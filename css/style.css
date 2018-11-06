@@ -1,0 +1,66 @@
+
+#canvas canvas{
+    border: #333 solid 2px;
+    max-width: 100%;
+    height: auto;
+}
+
+#canvas{
+    width: 100%;
+}
+
+.shadow{
+    box-shadow: rgba(0,0,0, 0.5) 0px 0px 0.2em;
+    padding: 0.5em;
+}
+
+.tabs, .tabs a{
+    /*background-color: #FAFAFA;*/
+    color: #000 !important;
+    border-color: #fff !important;
+}
+
+.indicator {
+    background-color: #2979ff !important;
+}
+.mjx-chtml {
+    outline: none;
+}
+.matrix::before, .matrix::after{
+    content: '(';
+    display: inline-block;
+    position: absolute;
+    transform: scaleY(5.2) scaleX(1.5);
+    margin-top: 1.0em;
+    font-size: 1.5em;
+    font-weight: 100;
+}
+.matrix::after{
+    content: ')';
+    margin-left: 9.2em;
+}
+
+.matrix{
+    display: inline-grid !important;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 0 1em;
+    grid-auto-flow: column;
+    padding-left: 1em;
+    margin-bottom: 2em;
+}
+.mat{
+    width: 5em!important;
+}
+.block {
+    display: block;
+}
+input[type='color']{
+    visibility: hidden;
+}
+input[type='color']::after{
+    visibility: visible;
+    content: attr(value);
+    background-color: attr(value color);
+    font-weight: bold;
+    text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
+}
