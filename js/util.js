@@ -58,3 +58,12 @@ function hslToHex(h, s, l) {
 
     return (r << 16) | (g << 8) | b;
 }
+
+function logError(...msgs){
+    console.error(...msgs);
+    document.getElementById('error_log').textContent = msgs.join(' ');
+}
+
+function clearError() {
+    document.getElementById('error_log').textContent = '';
+}

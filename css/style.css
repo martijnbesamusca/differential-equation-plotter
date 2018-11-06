@@ -1,4 +1,7 @@
-
+footer {
+    overflow: auto;
+    margin-top: 2em;
+}
 #canvas canvas{
     border: #333 solid 2px;
     max-width: 100%;
@@ -63,4 +66,26 @@ input[type='color']::after{
     background-color: attr(value color);
     font-weight: bold;
     text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
+}
+
+.error{
+    background-color: #F44336;
+    color: #fff;
+    margin: 1em 0;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.1em;
+    border-radius: 0.5em;
+    min-height: 3em;
+    line-height: 3em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.error:empty{
+    min-height: 0;
+    visibility: hidden;
+}
+
+.page-footer{
+    background-color: #333;
 }

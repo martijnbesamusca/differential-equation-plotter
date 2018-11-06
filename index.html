@@ -52,7 +52,7 @@
                     <li class="tab col s4"><a class="active" href="#drdt">\(\frac{dr}{dt}, \frac{d\theta}{dt}\)</a></li>
                 </ul>
             </div>
-
+            <div class="col s12 error red" id="error_log"></div>
             <div id="dxdy" class="col s12">
                 <div class="row">
                     <div class="input-field col s12">
@@ -141,12 +141,12 @@
 
                 <div class="col s6 input-field">
                     <label for="step">Step size (smaller is preciser, but slower)</label>
-                    <input id="step" type="number" value="0.1" data-option="dot_step">
+                    <input id="step" type="number" value="0.01" data-option="dot_step">
                 </div>
 
                 <div class="col s6 input-field">
                     <label for="density">Arrow density</label>
-                    <input id="density" type="number" min="0" value="0.1" data-option="dot_density">
+                    <input id="density" type="number" min="0" value="0.05" data-option="dot_density">
                 </div>
 
                 <div class="col s6 file-field">
@@ -155,7 +155,7 @@
                 </div>
                 <div class="col s6">
                     <label for="dot_c">Arrow Color</label>
-                    <input id="dot_c" type="color" value="#00FF66" style="color:#00FF66" data-option="dot_color"/>
+                    <input id="dot_c" type="color" value="#00FF44" style="color:#00FF44" data-option="dot_color"/>
                 </div>
 
                 <div class="col s6 input-field">
@@ -189,7 +189,7 @@
 
                 <div class="col s6 file-field">
                     <label for="path_length">Path length</label>
-                    <input id="path_length" type="number" min="0" value="10" data-option="path_length">
+                    <input id="path_length" type="number" min="0" value="15" data-option="path_length">
                 </div>
 
                 <div class="col s6 input-field">
@@ -203,7 +203,7 @@
                 </div>
                 <div class="col s6 ">
                     <label for="path_c">Path Color</label>
-                    <input id="path_c" type="color" value="#FF0000" style="color:#FF0000" data-option="path_color"/>
+                    <input id="path_c" type="color" value="#FF6633" style="color:#FF6633" data-option="path_color"/>
                 </div>
 
                 <div class="col s6 input-field">
@@ -246,6 +246,21 @@
 
 </div>
 
+<footer class="page-footer z-depth-1">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 center-align">
+                By Martijn Besamusca.
+            </div>
+            <div class="col s12 center-align">
+                <a href="https://github.com/martinusandreas99/differential-equation-plotter">View on github</a>
+            </div>
+            <div class="col s12 center-align">
+                <a href="https://github.com/martinusandreas99/differential-equation-plotter/issues">Issue's or requests?</a>
+            </div>
+        </div>
+    </div>
+</footer>
 <script src="js/pixi.min.js"></script>
 <script src="js/particles.js"></script>
 <script src="js/main.js"></script>

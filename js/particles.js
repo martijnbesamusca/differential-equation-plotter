@@ -45,7 +45,7 @@ class DiffGrid {
                 normalize_speed: true
             },
             path: {
-                length: 10,
+                length: 15,
                 precision: 100,
                 width: 2,
                 color: 0xFF6633,

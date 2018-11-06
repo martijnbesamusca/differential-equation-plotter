@@ -16,11 +16,16 @@ function activeMatxy() {
                 return;
             }
             const val = parseFloat(elm.value);
-            if(Number.isNaN(val))
+            if(Number.isNaN(val)) {
+                logError('Value is not a number:', elm.value);
                 return;
+            }
             mat[i][j] = val;
         }
     }
+
+    clearError();
+
     scene.setMatrix(mat)
 }
 function activateDrDt(){
@@ -37,7 +42,7 @@ function activateDrDt(){
         dr = math.compile(dr_text);
         dt = math.compile(dt_text);
     } catch (e) {
-        console.error('Could not compile:', e.message);
+        logError('Could not compile:', e.message);
         return;
     }
 
@@ -45,9 +50,11 @@ function activateDrDt(){
         dr.eval({r:1, θ:1, t:1});
         dt.eval({r:1, θ:1, t:1});
     } catch (e) {
-        console.error('Could not execute:', e.message);
+        logError('Could not execute:', e.message);
         return;
     }
+
+    clearError();
 
     const dr_func = (r,t) => dr.eval({r:r, θ:t, t:t});
     const dt_func = (r,t) => dt.eval({r:r, θ:t, t:t});
@@ -69,7 +76,7 @@ function activateDxDy(){
         dx = math.compile(dx_text);
         dy = math.compile(dy_text);
     } catch (e) {
-        console.error('Could not compile:', e.message);
+        logError('Could not compile:', e.message);
         return;
     }
 
@@ -77,9 +84,11 @@ function activateDxDy(){
         dx.eval({x:1,y:1});
         dy.eval({x:1,y:1});
     } catch (e) {
-        console.error('Could not execute:', e.message);
+        logError('Could not execute:', e.message);
         return;
     }
+
+    clearError();
 
     const dx_func = (x,y) => dx.eval({x:x, y:y});
     const dy_func = (x,y) => dy.eval({x:x, y:y});
