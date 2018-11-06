@@ -3,7 +3,7 @@ class DiffGrid {
     constructor(options){
         this.tick = 0;
 
-        this.requestStop = false;
+        this.requestStop = true;
         this.frozen = false;
         this.setOptions(options);
         this.makeRenderer();
@@ -179,13 +179,13 @@ class DiffGrid {
             return;
         }
 
-        if(!this.frozen || this.requestStop){
+        if(this.requestStop){
             this.requestStop = false;
             requestAnimationFrame(this.drawBinded);
+            console.log('faster')
         }
 
         this.frozen = false;
-
     }
 
     stop(){
@@ -203,7 +203,7 @@ class DiffGrid {
 
         if(this.frozen){
             this.renderer.render(this.stage);
-            requestAnimationFrame(this.drawBinded)
+            requestAnimationFrame(this.drawBinded);
             return;
         }
 
@@ -223,21 +223,22 @@ class DiffGrid {
 
             dot.age += 10*Math.random();
 
-            if (dot.grid.x > this.options.screen.maxX  || dot.grid.x < this.options.screen.minX ||
-                dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY ||
-                (this.options.dot.maxAge >= 0 && dot.age > this.options.dot.maxAge)) {
-                dot.grid.x = dot.start.x;
-                dot.grid.y = dot.start.y;
-                dot.age = 0;
-                // dots.pop(i)
-            }
-
             let dxScreen = dot.position.x;
             let dyScreen = dot.position.y;
             dot.position.x = this.gridToScreenX(dot.grid.x);
             dot.position.y = this.gridToScreenY(dot.grid.y);
             dxScreen -= dot.position.x;
             dyScreen -= dot.position.y;
+
+            if (dot.grid.x > this.options.screen.maxX  || dot.grid.x < this.options.screen.minX ||
+                dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY ||
+                (this.options.dot.maxAge >= 0 && dot.age > this.options.dot.maxAge)) {
+                dot.grid.x = dot.start.x;
+                dot.grid.y = dot.start.y;
+                dot.age = 0;
+                dot.position.x = this.gridToScreenX(dot.grid.x);
+                dot.position.y = this.gridToScreenY(dot.grid.y);
+            }
 
             dot.rotation = Math.atan2(-dyScreen,-dxScreen);
         }

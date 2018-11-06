@@ -45,23 +45,23 @@
             <div class="divider"></div>
             <div class="col s12">
                 <ul class="tabs">
-                    <li class="tab col s4"><a href="#dxdy">\(\frac{dx}{dt}, \frac{dy}{dt}\)</a></li>
+                    <li class="tab col s4"><a href="#dxdy">\(\dot{x},\ \dot{y}\)</a></li>
                     <li class="tab col s4"><a href="#xymat">\(
-                        \begin{pmatrix}x\prime \\ y\prime \end{pmatrix} = A \begin{pmatrix}x \\ y \end{pmatrix}
+                        \dot{\vec{x}} = A \vec{x}
                         \)</a></li>
-                    <li class="tab col s4"><a class="active" href="#drdt">\(\frac{dr}{dt}, \frac{d\theta}{dt}\)</a></li>
+                    <li class="tab col s4"><a class="active" href="#drdt">\(\dot{r},\ \dot{\theta}\)</a></li>
                 </ul>
             </div>
             <div class="col s12 error red" id="error_log"></div>
             <div id="dxdy" class="col s12">
                 <div class="row">
                     <div class="input-field col s12">
-                        <i class="prefix">\(\frac{d}{dx}\)</i>
+                        <i class="prefix">\(\dot{x}\)</i>
                         <input id="dx" type="text" required>
                         <label for="dx">= formula</label>
                     </div>
                     <div class="input-field col s12">
-                        <i class="prefix">\(\frac{d}{dy}\)</i>
+                        <i class="prefix">\(\dot{y}\)</i>
                         <input id="dy" type="text" required>
                         <label for="dy">= formula</label>
                     </div>
@@ -88,12 +88,12 @@
                 </p>
                 <div class="row">
                     <div class="input-field col s12">
-                        <i class="prefix">\(\frac{d}{dr}\)</i>
+                        <i class="prefix">\(\dot{r}\)</i>
                         <input id="dr" type="text" required value="r(r-1)(r-2)">
                         <label for="dr">= formula</label>
                     </div>
                     <div class="input-field col s12">
-                        <i class="prefix">\(\frac{d}{d&theta;}\)</i>
+                        <i class="prefix">\(\dot{\theta}\)</i>
                         <input id="dt" type="text" required value="1">
                         <label for="dt">= formula</label>
                     </div>
@@ -169,7 +169,7 @@
                 </div>
 
                 <div class="col s6 input-field">
-                    <label for="max_age">Max arrow age (-1 for infinite)</label>
+                    <label for="max_age">Max arrow age (-1 for infinite, 0 for static arrows)</label>
                     <input id="max_age" type="number" min="-1" value="1000" data-option="dot_maxAge">
                 </div>
 
