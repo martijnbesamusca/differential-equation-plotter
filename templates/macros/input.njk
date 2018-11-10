@@ -1,0 +1,25 @@
+{% macro field(values) %}
+{% set id="{{ values.section }}.{{ values.name }}" %}
+
+{% if values.type == 'switch' %}
+    <div class="col s6 input-field">
+        <div class="switch">
+            <label>
+                {{ values.label }}
+                <input type="checkbox" id="path_cr" data-section="{{ values.section }}" data-name="{{ values.name }}">
+                <span class="lever"></span>
+            </label>
+        </div>
+    </div>
+{% elseif values.type == 'color' %}
+    <div class="col s6">
+        <label for="dot_c">{{ values.label }}</label>
+        <input id="dot_c" type="color" value="#000000" style="color:#00FF44" data-section="{{ values.section }}" data-name="{{ values.name }}"/>
+    </div>
+{% else %}
+    <div class="col s6 input-field">
+        <label for="{{ values.section }}-{{ values.name }}">{{ values.label }}</label>
+        <input id="{{ values.section }}-{{ values.name }}" type="{{ values.type }}" data-section="{{ values.section }}" data-name="{{ values.name }}">
+    </div>
+{% endif %}
+{% endmacro %}

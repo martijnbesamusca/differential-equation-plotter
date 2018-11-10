@@ -1,0 +1,133 @@
+{
+  "title": "Differential equations",
+
+  "input" : {
+    "Screen size" : [
+      {
+        "label": "Resolution width",
+        "type": "number",
+        "section": "screen",
+        "name": "width"
+      },
+      {
+        "label": "Resolution height",
+        "type": "number",
+        "section": "screen",
+        "name": "height"
+      },
+      {
+        "label": "Min x",
+        "type": "number",
+        "section": "screen",
+        "name": "minX"
+      },
+      {
+        "label": "Max x",
+        "type": "number",
+        "section": "screen",
+        "name": "maxX"
+      },
+      {
+        "label": "Min y",
+        "type": "number",
+        "section": "screen",
+        "name": "minY"
+      },
+      {
+        "label": "Max y",
+        "type": "number",
+        "section": "screen",
+        "name": "maxY"
+      }
+    ],
+
+    "Arrow style":[
+      {
+        "label": "Step size (smaller is preciser, but slower)",
+        "type": "number",
+        "section": "dot",
+        "name": "step"
+      },
+      {
+        "label": "Step density",
+        "type": "number",
+        "section": "dot",
+        "name": "density"
+      },
+      {
+        "label": "Arrow size",
+        "type": "number",
+        "section": "dot",
+        "name": "size"
+      },
+      {
+        "label": "Arrow color",
+        "type": "color",
+        "section": "dot",
+        "name": "color"
+      },
+      {
+        "label": "Randomize color",
+        "type": "switch",
+        "section": "dot",
+        "name": "color_random"
+      },
+      {
+        "label": "Max arrow age (-1 for infinite, 0 for static arrows)",
+        "type": "number",
+        "section": "dot",
+        "name": "maxAge"
+      },
+      {
+        "label": "Normalize speed",
+        "type": "switch",
+        "section": "dot",
+        "name": "normalize"
+      }
+    ],
+    "Solution path style" : [
+      {
+        "label": "Path length",
+        "type": "number",
+        "section": "path",
+        "name": "length"
+      },
+      {
+        "label": "Path precision boost",
+        "type": "number",
+        "section": "path",
+        "name": "precision"
+      },
+      {
+        "label": "Path width",
+        "type": "number",
+        "section": "path",
+        "name": "width"
+      },
+      {
+        "label": "Path color",
+        "type": "color",
+        "section": "path",
+        "name": "color"
+      },
+      {
+        "label": "Randomize color",
+        "type": "switch",
+        "section": "path",
+        "name": "color_random"
+      },
+      {
+        "label": "Solution forwards",
+        "type": "switch",
+        "section": "path",
+        "name": "forwards"
+      },
+      {
+        "label": "Solution backwards",
+        "type": "switch",
+        "section": "path",
+        "name": "backwards"
+      }
+    ]
+  }
+}

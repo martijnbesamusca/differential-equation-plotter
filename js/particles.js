@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 class DiffGrid {
     constructor(options){
         this.tick = 0;
@@ -60,7 +60,7 @@ class DiffGrid {
         this.backgroundTextStyle = {
             fill: 0x333333,
             fontSize: 14,
-        }
+        };
     }
 
     makeRenderer() {
@@ -107,9 +107,9 @@ class DiffGrid {
             if(this.options.screen.minY <= 0 && this.options.screen.maxY >= 0) {
                 text.y = this.gridToScreenY(0) + 2;
             } else {
-                text.y = this.options.screen.height - text.height - 2.
+                text.y = this.options.screen.height - text.height - 2.;
             }
-            this.backgroundText.addChild(text)
+            this.backgroundText.addChild(text);
             // this.background.text(x,this.options.height/2, ''+i)
         }
 
@@ -130,7 +130,7 @@ class DiffGrid {
                 text.x = 2;
             }
             text.y = y + 2;
-            this.backgroundText.addChild(text)
+            this.backgroundText.addChild(text);
         }
     }
 
@@ -175,14 +175,13 @@ class DiffGrid {
 
     start() {
         if(!this.hasOwnProperty('dx') || !this.hasOwnProperty('dy')) {
-            console.error('Dx or Dy is not set.');
+            Logger.error('Dx or Dy is not set.');
             return;
         }
 
         if(this.requestStop){
             this.requestStop = false;
             requestAnimationFrame(this.drawBinded);
-            console.log('faster')
         }
 
         this.frozen = false;
@@ -198,7 +197,7 @@ class DiffGrid {
 
     draw(){
         if(this.requestStop) {
-            return
+            return;
         }
 
         if(this.frozen){
@@ -306,13 +305,13 @@ class DiffGrid {
     setDxDy(dx, dy) {
         this.dx = dx;
         this.dy = dy;
-        this.resetSolutions()
+        this.resetSolutions();
     }
 
     setMatrix(mat){
         this.dx = (x, y) => mat[0][0] * x + mat[0][1] * y;
         this.dy = (x, y) => mat[1][0] * x + mat[1][1] * y;
-        this.resetSolutions()
+        this.resetSolutions();
     }
 
     setPolar(dr, dtheta){
@@ -329,11 +328,11 @@ class DiffGrid {
             const dt_val = dtheta(r,t);
             return Math.sin(t)*dr_val + Math.cos(t)/r * dt_val;
         };
-        this.resetSolutions()
+        this.resetSolutions();
     }
 
     getRandomColor(hex){
-        let [h,s,l] = hexToHsl(hex);
+        let [h,s,l] = Color.hexToHsl(hex);
         h += math.random(-0.15,0.15);
         s += math.random(-0.1,0.1);
         l += math.random(-0.2,0.2);
@@ -342,7 +341,7 @@ class DiffGrid {
         s = Math.min(1, Math.max(0 , s));
         l = Math.min(1, Math.max(0 , l));
 
-        return hslToHex(h,s,l);
+        return Color.hslToHex(h,s,l);
     }
 
     updateOption(elm) {
@@ -376,7 +375,7 @@ class DiffGrid {
                 this.options.dot[id] = parseFloat(elm.value);
                 this.resetGrid();
             } else {
-                console.error('Unknown id ', id)
+                Logger.error('Unknown id ', id);
             }
 
             if (id !== 'maxAge') {
@@ -385,7 +384,7 @@ class DiffGrid {
                     if (this.options.dot.color_random) col = this.getRandomColor(col);
                     dot.scale.set(this.options.dot.size);
                     dot.tint = col;
-                })
+                });
             }
         } else if(id.startsWith('path_')) {
             id = id.replace('path_', '');
@@ -395,7 +394,7 @@ class DiffGrid {
             } else if (id === 'color_random' || id === 'forwards' || id === 'backwards') {
                 this.options.path[id] = elm.checked;
             } else {
-                console.error('Unknown id ', id)
+                Logger.error('Unknown id ', id);
             }
         }
     }

@@ -1,0 +1,63 @@
+
+<div class="row">
+    <h3 class="center-align">Equation</h3>
+    <div class="divider"></div>
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s4"><a href="#dxdy">\(\dot{x},\ \dot{y}\)</a></li>
+            <li class="tab col s4"><a href="#xymat">\(
+                    \dot{\vec{x}} = A \vec{x}
+                    \)</a></li>
+            <li class="tab col s4"><a class="active" href="#drdt">\(\dot{r},\ \dot{\theta}\)</a></li>
+        </ul>
+    </div>
+    <div class="col s12 error red" id="error_log"></div>
+    <div id="dxdy" class="col s12">
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="prefix">\(\dot{x}\)</i>
+                <input id="dx" type="text" required>
+                <label for="dx">= formula</label>
+            </div>
+            <div class="input-field col s12">
+                <i class="prefix">\(\dot{y}\)</i>
+                <input id="dy" type="text" required>
+                <label for="dy">= formula</label>
+            </div>
+        </div>
+
+        <a class="waves-effect waves-light btn" onclick="activateDxDy()">Apply</a>
+    </div>
+
+    <div id="xymat" class="col s12">
+        <span>\(A = \)</span>
+        <div class="matrix">
+            <input title="Matrix 1 1" type="number" id="mat11" class="mat" required>
+            <input title="Matrix 1 2" type="number" id="mat12" class="mat" required>
+            <input title="Matrix 2 1" type="number" id="mat21" class="mat" required>
+            <input title="Matrix 2 2" type="number" id="mat22" class="mat" required>
+        </div>
+
+        <a class="waves-effect waves-light btn block" onclick="activeMatxy()">Apply</a>
+    </div>
+
+    <div id="drdt" class="col s12">
+        <p>
+            Note that &theta; and t are both allowed in the formulas.
+        </p>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="prefix">\(\dot{r}\)</i>
+                <input id="dr" type="text" required value="r*(r-1)*(r-2)">
+                <label for="dr">= formula</label>
+            </div>
+            <div class="input-field col s12">
+                <i class="prefix">\(\dot{\theta}\)</i>
+                <input id="dt" type="text" required value="1">
+                <label for="dt">= formula</label>
+            </div>
+        </div>
+
+        <a class="waves-effect waves-light btn" onclick="activateDrDt()">Apply</a>
+    </div>
+</div>

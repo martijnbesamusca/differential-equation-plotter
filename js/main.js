@@ -2,7 +2,7 @@ function init(){
     M.Tabs.init(document.getElementsByClassName('tabs')[0]);
 
     window.scene = new DiffGrid();
-    scene.setPolar((r,t)=> r**3 - 3*r**2 + 2*r, (r,t)=> 1);
+    scene.setPolar((r,t)=>r*(r-1)*(r-2), (r,t)=> 1);
     scene.start();
 }
 

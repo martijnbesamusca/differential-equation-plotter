@@ -1,0 +1,51 @@
+{% from 'macros/input.njk' import field %}
+{% extends 'layout/layout.njk' %}
+
+{% block title %}
+    <h1 class="center-align">{{ title }}</h1>
+{% endblock %}
+
+{% block canvas %}
+    <div id="canvas" class="center-align"></div>
+{% endblock %}
+
+{% block buttons %}
+    <div class="col s4">
+        <a class="waves-effect waves-light btn-large green block" onclick="scene.start()">Start</a>
+    </div>
+    <div class="col s4">
+        <a class="waves-effect waves-light btn-large red block" onclick="scene.freeze()">Stop</a>
+    </div>
+    <div class="col s4">
+        <a class="waves-effect waves-light btn-large block" onclick="">Download gif</a>
+    </div>
+{% endblock %}
+
+{% block equations %}
+{% include "partial/tabs.njk" %}
+{% endblock %}
+
+{% block options %}
+    <h3 class="col s12 center-align">Settings</h3>
+    <div class="divider"></div>
+
+    {% for name, fields in input %}
+        <h4 class="col s12">{{ name }}</h4>
+        {% for values in fields %}
+            {{ field(values) }}
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}
+
+{% block footer %}
+    <div class="col s12 center-align">
+        <a href="https://github.com/martinusandreas99/differential-equation-plotter">View on github</a>
+    </div>
+    <div class="col s12 center-align">
+        <a href="https://github.com/martinusandreas99/differential-equation-plotter/issues">Issue's or requests?</a>
+    </div>
+    <div class="col s12 center-align">
+        By Martijn Besamusca.
+    </div>
+{% endblock %}

@@ -1,0 +1,72 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>{{ title }}</title>
+    <meta name="description" content="">
+    <meta name="author" content="Martijn Besamusca">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.2.3/math.min.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/bootstrap-colorpicker.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+</head>
+
+<body>
+
+<div class="container">
+<div class="section">
+    {% block title %} {% endblock %}
+</div>
+
+<div class="section">
+    {% block canvas %} {% endblock %}
+</div>
+
+<div class="section center-align">
+    <div class="row">
+        {% block buttons %} {% endblock %}
+    </div>
+</div>
+
+<div class="section z-depth-1">
+    {% block equations %} {% endblock %}
+</div>
+
+<div class="section z-depth-1">
+    <div class="row">
+        {% block options %} {% endblock %}
+    </div>
+</div>
+
+<div class="section">
+    <a class="waves-effect waves-light btn block red" onclick="resetSaved()">Reset settings</a>
+</div>
+
+</div>
+
+
+<footer class="page-footer z-depth-1">
+    <div class="container">
+        <div class="row">
+            {% block footer %} {% endblock %}
+        </div>
+    </div>
+</footer>
+
+
+<script src="js/pixi.min.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/main.js"></script>
+<script src="js/events.js"></script>
+</body>
+</html>

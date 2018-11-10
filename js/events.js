@@ -14,9 +14,10 @@ document.querySelector('#canvas canvas').addEventListener('click',
     }
 );
 
-document.querySelectorAll('input[data-option]').forEach(elm=>
+document.querySelectorAll('input[data-option]').forEach(elm=>{
     elm.addEventListener('change', e =>
-        scene.updateOption(e.target)));
+        scene.updateOption(e.target));
+});
 
 document.querySelectorAll('input').forEach(elm=> {
     elm.addEventListener('change', e => {
@@ -27,12 +28,16 @@ document.querySelectorAll('input').forEach(elm=> {
         }
     });
 
-    const val = localStorage.getItem(elm.id);
+    let val = localStorage.getItem(elm.id);
+    if(val === null && elm.dataset.section) {
+        val = scene.options[elm.dataset.section][elm.dataset.name];
+    }
+
     const event = new Event('change');
     if (val !== null) {
         if (elm.type === 'checkbox') {
             elm.checked = val === 'true'
-        } else {
+        }  else {
             elm.value = val;
         }
         elm.dispatchEvent(event);
