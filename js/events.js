@@ -1,4 +1,4 @@
-document.querySelectorAll('input[type="color"]').forEach(elm=>elm.addEventListener('input', e => {
+document.querySelectorAll('input[type="color"]').forEach(elm=>elm.addEventListener('change', e => {
     e.target.setAttribute('value', e.target.value);
     e.target.style.color = e.target.value;
 }));
@@ -14,7 +14,7 @@ document.querySelector('#canvas canvas').addEventListener('click',
     }
 );
 
-document.querySelectorAll('input[data-option]').forEach(elm=>{
+document.querySelectorAll('input[data-section]').forEach(elm=>{
     elm.addEventListener('change', e =>
         scene.updateOption(e.target));
 });
@@ -31,13 +31,16 @@ document.querySelectorAll('input').forEach(elm=> {
     let val = localStorage.getItem(elm.id);
     if(val === null && elm.dataset.section) {
         val = scene.options[elm.dataset.section][elm.dataset.name];
+        if(elm.type === 'color') {
+            val = '#' + val.toString(16).padStart(6, '0');
+        }
     }
 
     const event = new Event('change');
     if (val !== null) {
         if (elm.type === 'checkbox') {
-            elm.checked = val === 'true'
-        }  else {
+            elm.checked = val
+        } else {
             elm.value = val;
         }
         elm.dispatchEvent(event);

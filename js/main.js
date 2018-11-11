@@ -24,7 +24,7 @@ function activeMatxy() {
         }
     }
 
-    clearError();
+    Logger.clearError();
 
     scene.setMatrix(mat)
 }
@@ -54,7 +54,7 @@ function activateDrDt(){
         return;
     }
 
-    clearError();
+    Logger.clearError();
 
     const dr_func = (r,t) => dr.eval({r:r, θ:t, t:t});
     const dt_func = (r,t) => dt.eval({r:r, θ:t, t:t});
@@ -88,7 +88,7 @@ function activateDxDy(){
         return;
     }
 
-    clearError();
+    Logger.clearError();
 
     const dx_func = (x,y) => dx.eval({x:x, y:y});
     const dy_func = (x,y) => dy.eval({x:x, y:y});

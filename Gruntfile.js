@@ -1,12 +1,33 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        express: {
+            all: {
+                options: {
+                    bases: ['C:\\Users\\Gebruiker\\WebstormProjects\\differential'],
+                    port: 8080,
+                    hostname: '0.0.0.0',
+                    livereload: true
+                }
+            }
+        },
+
         watch: {
+            css: {
+                files: ['css/**/*.css'],
+                options: {
+                }
+            },
+            js: {
+                files: ['js/**/*.js'],
+                options: {
+                }
+            },
             njk: {
                 files: ['templates/**/*.njk'],
-                task: ['nunjucks'],
+                tasks: ['compile'],
                 options: {
-                    spawn: false,
+                    livereload: true
                 }
             },
             gruntfile: {
@@ -16,6 +37,24 @@ module.exports = function (grunt) {
                 }
             }
         },
+        parallel:{
+            web: {
+                options:{
+                    stream: true
+                },
+                tasks: [{
+                    grunt: true,
+                    args: ['watch:css']
+                },{
+                    grunt: true,
+                    args: ['watch:js']
+                },{
+                    grunt: true,
+                    args: ['watch:njk']
+                }]
+            }
+        },
+
         nunjucks: {
             options: {
                 data: grunt.file.readJSON('data.json'),
@@ -41,6 +80,11 @@ module.exports = function (grunt) {
                 src: 'index.html',
                 dest: 'index.html'
             }
+        },
+        open: {
+            all: {
+                path: 'http://localhost:8080/index.html'
+            }
         }
     });
 
@@ -50,6 +94,8 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['nunjucks', 'prettify']);
+    grunt.registerTask('compile', ['nunjucks', 'prettify']);
+    grunt.registerTask('web', ['compile', 'express', 'open', 'watch']);
+    grunt.registerTask('default', 'web')
 
 };

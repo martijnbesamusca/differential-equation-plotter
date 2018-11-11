@@ -5,6 +5,7 @@ class DiffGrid {
 
         this.requestStop = true;
         this.frozen = false;
+        this.recording = false;
         this.setOptions(options);
         this.makeRenderer();
         this.makeGrid();
@@ -15,6 +16,40 @@ class DiffGrid {
         this.stage.addChild(this.solutions);
 
         this.drawBinded = this.draw.bind(this);
+    }
+
+    makeGif(button) {
+        console.log(button);
+        this.recording = true;
+        this.record_button = button;
+        this.record_button.textContent = 'Recording...';
+        this.record_button.setAttribute("disabled", "disabled");
+
+
+        this.options.dot._age_random = this.options.dot.age_random;
+        this.options.dot.age_random = false;
+        this.frame_count = 0;
+        this.resetGrid();
+
+        this.gif = new GIF({
+            workers: 4,
+            workerScript: 'js/gif.worker.js',
+            background: '#ffffff'
+        });
+
+        this.gif.on('finished', function(blob) {
+            window.open(URL.createObjectURL(blob));
+            scene.record_button.textContent = 'Download gif';
+            scene.record_button.removeAttribute("disabled");
+        });
+    }
+
+    endGif(){
+        this.recording = false;
+        this.record_button.textContent = 'Processing...';
+        this.options.dot.age_random = this.options.dot._age_random;
+        delete this.options.dot._age_random;
+        this.gif.render();
     }
 
     gridToScreenX(x){
@@ -33,7 +68,7 @@ class DiffGrid {
                 minX: -4,
                 maxX: 4,
                 minY: -3,
-                maxY: 3
+                maxY: 3,
             },
             dot: {
                 step: 0.01,
@@ -42,7 +77,8 @@ class DiffGrid {
                 color: 0x00FF44,
                 color_random: true,
                 maxAge: 1000,
-                normalize_speed: true
+                normalize: true,
+                age_random: true,
             },
             path: {
                 length: 15,
@@ -64,7 +100,9 @@ class DiffGrid {
     }
 
     makeRenderer() {
-        this.renderer = PIXI.autoDetectRenderer(800, 600, {transparent: true, autoResize: false});
+        this.renderer = PIXI.autoDetectRenderer(800, 600, {transparent: false,
+            autoResize: false,
+            backgroundColor: 0xffffff});
         this.stage = new PIXI.Container();
         this.options.parentElm.appendChild(this.renderer.view);
 
@@ -213,14 +251,18 @@ class DiffGrid {
             const dy = this.dy(dot.grid.x, dot.grid.y);
             let norm = 1;
 
-            if(this.options.dot.normalize_speed) {
+            if(this.options.dot.normalize) {
                 norm = Math.sqrt(dx**2 + dy**2);
             }
 
             dot.grid.x += dx * this.options.dot.step / norm;
             dot.grid.y += dy * this.options.dot.step / norm;
 
-            dot.age += 10*Math.random();
+            if (this.options.dot.age_random){
+                dot.age += math.random(0.5, 1.5);
+            } else {
+                dot.age += 1;
+            }
 
             let dxScreen = dot.position.x;
             let dyScreen = dot.position.y;
@@ -244,6 +286,14 @@ class DiffGrid {
 
         this.tick++;
         this.renderer.render(this.stage);
+        if(this.recording){
+            if(this.frame_count> this.options.dot.maxAge){
+                this.endGif();
+            }else if(this.frame_count > 0)
+                this.gif.addFrame(scene.renderer.view , {delay:0.03, copy:true});
+            this.frame_count += 1;
+        }
+
         requestAnimationFrame(this.drawBinded);
     }
 
@@ -252,10 +302,6 @@ class DiffGrid {
     }
 
     addSolution(x,y) {
-        // const res = 4;
-        // x = Math.round(x*res) / res;
-        // y = Math.round(y*res) / res;
-
         let start = [x,y];
 
         let directions = [];
@@ -345,33 +391,37 @@ class DiffGrid {
     }
 
     updateOption(elm) {
-        let id = elm.dataset.option;
+        const id = elm.dataset.name;
+        const section = elm.dataset.section;
+        if(section === 'screen') {
+            if (id === 'width' || id === 'height') {
+                this.options.screen[id] = parseInt(elm.value);
+                this.renderer.resize(this.options.screen.width, this.options.screen.height);
+            } else {
+                this.options.screen[id] = parseFloat(elm.value);
+            }
 
-        if(id === 'width' || id === 'height') {
-            this.options.screen[id] = parseInt(elm.value);
-            this.renderer.resize(this.options.screen.width, this.options.screen.height);
-            this.updateBackground();
-            this.resetSolutions();
-            this.resetGrid();
-        } else if(id.startsWith('screen_')) {
-            id = id.replace('screen_', '');
-            this.options.screen[id] = parseFloat(elm.value);
             this.updateBackground();
             this.resetSolutions();
             this.resetGrid();
         } else if(id === 'density'){
             this.options.screen[id] = parseInt(elm.value);
             this.resetGrid();
-        } else if(id.startsWith('dot_')) {
-            id = id.replace('dot_', '');
-
+        } else if(section === 'dot') {
             if(id === 'size' || id === 'step'){
                 this.options.dot[id] = parseFloat(elm.value);
             } else if(id === 'maxAge' || id === 'color'){
                 this.options.dot[id] = parseInt(elm.value.replace('#', '0x'));
-            } else if (id === 'color_random' || id === 'normalize_speed') {
+            } else if (id === 'color_random' || id === 'normalize') {
                 this.options.dot[id] = elm.checked;
-            }else if (id === 'density') {
+            }else if (id === 'age_random') {
+                this.options.dot[id] = elm.checked;
+                if (this.options.dot.maxAge>=0){
+                    this.dots.forEach(dot => {
+                        dot.age = this.options.dot.maxAge + 1;
+                    })
+                }
+            } else if (id === 'density') {
                 this.options.dot[id] = parseFloat(elm.value);
                 this.resetGrid();
             } else {
@@ -386,9 +436,7 @@ class DiffGrid {
                     dot.tint = col;
                 });
             }
-        } else if(id.startsWith('path_')) {
-            id = id.replace('path_', '');
-
+        } else if(section === 'path') {
             if (id === 'length' || id === 'color' || id === 'width' || id==='precision') {
                 this.options.path[id] = parseInt(elm.value.replace('#', '0x'));
             } else if (id === 'color_random' || id === 'forwards' || id === 'backwards') {

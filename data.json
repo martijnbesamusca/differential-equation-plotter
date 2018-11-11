@@ -83,6 +83,12 @@
         "type": "switch",
         "section": "dot",
         "name": "normalize"
+      },
+      {
+        "label": "Random max age",
+        "type": "switch",
+        "section": "dot",
+        "name": "age_random"
       }
     ],
     "Solution path style" : [
