@@ -34,6 +34,9 @@ document.querySelectorAll('input').forEach(elm=> {
         if(elm.type === 'color') {
             val = '#' + val.toString(16).padStart(6, '0');
         }
+        if(elm.type === 'checkbox') {
+            val = val.toString();
+        }
     }
 
     const event = new Event('change');
