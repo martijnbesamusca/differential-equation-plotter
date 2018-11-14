@@ -13,6 +13,16 @@ document.querySelector('#canvas canvas').addEventListener('click',
         scene.addSolution(x,y);
     }
 );
+document.querySelector('#canvas canvas').addEventListener('touch',
+    e => {
+        const rect = e.target.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+        x = DiffGrid.rescale(x, 0, e.target.clientWidth, scene.options.screen.minX, scene.options.screen.maxX);
+        y = DiffGrid.rescale(y, 0, e.target.clientHeight, scene.options.screen.maxY, scene.options.screen.minY);
+        scene.addSolution(x,y);
+    }
+);
 
 document.querySelectorAll('input[data-section]').forEach(elm=>{
     elm.addEventListener('change', e =>
