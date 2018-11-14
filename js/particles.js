@@ -25,9 +25,6 @@ class DiffGrid {
         this.record_button.textContent = 'Recording...';
         this.record_button.setAttribute("disabled", "disabled");
 
-
-        this.options.dot._age_random = this.options.dot.age_random;
-        this.options.dot.age_random = false;
         this.frame_count = 0;
         this.resetGrid();
 
@@ -38,7 +35,15 @@ class DiffGrid {
         });
 
         this.gif.on('finished', function(blob) {
-            window.open(URL.createObjectURL(blob));
+            const a = document.createElement('a');
+            document.body.appendChild(a);
+            a.style.display = 'none';
+            a.href = window.URL.createObjectURL(blob);
+            a.download = 'my-differential-equation.gif';
+            a.click();
+            window.URL.revokeObjectURL(a.href);
+            a.remove();
+
             scene.record_button.textContent = 'Download gif';
             scene.record_button.removeAttribute("disabled");
         });
@@ -47,8 +52,6 @@ class DiffGrid {
     endGif(){
         this.recording = false;
         this.record_button.textContent = 'Processing...';
-        this.options.dot.age_random = this.options.dot._age_random;
-        delete this.options.dot._age_random;
         this.gif.render();
     }
 
@@ -79,6 +82,7 @@ class DiffGrid {
                 maxAge: 1000,
                 normalize: true,
                 age_random: true,
+                loop_back: true
             },
             path: {
                 length: 15,
@@ -88,6 +92,11 @@ class DiffGrid {
                 color_random: false,
                 forwards: true,
                 backwards: true,
+
+            },
+            gif: {
+                length: 300,
+                skip: 1
             },
             parentElm: document.getElementById('canvas'),
         };
@@ -271,8 +280,9 @@ class DiffGrid {
             dxScreen -= dot.position.x;
             dyScreen -= dot.position.y;
 
-            if (dot.grid.x > this.options.screen.maxX  || dot.grid.x < this.options.screen.minX ||
-                dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY ||
+            const isOutside = dot.grid.x > this.options.screen.maxX  || dot.grid.x < this.options.screen.minX ||
+                              dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY;
+            if ((isOutside && this.options.dot.loop_back) ||
                 (this.options.dot.maxAge >= 0 && dot.age > this.options.dot.maxAge)) {
                 dot.grid.x = dot.start.x;
                 dot.grid.y = dot.start.y;
@@ -287,9 +297,9 @@ class DiffGrid {
         this.tick++;
         this.renderer.render(this.stage);
         if(this.recording){
-            if(this.frame_count> this.options.dot.maxAge){
+            if(this.frame_count> this.options.gif.length){
                 this.endGif();
-            }else if(this.frame_count > 0)
+            }else if(this.frame_count > 0 && this.frame_count % (this.options.gif.skip+1) === 0)
                 this.gif.addFrame(scene.renderer.view , {delay:0.03, copy:true});
             this.frame_count += 1;
         }
@@ -404,16 +414,16 @@ class DiffGrid {
             this.updateBackground();
             this.resetSolutions();
             this.resetGrid();
-        } else if(id === 'density'){
-            this.options.screen[id] = parseInt(elm.value);
-            this.resetGrid();
         } else if(section === 'dot') {
             if(id === 'size' || id === 'step'){
                 this.options.dot[id] = parseFloat(elm.value);
             } else if(id === 'maxAge' || id === 'color'){
                 this.options.dot[id] = parseInt(elm.value.replace('#', '0x'));
-            } else if (id === 'color_random' || id === 'normalize') {
+            } else if (id === 'color_random' || id === 'normalize' || id === 'loop_back') {
                 this.options.dot[id] = elm.checked;
+            }else if(id === 'density') {
+                this.options.dot[id] = parseFloat(elm.value);
+                this.resetGrid();
             }else if (id === 'age_random') {
                 this.options.dot[id] = elm.checked;
                 if (this.options.dot.maxAge>=0){
@@ -444,6 +454,8 @@ class DiffGrid {
             } else {
                 Logger.error('Unknown id ', id);
             }
+        } else if(section === 'gif'){
+            this.options.gif[id] = parseInt(elm.value);
         }
     }
 }

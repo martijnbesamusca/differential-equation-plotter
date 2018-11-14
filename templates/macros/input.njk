@@ -1,3 +1,4 @@
+{% set reg= r/^(type|name|section|label)$/i %}
 {% macro field(values) %}
 {% set id= values.section + '.' + values.name %}
 
@@ -19,7 +20,14 @@
 {% else %}
     <div class="col s6 input-field">
         <label for="{{ id }}">{{ values.label }}</label>
-        <input id="{{ id }}" type="{{ values.type }}" data-section="{{ values.section }}" data-name="{{ values.name }}">
+        <input id="{{ id }}" type="{{ values.type }}" data-section="{{ values.section }}" data-name="{{ values.name }}"
+        {% for name, val in values %} {# add attributes #}
+            {% if not reg.test(name)%}
+                {{ name }} = "{{ val }}"
+            {% endif %}
+        {% endfor %}
+        data-thing = "hey"
+        >
     </div>
 {% endif %}
 {% endmacro %}

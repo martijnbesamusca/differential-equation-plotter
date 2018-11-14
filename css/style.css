@@ -26,6 +26,9 @@ footer {
 .indicator {
     background-color: #2979ff !important;
 }
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+    background-color: rgba(41,121,255,0.1)
+}
 .mjx-chtml {
     outline: none;
 }
@@ -45,21 +48,24 @@ footer {
 
 .matrix{
     display: inline-grid !important;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 0 1em;
-    grid-auto-flow: column;
+    grid-auto-flow: row;
     padding-left: 1em;
     margin-bottom: 2em;
 }
 .mat{
     width: 5em!important;
 }
+
 .block {
     display: block;
 }
+
 input[type='color']{
     visibility: hidden;
 }
+
 input[type='color']::after{
     visibility: visible;
     content: attr(value);

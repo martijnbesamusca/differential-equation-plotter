@@ -1,10 +1,11 @@
+const path = require('path');
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         express: {
             all: {
                 options: {
-                    bases: ['C:\\Users\\Gebruiker\\WebstormProjects\\differential'],
+                    bases: path.resolve(__dirname),
                     port: 8080,
                     hostname: '0.0.0.0',
                     livereload: true
@@ -35,23 +36,6 @@ module.exports = function (grunt) {
                 options: {
                     reload: true
                 }
-            }
-        },
-        parallel:{
-            web: {
-                options:{
-                    stream: true
-                },
-                tasks: [{
-                    grunt: true,
-                    args: ['watch:css']
-                },{
-                    grunt: true,
-                    args: ['watch:js']
-                },{
-                    grunt: true,
-                    args: ['watch:njk']
-                }]
             }
         },
 

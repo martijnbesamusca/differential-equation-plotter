@@ -46,19 +46,25 @@
         "label": "Step size (smaller is preciser, but slower)",
         "type": "number",
         "section": "dot",
-        "name": "step"
+        "name": "step",
+        "min": 0.0001,
+        "step": 0.01
       },
       {
-        "label": "Step density",
+        "label": "Arrow density",
         "type": "number",
         "section": "dot",
-        "name": "density"
+        "name": "density",
+        "min": 0.0001,
+        "step": 0.01
       },
       {
         "label": "Arrow size",
         "type": "number",
         "section": "dot",
-        "name": "size"
+        "name": "size",
+        "min": 0,
+        "step": 0.1
       },
       {
         "label": "Arrow color",
@@ -89,6 +95,12 @@
         "type": "switch",
         "section": "dot",
         "name": "age_random"
+      },
+      {
+        "label": "Loop back if outside",
+        "type": "switch",
+        "section": "dot",
+        "name": "loop_back"
       }
     ],
     "Solution path style" : [
@@ -96,19 +108,25 @@
         "label": "Path length",
         "type": "number",
         "section": "path",
-        "name": "length"
+        "name": "length",
+        "min": 0,
+        "step": 1
       },
       {
         "label": "Path precision boost",
         "type": "number",
         "section": "path",
-        "name": "precision"
+        "name": "precision",
+        "min": 0,
+        "step": 1
       },
       {
         "label": "Path width",
         "type": "number",
         "section": "path",
-        "name": "width"
+        "name": "width",
+        "min": 0,
+        "step": 0.1
       },
       {
         "label": "Path color",
@@ -133,6 +151,24 @@
         "type": "switch",
         "section": "path",
         "name": "backwards"
+      }
+    ],
+    "GIF":[
+      {
+        "label": "Number of frames recorded)",
+        "type": "number",
+        "section": "gif",
+        "name": "length",
+        "min": 1,
+        "step": 1
+      },
+      {
+        "label": "Amount of frames skipped. (makes a faster gif)",
+        "type": "number",
+        "section": "gif",
+        "name": "skip",
+        "min": 0,
+        "step": 1
       }
     ]
   }

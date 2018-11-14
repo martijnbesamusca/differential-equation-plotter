@@ -30,12 +30,16 @@
     </div>
 
     <div id="xymat" class="col s12">
+        <p>
+            Note that x and y are both allowed in the entries of the matrix.
+            We define \(\vec{x} = \begin{bmatrix}x \\ y\end{bmatrix} \).
+        </p>
         <span>\(A = \)</span>
         <div class="matrix">
-            <input title="Matrix 1 1" type="number" id="mat11" class="mat" required>
-            <input title="Matrix 1 2" type="number" id="mat12" class="mat" required>
-            <input title="Matrix 2 1" type="number" id="mat21" class="mat" required>
-            <input title="Matrix 2 2" type="number" id="mat22" class="mat" required>
+            <input title="Matrix 1 1" type="text" id="mat11" class="mat" required>
+            <input title="Matrix 1 2" type="text" id="mat12" class="mat" required>
+            <input title="Matrix 2 1" type="text" id="mat21" class="mat" required>
+            <input title="Matrix 2 2" type="text" id="mat22" class="mat" required>
         </div>
 
         <a class="waves-effect waves-light btn block" onclick="activeMatxy()">Apply</a>
