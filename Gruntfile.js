@@ -69,6 +69,23 @@ module.exports = function (grunt) {
             all: {
                 path: 'http://localhost:8080/index.html'
             }
+        },
+        cachebreaker: {
+            dev: {
+                options: {
+                    match: [{
+                        'particles.js':     'js/particles.js',
+                        'events.js':        'js/events.js',
+                        'main.js':          'js/main.js',
+                        'util.js':          'js/util.js',
+                        'style.css':        'css/style.css'
+                    }],
+                    replacement: 'md5'
+                },
+                files: {
+                    src: ['index.html']
+                }
+            }
         }
     });
 
@@ -78,7 +95,7 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('compile', ['nunjucks', 'prettify']);
+    grunt.registerTask('compile', ['nunjucks', 'prettify', 'cachebreaker']);
     grunt.registerTask('web', ['compile', 'express', 'open', 'watch']);
     grunt.registerTask('default', 'web')
 

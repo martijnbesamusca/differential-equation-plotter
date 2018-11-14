@@ -12,12 +12,11 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.2.3/math.min.js"></script>
     <script src="js/gif.js"></script>
-    <script src="js/util.js"></script>
+    <script src="js/util.js?rel=fe1fc5214c"></script>
     <script src="js/bootstrap-colorpicker.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="img/favicon.ico" />
-  </head>
+    <link rel="stylesheet" href="css/style.css?rel=e04110da35">
+    <link rel="shortcut icon" href="img/favicon.ico" /> </head>
   <body>
     <div class="container">
       <div class="section">
@@ -49,8 +48,7 @@
                 <a href="#dxdy">\(\dot{x},\ \dot{y}\)</a>
               </li>
               <li class="tab col s4">
-                <a href="#xymat">\( \dot{\vec{x}} = A \vec{x} \)
-                </a>
+                <a href="#xymat">\( \dot{\vec{x}} = A \vec{x} \)</a>
               </li>
               <li class="tab col s4">
                 <a class="active" href="#drdt">\(\dot{r},\ \dot{\theta}\)</a>
@@ -74,22 +72,17 @@
             <a class="waves-effect waves-light btn" onclick="activateDxDy()">Apply</a>
           </div>
           <div id="xymat" class="col s12">
-            <p>
-              Note that x and y are both allowed in the entries of the matrix. We define \(\vec{x} = \begin{bmatrix}x \\ y\end{bmatrix} \).
-            </p>
+            <p> Note that x and y are both allowed in the entries of the matrix. We define \(\vec{x} = \begin{bmatrix}x \\ y\end{bmatrix} \). </p>
             <div class="matrix">
               <span class="equation">\(A=\)</span>
               <input title="matrix entry [1,1]" type="text" id="mat11" required>
               <input title="matrix entry [1,2]" type="text" id="mat12" required>
               <input title="matrix entry [2,1]" type="text" id="mat21" required>
-              <input title="matrix entry [2,2]" type="text" id="mat22" required>
-            </div>
+              <input title="matrix entry [2,2]" type="text" id="mat22" required> </div>
             <a class="waves-effect waves-light btn block" onclick="activeMatxy()">Apply</a>
           </div>
           <div id="drdt" class="col s12">
-            <p>
-              Note that &theta; and t are both allowed in the formulas.
-            </p>
+            <p> Note that &theta; and t are both allowed in the formulas. </p>
             <div class="row">
               <div class="input-field col s12">
                 <i class="prefix">\(\dot{r}\)</i>
@@ -113,49 +106,38 @@
           <h4 class="col s12">Screen size</h4>
           <div class="col s6 input-field">
             <label for="screen.width">Resolution width</label>
-            <input id="screen.width" type="number" data-section="screen" data-name="width" data-thing="hey">
-          </div>
+            <input id="screen.width" type="number" data-section="screen" data-name="width" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="screen.height">Resolution height</label>
-            <input id="screen.height" type="number" data-section="screen" data-name="height" data-thing="hey">
-          </div>
+            <input id="screen.height" type="number" data-section="screen" data-name="height" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="screen.minX">Min x</label>
-            <input id="screen.minX" type="number" data-section="screen" data-name="minX" data-thing="hey">
-          </div>
+            <input id="screen.minX" type="number" data-section="screen" data-name="minX" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="screen.maxX">Max x</label>
-            <input id="screen.maxX" type="number" data-section="screen" data-name="maxX" data-thing="hey">
-          </div>
+            <input id="screen.maxX" type="number" data-section="screen" data-name="maxX" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="screen.minY">Min y</label>
-            <input id="screen.minY" type="number" data-section="screen" data-name="minY" data-thing="hey">
-          </div>
+            <input id="screen.minY" type="number" data-section="screen" data-name="minY" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="screen.maxY">Max y</label>
-            <input id="screen.maxY" type="number" data-section="screen" data-name="maxY" data-thing="hey">
-          </div>
+            <input id="screen.maxY" type="number" data-section="screen" data-name="maxY" data-thing="hey"> </div>
           <h4 class="col s12">Arrow style</h4>
           <div class="col s6 input-field">
             <label for="dot.step">Step size (smaller is preciser, but slower)</label>
-            <input id="dot.step" type="number" data-section="dot" data-name="step" min="0.0001" step="0.01" data-thing="hey">
-          </div>
+            <input id="dot.step" type="number" data-section="dot" data-name="step" min="0.0001" step="0.01" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="dot.density">Arrow density</label>
-            <input id="dot.density" type="number" data-section="dot" data-name="density" min="0.0001" step="0.01" data-thing="hey">
-          </div>
+            <input id="dot.density" type="number" data-section="dot" data-name="density" min="0.0001" step="0.01" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="dot.size">Arrow size</label>
-            <input id="dot.size" type="number" data-section="dot" data-name="size" min="0" step="0.1" data-thing="hey">
-          </div>
+            <input id="dot.size" type="number" data-section="dot" data-name="size" min="0" step="0.1" data-thing="hey"> </div>
           <div class="col s6">
             <label for="dot.color">Arrow color</label>
-            <input id="dot.color" type="color" value="#000000" style="color:#00FF44" data-section="dot" data-name="color" />
-          </div>
+            <input id="dot.color" type="color" value="#000000" style="color:#00FF44" data-section="dot" data-name="color" /> </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Randomize color
+              <label> Randomize color
                 <input type="checkbox" id="dot.color_random" data-section="dot" data-name="color_random">
                 <span class="lever"></span>
               </label>
@@ -163,12 +145,10 @@
           </div>
           <div class="col s6 input-field">
             <label for="dot.maxAge">Max arrow age (-1 for infinite, 0 for static arrows)</label>
-            <input id="dot.maxAge" type="number" data-section="dot" data-name="maxAge" data-thing="hey">
-          </div>
+            <input id="dot.maxAge" type="number" data-section="dot" data-name="maxAge" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Normalize speed
+              <label> Normalize speed
                 <input type="checkbox" id="dot.normalize" data-section="dot" data-name="normalize">
                 <span class="lever"></span>
               </label>
@@ -176,8 +156,7 @@
           </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Random max age
+              <label> Random max age
                 <input type="checkbox" id="dot.age_random" data-section="dot" data-name="age_random">
                 <span class="lever"></span>
               </label>
@@ -185,8 +164,7 @@
           </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Loop back if outside
+              <label> Loop back if outside
                 <input type="checkbox" id="dot.loop_back" data-section="dot" data-name="loop_back">
                 <span class="lever"></span>
               </label>
@@ -195,24 +173,19 @@
           <h4 class="col s12">Solution path style</h4>
           <div class="col s6 input-field">
             <label for="path.length">Path length</label>
-            <input id="path.length" type="number" data-section="path" data-name="length" min="0" step="1" data-thing="hey">
-          </div>
+            <input id="path.length" type="number" data-section="path" data-name="length" min="0" step="1" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="path.precision">Path precision boost</label>
-            <input id="path.precision" type="number" data-section="path" data-name="precision" min="0" step="1" data-thing="hey">
-          </div>
+            <input id="path.precision" type="number" data-section="path" data-name="precision" min="0" step="1" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="path.width">Path width</label>
-            <input id="path.width" type="number" data-section="path" data-name="width" min="0" step="0.1" data-thing="hey">
-          </div>
+            <input id="path.width" type="number" data-section="path" data-name="width" min="0" step="0.1" data-thing="hey"> </div>
           <div class="col s6">
             <label for="path.color">Path color</label>
-            <input id="path.color" type="color" value="#000000" style="color:#00FF44" data-section="path" data-name="color" />
-          </div>
+            <input id="path.color" type="color" value="#000000" style="color:#00FF44" data-section="path" data-name="color" /> </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Randomize color
+              <label> Randomize color
                 <input type="checkbox" id="path.color_random" data-section="path" data-name="color_random">
                 <span class="lever"></span>
               </label>
@@ -220,8 +193,7 @@
           </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Solution forwards
+              <label> Solution forwards
                 <input type="checkbox" id="path.forwards" data-section="path" data-name="forwards">
                 <span class="lever"></span>
               </label>
@@ -229,8 +201,7 @@
           </div>
           <div class="col s6 input-field">
             <div class="switch">
-              <label>
-                Solution backwards
+              <label> Solution backwards
                 <input type="checkbox" id="path.backwards" data-section="path" data-name="backwards">
                 <span class="lever"></span>
               </label>
@@ -239,12 +210,10 @@
           <h4 class="col s12">GIF</h4>
           <div class="col s6 input-field">
             <label for="gif.length">Number of frames recorded</label>
-            <input id="gif.length" type="number" data-section="gif" data-name="length" min="1" step="1" data-thing="hey">
-          </div>
+            <input id="gif.length" type="number" data-section="gif" data-name="length" min="1" step="1" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <label for="gif.skip">Amount of frames skipped. (makes a faster gif)</label>
-            <input id="gif.skip" type="number" data-section="gif" data-name="skip" min="0" step="1" data-thing="hey">
-          </div>
+            <input id="gif.skip" type="number" data-section="gif" data-name="skip" min="0" step="1" data-thing="hey"> </div>
         </div>
       </div>
       <div class="section">
@@ -260,15 +229,13 @@
           <div class="col s12 center-align">
             <a href="https://github.com/martinusandreas99/differential-equation-plotter/issues">Issue's or requests?</a>
           </div>
-          <div class="col s12 center-align">
-            By Martijn Besamusca.
-          </div>
+          <div class="col s12 center-align"> By Martijn Besamusca. </div>
         </div>
       </div>
     </footer>
     <script src="js/pixi.min.js"></script>
-    <script src="js/particles.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/events.js"></script>
+    <script src="js/particles.js?rel=7e12db3295"></script>
+    <script src="js/main.js?rel=0cb334c7cb"></script>
+    <script src="js/events.js?rel=eae70cde00"></script>
   </body>
 </html>

@@ -16,6 +16,7 @@
   "private": true,
   "devDependencies": {
     "grunt": "~1.0.3",
+    "grunt-cache-breaker": "^2.0.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-express": "^1.4.1",
     "grunt-nunjucks-2-html": "^2.2.0",
