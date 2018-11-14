@@ -155,7 +155,7 @@
     ],
     "GIF":[
       {
-        "label": "Number of frames recorded)",
+        "label": "Number of frames recorded",
         "type": "number",
         "section": "gif",
         "name": "length",

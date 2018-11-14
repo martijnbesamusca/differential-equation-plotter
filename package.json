@@ -1,0 +1,27 @@
+{
+  "name": "differential_equation_plotter",
+  "version": "1.1.0",
+  "author": "Martijn Besamusca",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/martinusandreas99/differential-equation-plotter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/martinusandreas99/differential-equation-plotter/issues"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "grunt": "~1.0.3",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-express": "^1.4.1",
+    "grunt-nunjucks-2-html": "^2.2.0",
+    "grunt-open": "^0.2.3",
+    "grunt-parallel": "^0.5.1",
+    "grunt-prettify": "^0.4.0",
+    "load-grunt-tasks": "^4.0.0"
+  }
+}

@@ -355,7 +355,7 @@ class DiffGrid {
     resetSolutions(){
         this.solutions.clear();
         this.solutions.lineStyle(this.options.path.width, this.options.path.color);
-
+        this.resetGrid();
     }
 
     setDxDy(dx, dy) {

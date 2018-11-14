@@ -39,7 +39,7 @@ document.querySelectorAll('input').forEach(elm=> {
     const event = new Event('change');
     if (val !== null) {
         if (elm.type === 'checkbox') {
-            elm.checked = val
+            elm.checked = val === 'true';
         } else {
             elm.value = val;
         }
