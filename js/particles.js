@@ -139,7 +139,7 @@ class DiffGrid {
         this.background.clear();
         this.backgroundText.removeChildren();
 
-        for(let i = this.options.screen.minX; i <= this.options.screen.maxX; i++){
+        for(let i = Math.floor(this.options.screen.minX); i <= Math.ceil(this.options.screen.maxX); i++){
             let x = this.gridToScreenX(i);
             if(i===0) {
                 this.background.lineStyle(2, 0x333333);
@@ -160,7 +160,7 @@ class DiffGrid {
             // this.background.text(x,this.options.height/2, ''+i)
         }
 
-        for(let i = this.options.screen.minY; i <= this.options.screen.maxY; i++){
+        for(let i = Math.floor(this.options.screen.minY); i <= Math.ceil(this.options.screen.maxY); i++){
             let y = this.gridToScreenY(i);
             if(i===0) {
                 this.background.lineStyle(2, 0x333333);
