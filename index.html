@@ -122,6 +122,12 @@
           <div class="col s6 input-field">
             <label for="screen.maxY">Max y</label>
             <input id="screen.maxY" type="number" data-section="screen" data-name="maxY" data-thing="hey"> </div>
+          <div class="col s6 input-field">
+            <label for="screen.gridResX">Resolution grid x</label>
+            <input id="screen.gridResX" type="number" data-section="screen" data-name="gridResX" data-thing="hey"> </div>
+          <div class="col s6 input-field">
+            <label for="screen.gridResY">Resolution grid y</label>
+            <input id="screen.gridResY" type="number" data-section="screen" data-name="gridResY" data-thing="hey"> </div>
           <h4 class="col s12">Arrow style</h4>
           <div class="col s6 input-field">
             <label for="dot.step">Step size (smaller is preciser, but slower)</label>
@@ -144,8 +150,8 @@
             </div>
           </div>
           <div class="col s6 input-field">
-            <label for="dot.maxAge">Max arrow age (-1 for infinite, 0 for static arrows)</label>
-            <input id="dot.maxAge" type="number" data-section="dot" data-name="maxAge" data-thing="hey"> </div>
+            <label for="dot.maxAge">Average age (-1 for no respawn, 0 for static arrows)</label>
+            <input id="dot.maxAge" type="number" data-section="dot" data-name="maxAge" min="0" data-thing="hey"> </div>
           <div class="col s6 input-field">
             <div class="switch">
               <label> Normalize speed
@@ -234,7 +240,7 @@
       </div>
     </footer>
     <script src="js/pixi.min.js"></script>
-    <script src="js/particles.js?rel=18d4833ed5"></script>
+    <script src="js/particles.js?rel=45a979f63a"></script>
     <script src="js/main.js?rel=0cb334c7cb"></script>
     <script src="js/events.js?rel=adcc6f5eb5"></script>
   </body>

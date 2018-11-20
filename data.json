@@ -38,6 +38,18 @@
         "type": "number",
         "section": "screen",
         "name": "maxY"
+      },
+      {
+        "label": "Resolution grid x",
+        "type": "number",
+        "section": "screen",
+        "name": "gridResX"
+      },
+      {
+        "label": "Resolution grid y",
+        "type": "number",
+        "section": "screen",
+        "name": "gridResY"
       }
     ],
 
@@ -79,10 +91,11 @@
         "name": "color_random"
       },
       {
-        "label": "Max arrow age (-1 for infinite, 0 for static arrows)",
+        "label": "Average age (-1 for no respawn, 0 for static arrows)",
         "type": "number",
         "section": "dot",
-        "name": "maxAge"
+        "name": "maxAge",
+        "min": 0
       },
       {
         "label": "Normalize speed",

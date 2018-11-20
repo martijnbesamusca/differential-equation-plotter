@@ -72,6 +72,8 @@ class DiffGrid {
                 maxX: 4,
                 minY: -3,
                 maxY: 3,
+                gridResX: 1,
+                gridResY: 1,
             },
             dot: {
                 step: 0.01,
@@ -139,7 +141,10 @@ class DiffGrid {
         this.background.clear();
         this.backgroundText.removeChildren();
 
-        for(let i = Math.floor(this.options.screen.minX); i <= Math.ceil(this.options.screen.maxX); i++){
+        let stepX = this.options.screen.gridResX;
+        let stepY = this.options.screen.gridResY;
+
+        for(let i = Math.floor(this.options.screen.minX/stepX)*stepX; i <= Math.ceil(this.options.screen.maxX/stepX)*stepX; i+=stepX){
             let x = this.gridToScreenX(i);
             if(i===0) {
                 this.background.lineStyle(2, 0x333333);
@@ -160,7 +165,7 @@ class DiffGrid {
             // this.background.text(x,this.options.height/2, ''+i)
         }
 
-        for(let i = Math.floor(this.options.screen.minY); i <= Math.ceil(this.options.screen.maxY); i++){
+        for(let i = Math.floor(this.options.screen.minY/stepY)*stepY; i <= Math.ceil(this.options.screen.maxY/stepY)*stepY; i+=stepY){
             let y = this.gridToScreenY(i);
             if(i===0) {
                 this.background.lineStyle(2, 0x333333);
@@ -280,12 +285,16 @@ class DiffGrid {
             dxScreen -= dot.position.x;
             dyScreen -= dot.position.y;
 
+            dot.age += 1;
+
             const isOutside = dot.grid.x > this.options.screen.maxX  || dot.grid.x < this.options.screen.minX ||
                               dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY;
-            if ((isOutside && this.options.dot.loop_back) ||
-                (this.options.dot.maxAge >= 0 && dot.age > this.options.dot.maxAge)) {
-                dot.grid.x = dot.start.x;
-                dot.grid.y = dot.start.y;
+            const isOld = this.options.dot.maxAge === 0 ||
+                this.options.dot.maxAge >= 0 && Math.random() <= 1/this.options.dot.maxAge;
+
+            if ((isOutside && this.options.dot.loop_back) || isOld) {
+                dot.grid.x = math.random(this.options.screen.minX, this.options.screen.maxX);
+                dot.grid.y = math.random(this.options.screen.minY, this.options.screen.maxY);
                 dot.age = 0;
                 dot.position.x = this.gridToScreenX(dot.grid.x);
                 dot.position.y = this.gridToScreenY(dot.grid.y);
