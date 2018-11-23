@@ -258,6 +258,22 @@ class DiffGrid {
             return;
         }
 
+        this.move();
+
+        this.tick++;
+        this.renderer.render(this.stage);
+        if(this.recording){
+            if(this.frame_count> this.options.gif.length){
+                this.endGif();
+            }else if(this.frame_count > 0 && this.frame_count % (this.options.gif.skip+1) === 0)
+                this.gif.addFrame(scene.renderer.view , {delay:0.03, copy:true});
+            this.frame_count += 1;
+        }
+
+        requestAnimationFrame(this.drawBinded);
+    }
+
+    move(){
         for (let i = 0; i < this.dots.length; i++) {
             const dot = this.dots[i];
 
@@ -288,33 +304,32 @@ class DiffGrid {
             dot.age += 1;
 
             const isOutside = dot.grid.x > this.options.screen.maxX  || dot.grid.x < this.options.screen.minX ||
-                              dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY;
+                dot.grid.y > this.options.screen.maxY || dot.grid.y < this.options.screen.minY;
             const isOld = this.options.dot.maxAge === 0 ||
                 this.options.dot.maxAge >= 0 && Math.random() <= 1/this.options.dot.maxAge;
 
-            if ((isOutside && this.options.dot.loop_back) || isOld) {
-                dot.grid.x = math.random(this.options.screen.minX, this.options.screen.maxX);
-                dot.grid.y = math.random(this.options.screen.minY, this.options.screen.maxY);
-                dot.age = 0;
-                dot.position.x = this.gridToScreenX(dot.grid.x);
-                dot.position.y = this.gridToScreenY(dot.grid.y);
-            }
 
             dot.rotation = Math.atan2(-dyScreen,-dxScreen);
-        }
 
-        this.tick++;
-        this.renderer.render(this.stage);
-        if(this.recording){
-            if(this.frame_count> this.options.gif.length){
-                this.endGif();
-            }else if(this.frame_count > 0 && this.frame_count % (this.options.gif.skip+1) === 0)
-                this.gif.addFrame(scene.renderer.view , {delay:0.03, copy:true});
-            this.frame_count += 1;
+            if ((isOutside && this.options.dot.loop_back) || isOld){
+                this.resetDot(dot);
+            }
         }
-
-        requestAnimationFrame(this.drawBinded);
     }
+
+    resetDot(dot){
+        const x = this.options.dot.maxAge === 0 ? dot.start.x : math.random(this.options.screen.minX, this.options.screen.maxX);
+        const y = this.options.dot.maxAge === 0 ? dot.start.y : math.random(this.options.screen.minY, this.options.screen.maxY);
+
+        dot.grid.x = x;
+        dot.grid.y = y;
+        dot.age = 0;
+        dot.position.x = this.gridToScreenX(dot.grid.x);
+        dot.position.y = this.gridToScreenY(dot.grid.y);
+        dot.rotation = Math.atan2(-this.dy(x,y), this.dx(x,y));
+
+    }
+
 
     static rescale(val, fromMin, fromMax, toMin, toMax) {
         return (val - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
@@ -430,9 +445,6 @@ class DiffGrid {
                 this.options.dot[id] = parseInt(elm.value.replace('#', '0x'));
             } else if (id === 'color_random' || id === 'normalize' || id === 'loop_back') {
                 this.options.dot[id] = elm.checked;
-            }else if(id === 'density') {
-                this.options.dot[id] = parseFloat(elm.value);
-                this.resetGrid();
             }else if (id === 'age_random') {
                 this.options.dot[id] = elm.checked;
                 if (this.options.dot.maxAge>=0){
@@ -441,6 +453,7 @@ class DiffGrid {
                     })
                 }
             } else if (id === 'density') {
+                const dens = parseFloat(elm.value);
                 this.options.dot[id] = parseFloat(elm.value);
                 this.resetGrid();
             } else {
