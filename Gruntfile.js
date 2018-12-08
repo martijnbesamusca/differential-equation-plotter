@@ -25,7 +25,7 @@ module.exports = function (grunt) {
                 }
             },
             njk: {
-                files: ['templates/**/*.njk'],
+                files: ['templates/**/*.njk', 'data.json'],
                 tasks: ['compile'],
                 options: {
                     livereload: true

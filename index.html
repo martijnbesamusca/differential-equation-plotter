@@ -15,7 +15,7 @@
     <script src="js/util.js?rel=fe1fc5214c"></script>
     <script src="js/bootstrap-colorpicker.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap-colorpicker.min.css">
-    <link rel="stylesheet" href="css/style.css?rel=e04110da35">
+    <link rel="stylesheet" href="css/style.css?rel=e94dd2907f">
     <link rel="shortcut icon" href="img/favicon.ico" /> </head>
   <body>
     <div class="container">
@@ -23,7 +23,9 @@
         <h1 class="center-align">Differential Equations</h1>
       </div>
       <div class="section">
-        <div id="canvas" class="center-align"></div>
+        <div id="canvas" class="center-align">
+          <i onclick="scene.fullscreen()" class="material-icons">fullscreen</i>
+        </div>
       </div>
       <div class="section center-align">
         <div class="row">
@@ -213,6 +215,32 @@
               </label>
             </div>
           </div>
+          <h4 class="col s12">Nullclines</h4>
+          <div class="col s6 input-field">
+            <div class="switch">
+              <label> Enable x nullcline (\(\dot{x}=0\))
+                <input type="checkbox" id="nullclines.enableX" data-section="nullclines" data-name="enableX">
+                <span class="lever"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col s6 input-field">
+            <div class="switch">
+              <label> Enable y nullcline (\(\dot{y}=0\))
+                <input type="checkbox" id="nullclines.enableY" data-section="nullclines" data-name="enableY">
+                <span class="lever"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col s6">
+            <label for="nullclines.colorX">Color x nullcline</label>
+            <input id="nullclines.colorX" type="color" value="#000000" style="color:#00FF44" data-section="nullclines" data-name="colorX" /> </div>
+          <div class="col s6">
+            <label for="nullclines.colorY">Color y nullcline</label>
+            <input id="nullclines.colorY" type="color" value="#000000" style="color:#00FF44" data-section="nullclines" data-name="colorY" /> </div>
+          <div class="col s6 input-field">
+            <label for="nullclines.tolerance">Tolerance</label>
+            <input id="nullclines.tolerance" type="number" data-section="nullclines" data-name="tolerance" data-thing="hey"> </div>
           <h4 class="col s12">GIF</h4>
           <div class="col s6 input-field">
             <label for="gif.length">Number of frames recorded</label>
@@ -240,8 +268,8 @@
       </div>
     </footer>
     <script src="js/pixi.min.js"></script>
-    <script src="js/particles.js?rel=f224993ca0"></script>
+    <script src="js/particles.js?rel=341cee48c9"></script>
     <script src="js/main.js?rel=0cb334c7cb"></script>
-    <script src="js/events.js?rel=adcc6f5eb5"></script>
+    <script src="js/events.js?rel=1fa6d0bbae"></script>
   </body>
 </html>

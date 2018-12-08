@@ -10,7 +10,7 @@ document.querySelector('#canvas canvas').addEventListener('click',
         let y = event.clientY - rect.top;
         x = DiffGrid.rescale(x, 0, e.target.clientWidth, scene.options.screen.minX, scene.options.screen.maxX);
         y = DiffGrid.rescale(y, 0, e.target.clientHeight, scene.options.screen.maxY, scene.options.screen.minY);
-        scene.addSolution(x,y);
+        scene.addSolution(x, y);
     }
 );
 document.querySelector('#canvas canvas').addEventListener('touch',
@@ -59,3 +59,51 @@ document.querySelectorAll('input').forEach(elm=> {
         elm.dispatchEvent(event);
     }
 });
+
+(()=>{
+    let canvasSmall = false;
+    let last_known_scroll_position = 0;
+    const canvas = document.querySelector('canvas');
+    let top = canvas.parentElement.getBoundingClientRect().top + window.scrollY;
+    console.log(top);
+    let ticking = false;
+
+    canvas.parentElement.classList.remove('small_canvas');
+
+    let check_canvas = () => {
+        if(last_known_scroll_position > top){
+            // console.log('past',last_known_scroll_position, top);
+            if(!canvasSmall) {
+                let rect = canvas.getBoundingClientRect();
+                canvas.parentElement.display = 'block';
+                canvas.parentElement.style.height = rect.bottom - rect.top + 'px';
+                // canvas.parentElement.style.width = rect.right - rect.left  + 'px';
+                canvas.parentElement.classList.add('small_canvas');
+                canvasSmall = true;
+            }
+        }else{
+            // console.log('on',last_known_scroll_position, top)
+            if(canvasSmall) {
+                delete canvas.parentElement.style.height;
+                delete canvas.parentElement.style.width;
+                canvas.parentElement.classList.remove('small_canvas');
+                canvasSmall = false;
+            }
+        }
+    };
+
+    window.addEventListener('scroll', e => {
+        last_known_scroll_position = window.scrollY;
+
+        if (!ticking) {
+
+            window.requestAnimationFrame(function() {
+                check_canvas();
+                ticking = false;
+            });
+
+            ticking = true;
+
+        }
+    });
+})();

@@ -8,8 +8,38 @@ footer {
     height: auto;
 }
 
+#canvas i{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 3em;
+    color: black;
+    z-index: 11;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    text-shadow: -1px 0 0 white, 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white;
+    cursor: pointer;
+}
+
 #canvas{
     width: 100%;
+    position: relative;
+}
+
+#canvas.small_canvas canvas{
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    max-width: 50% !important;
+    max-height: 30% !important;
+    z-index: 10;
+}
+
+#canvas.small_canvas i{
+    position: fixed;
+    bottom: 0.5em;
+    right: 0.5em;
 }
 
 .section{
@@ -111,7 +141,9 @@ input[type='color']::after{
     content: attr(value);
     background-color: attr(value color);
     font-weight: bold;
-    text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
+    text-shadow: -1px 0 0 black, 0 1px 0 black, 1px 0 0 black, 0 -1px 0 black;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .error{

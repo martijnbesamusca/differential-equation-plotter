@@ -10,12 +10,18 @@ class DiffGrid {
         this.makeRenderer();
         this.makeGrid();
 
+
         this.stage.addChild(this.background);
         this.stage.addChild(this.backgroundText);
         this.stage.addChild(this.sprites);
         this.stage.addChild(this.solutions);
+        this.stage.addChild(this.nullclines);
 
         this.drawBinded = this.draw.bind(this);
+    }
+
+    fullscreen(){
+        this.options.parentElm.querySelector('canvas').requestFullscreen();
     }
 
     makeGif(button) {
@@ -96,6 +102,13 @@ class DiffGrid {
                 backwards: true,
 
             },
+            nullclines: {
+                enableX: false,
+                enableY: false,
+                colorX: 0x0044FF,
+                colorY: 0xEE22FF,
+                tolerance: 3
+            },
             gif: {
                 length: 300,
                 skip: 1
@@ -133,6 +146,8 @@ class DiffGrid {
 
         this.background = new PIXI.Graphics();
         this.backgroundText = new PIXI.Container();
+
+        this.nullclines = new PIXI.Graphics();
 
         this.updateBackground();
     }
@@ -199,6 +214,23 @@ class DiffGrid {
             y: (this.options.screen.maxY - this.options.screen.minY) / (this.options.screen.height * this.options.dot.density)
         };
 
+        const amount = Math.round(((this.options.screen.maxY - this.options.screen.minY- step.y) / step.y) *
+            ((this.options.screen.maxX - this.options.screen.minX - step.x) / step.x));
+
+        if (amount > 10000) {
+            if(confirm('You are about to spawn more than 10000 arrows.\n Want to reset the arrow density?')){
+                localStorage.removeItem('dot.density');
+                localStorage.removeItem('screen.minX');
+                localStorage.removeItem('screen.minY');
+                localStorage.removeItem('screen.maxX');
+                localStorage.removeItem('screen.maxY');
+                localStorage.removeItem('screen.width');
+                localStorage.removeItem('screen.height');
+                debugger;
+                location.reload();
+            }
+        }
+
         for(let y = this.options.screen.minY+step.y; y < this.options.screen.maxY; y += step.y) {
             for (let x = this.options.screen.minX+step.x; x < this.options.screen.maxX; x += step.x) {
                 const dot = new PIXI.Sprite.fromImage('sprites/arrow16.png');
@@ -223,6 +255,7 @@ class DiffGrid {
                 this.sprites.addChild(dot);
             }
         }
+        console.log(amount, this.dots.length);
     }
 
     start() {
@@ -382,16 +415,79 @@ class DiffGrid {
         this.resetGrid();
     }
 
+    //comment from Jim: not enough comments.
+    _drawNullcline(fn, col){
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = this.options.screen.width;
+        canvas.height = this.options.screen.height;
+        const data = new Uint8ClampedArray(this.options.screen.height * this.options.screen.width * 4);
+
+
+        const r = (col & 0xff0000) >> 16;
+        const g = (col & 0x00ff00) >> 8;
+        const b = (col & 0x0000ff);
+
+        // console.log(r,g,b)
+
+        const dx = (this.options.screen.maxX - this.options.screen.minX) / this.options.screen.width;
+        const dy = (this.options.screen.maxY - this.options.screen.minY) / this.options.screen.height;
+        const epsilon = Number.EPSILON * this.options.nullclines.tolerance;
+        console.log(epsilon)
+        const is0 = (x)=> Math.abs(x) <= epsilon;
+        let i = 0;
+        for(let y = this.options.screen.maxY; y > this.options.screen.minY-dy; y-=dy){
+            for(let x = this.options.screen.minX; x < this.options.screen.maxX - dx; x+=dx){
+                // debugger;
+                let vals = [fn(x,y), fn(x+dx,y), fn(x,y+dy), fn(x+dx,y+dy)];
+                let sign = Math.sign(vals[0]);
+
+                if(is0(vals[0]) || is0(vals[1]) || is0(vals[2]) || is0(vals[3]) ||
+                    Math.sign(vals[1]) !== sign || Math.sign(vals[2]) !== sign || Math.sign(vals[3]) !== sign){
+                    // debugger;
+                    data[i] = r;
+                    data[i+1] = g;
+                    data[i+2] = b;
+                    data[i+3] = 255;
+                }
+                i += 4;
+            }
+        }
+
+        const imgdata = new ImageData(data, this.options.screen.width, this.options.screen.height);
+        ctx.putImageData(imgdata, 0, 0);
+
+        return PIXI.Texture.fromCanvas(canvas);
+    }
+
+
+
+    drawNullcline() {
+        this.nullclines.removeChildren();
+        const textureX = this._drawNullcline(this.dx, this.options.nullclines.colorX);
+        const textureY = this._drawNullcline(this.dy, this.options.nullclines.colorY);
+
+
+        this.nullclineX = new PIXI.Sprite(textureX);
+        this.nullclineY = new PIXI.Sprite(textureY);
+        this.nullclineX.visible = this.options.nullclines.enableX;
+        this.nullclineY.visible = this.options.nullclines.enableY;
+        this.nullclines.addChild(this.nullclineX);
+        this.nullclines.addChild(this.nullclineY);
+    }
+
+    resetNullcline() {
+        if(this.options.nullclines.enableX || this.options.nullclines.enableY) {
+            this.drawNullcline();
+        }
+    }
+
     setDxDy(dx, dy) {
         this.dx = dx;
         this.dy = dy;
         this.resetSolutions();
-    }
 
-    setMatrix(mat){
-        this.dx = (x, y) => mat[0][0] * x + mat[0][1] * y;
-        this.dy = (x, y) => mat[1][0] * x + mat[1][1] * y;
-        this.resetSolutions();
+        this.resetNullcline();
     }
 
     setPolar(dr, dtheta){
@@ -408,7 +504,8 @@ class DiffGrid {
             const dt_val = dtheta(r,t);
             return Math.sin(t)*dr_val + Math.cos(t)/r * dt_val;
         };
-        this.resetSolutions();
+        this.resetSolutions()
+        this.resetNullcline();
     }
 
     getRandomColor(hex){
@@ -438,6 +535,8 @@ class DiffGrid {
             this.updateBackground();
             this.resetSolutions();
             this.resetGrid();
+            this.resetNullcline();
+
         } else if(section === 'dot') {
             if(id === 'size' || id === 'step'){
                 this.options.dot[id] = parseFloat(elm.value);
@@ -453,7 +552,6 @@ class DiffGrid {
                     })
                 }
             } else if (id === 'density') {
-                const dens = parseFloat(elm.value);
                 this.options.dot[id] = parseFloat(elm.value);
                 this.resetGrid();
             } else {
@@ -478,6 +576,25 @@ class DiffGrid {
             }
         } else if(section === 'gif'){
             this.options.gif[id] = parseInt(elm.value);
+        } else if(section === 'nullclines'){
+            if(id === 'colorX' || id === 'colorY'){
+                this.options.nullclines[id] = parseInt(elm.value.replace('#', '0x'));
+                this.resetNullcline();
+            } else if(id === 'enableX' || id === 'enableY') {
+                this.options.nullclines[id] = elm.checked;
+                if(this.nullclines.children.length === 0){
+                    this.resetNullcline();
+                }
+                if(this.nullclineX !== undefined)
+                    this.nullclineX.visible = this.options.nullclines.enableX;
+                if(this.nullclineY !== undefined)
+                    this.nullclineY.visible = this.options.nullclines.enableY;
+            } else if(id === 'tolerance') {
+                this.options.nullclines[id] = parseFloat(elm.value);
+                this.resetNullcline();
+            } else {
+                Logger.error('Unknown id ', id);
+            }
         }
     }
 }

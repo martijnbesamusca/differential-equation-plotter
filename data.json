@@ -166,6 +166,38 @@
         "name": "backwards"
       }
     ],
+    "Nullclines": [
+      {
+        "label": "Enable x nullcline (\\(\\dot{x}=0\\))",
+        "type": "switch",
+        "section": "nullclines",
+        "name": "enableX"
+      },
+      {
+        "label": "Enable y nullcline (\\(\\dot{y}=0\\))",
+        "type": "switch",
+        "section": "nullclines",
+        "name": "enableY"
+      },
+      {
+        "label": "Color x nullcline",
+        "type": "color",
+        "section": "nullclines",
+        "name": "colorX"
+      },
+      {
+        "label": "Color y nullcline",
+        "type": "color",
+        "section": "nullclines",
+        "name": "colorY"
+      },
+      {
+        "label": "Tolerance",
+        "type": "number",
+        "section": "nullclines",
+        "name": "tolerance"
+      }
+    ],
     "GIF":[
       {
         "label": "Number of frames recorded",
