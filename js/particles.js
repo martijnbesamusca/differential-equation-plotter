@@ -69,6 +69,14 @@ class DiffGrid {
         return DiffGrid.rescale(y, this.options.screen.minY, this.options.screen.maxY, this.options.screen.height, 0);
     }
 
+    screenToGridX(x){
+        return DiffGrid.rescale(x, 0, this.options.screen.width, this.options.screen.minX, this.options.screen.maxX);
+    }
+
+    screenToGridY(y){
+        return DiffGrid.rescale(y, this.options.screen.height, 0, this.options.screen.minY, this.options.screen.maxY);
+    }
+
     setOptions(options){
         const defaultOptions = {
             screen: {
@@ -433,12 +441,12 @@ class DiffGrid {
         const dx = (this.options.screen.maxX - this.options.screen.minX) / this.options.screen.width;
         const dy = (this.options.screen.maxY - this.options.screen.minY) / this.options.screen.height;
         const epsilon = Number.EPSILON * 2**this.options.nullclines.tolerance;
-        console.log(epsilon)
         const is0 = (x)=> Math.abs(x) <= epsilon;
         let i = 0;
-        for(let y = this.options.screen.maxY; y > this.options.screen.minY-dy; y-=dy){
-            for(let x = this.options.screen.minX; x < this.options.screen.maxX - dx; x+=dx){
-                // debugger;
+        for(let py = 0; py < this.options.screen.height; py++){
+            let y = this.screenToGridY(py);
+            for(let px = 0; px < this.options.screen.width; px++){
+                let x = this.screenToGridX(px);
                 let vals = [fn(x,y), fn(x+dx,y), fn(x,y+dy), fn(x+dx,y+dy)];
                 let sign = Math.sign(vals[0]);
 
