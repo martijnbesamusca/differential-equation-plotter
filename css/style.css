@@ -20,6 +20,12 @@ footer {
     line-height: 1em;
     text-shadow: -1px 0 0 white, 0 1px 0 white, 1px 0 0 white, 0 -1px 0 white;
     cursor: pointer;
+
+
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
 }
 
 #canvas{
