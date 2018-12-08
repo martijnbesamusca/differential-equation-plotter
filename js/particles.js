@@ -432,7 +432,7 @@ class DiffGrid {
 
         const dx = (this.options.screen.maxX - this.options.screen.minX) / this.options.screen.width;
         const dy = (this.options.screen.maxY - this.options.screen.minY) / this.options.screen.height;
-        const epsilon = Number.EPSILON * this.options.nullclines.tolerance;
+        const epsilon = Number.EPSILON * 2**this.options.nullclines.tolerance;
         console.log(epsilon)
         const is0 = (x)=> Math.abs(x) <= epsilon;
         let i = 0;
