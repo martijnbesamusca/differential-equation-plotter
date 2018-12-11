@@ -64,7 +64,8 @@ document.querySelectorAll('input').forEach(elm=> {
     let canvasSmall = false;
     let last_known_scroll_position = 0;
     const canvas = document.querySelector('canvas');
-    let top = canvas.parentElement.getBoundingClientRect().top + window.scrollY;
+    const rect = canvas.parentElement.getBoundingClientRect();
+    let top = (rect.bottom +rect.top)/2 + window.scrollY;
     console.log(top);
     let ticking = false;
 
