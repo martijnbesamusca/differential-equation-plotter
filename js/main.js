@@ -1,9 +1,55 @@
 function init(){
     M.Tabs.init(document.getElementsByClassName('tabs')[0]);
 
-    window.scene = new DiffGrid();
-    scene.setPolar((r,t)=>r*(r-1)*(r-2), (r,t)=> 1);
+    const options = loadSavedOptions();
+
+    window.scene = new DiffGrid(options);
+    loadSavedInput();
+
+    activateDrDt();
     scene.start();
+}
+
+function loadSavedOptions(){
+    const optionsString = localStorage.getItem('options');
+    if(optionsString === null){
+        localStorage.setItem('options', JSON.stringify({}));
+        return {};
+    }
+
+    return JSON.parse(optionsString);
+}
+
+function loadSavedInput(){
+    document.querySelectorAll('input').forEach(elm=> {
+        let val = localStorage.getItem(elm.id);
+        if(val === null && elm.dataset.section) {
+            val = scene.options[elm.dataset.section][elm.dataset.name];
+            if(elm.type === 'color') {
+                val = '#' + val.toString(16).padStart(6, '0');
+            }
+            if(elm.type === 'checkbox') {
+                val = val.toString();
+            }
+        }
+
+        // const event = new Event('change');
+        if (val !== null) {
+            if (elm.type === 'checkbox') {
+                elm.checked = val === 'true';
+            } else if(elm.type === 'color'){
+                elm.setAttribute('value', val);
+                elm.style.color = val;
+            }else {
+                elm.value = val;
+            }
+        }
+    });
+
+}
+
+function initUI(){
+
 }
 
 function activeMatxy() {
@@ -45,6 +91,7 @@ function activeMatxy() {
     const dx_func = (x,y) => dx.eval({x:x, y:y});
     const dy_func = (x,y) => dy.eval({x:x, y:y});
 
+    scene.updateWorkerSettings('dxdy', {x:dx_text, y:dy_text});
     scene.setDxDy(dx_func, dy_func);
 }
 function activateDrDt(){
@@ -78,6 +125,7 @@ function activateDrDt(){
     const dr_func = (r,t) => dr.eval({r:r, θ:t, t:t});
     const dt_func = (r,t) => dt.eval({r:r, θ:t, t:t});
 
+    scene.updateWorkerSettings('drdt', {r:dr_text, t:dt_text});
     scene.setPolar(dr_func, dt_func)
 }
 
@@ -108,10 +156,13 @@ function activateDxDy(){
     }
 
     Logger.clear();
+    console.log(dx);
+
 
     const dx_func = (x,y) => dx.eval({x:x, y:y});
     const dy_func = (x,y) => dy.eval({x:x, y:y});
 
+    scene.updateWorkerSettings('dxdy', {x:dx_text, y:dy_text});
     scene.setDxDy(dx_func, dy_func);
 }
 

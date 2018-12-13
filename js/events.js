@@ -37,27 +37,6 @@ document.querySelectorAll('input').forEach(elm=> {
             localStorage.setItem(e.target.id, e.target.value)
         }
     });
-
-    let val = localStorage.getItem(elm.id);
-    if(val === null && elm.dataset.section) {
-        val = scene.options[elm.dataset.section][elm.dataset.name];
-        if(elm.type === 'color') {
-            val = '#' + val.toString(16).padStart(6, '0');
-        }
-        if(elm.type === 'checkbox') {
-            val = val.toString();
-        }
-    }
-
-    const event = new Event('change');
-    if (val !== null) {
-        if (elm.type === 'checkbox') {
-            elm.checked = val === 'true';
-        } else {
-            elm.value = val;
-        }
-        elm.dispatchEvent(event);
-    }
 });
 
 (()=>{
@@ -85,8 +64,8 @@ document.querySelectorAll('input').forEach(elm=> {
         }else{
             // console.log('on',last_known_scroll_position, top)
             if(canvasSmall) {
-                delete canvas.parentElement.style.height;
-                delete canvas.parentElement.style.width;
+                canvas.parentElement.style.height = 'auto';
+                // delete canvas.parentElement.style.width;
                 canvas.parentElement.classList.remove('small_canvas');
                 canvasSmall = false;
             }

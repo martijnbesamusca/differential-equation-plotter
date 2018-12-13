@@ -9,7 +9,14 @@ class DiffGrid {
         this.setOptions(options);
         this.makeRenderer();
         this.makeGrid();
+        this.workerNullcline = new Worker('js/particles.worker.js');
+        this.workerNullcline.onmessage = this._drawNullcline;
+        this.workerSolution = new Worker('js/particles.worker.js');
+        this.workerSolution.onmessage = this._addSolution;
+        this.workers= [this.workerNullcline, this.workerSolution];
 
+        this.initSettingsWorkers();
+        // this.worker.onmessage = this._drawNullcline;
 
         this.stage.addChild(this.background);
         this.stage.addChild(this.backgroundText);
@@ -20,12 +27,20 @@ class DiffGrid {
         this.drawBinded = this.draw.bind(this);
     }
 
+    initSettingsWorkers(){
+        const settings = ['height', 'width', 'minX', 'minY', 'maxX', 'maxY']
+        for(let setting of settings){
+            this.updateWorkerSettings(setting, this.options.screen[setting]);
+        }
+
+    }
+
     fullscreen(){
         this.options.parentElm.querySelector('canvas').requestFullscreen();
     }
 
     makeGif(button) {
-        console.log(button);
+        // console.log(button);
         this.recording = true;
         this.record_button = button;
         this.record_button.textContent = 'Recording...';
@@ -123,7 +138,8 @@ class DiffGrid {
             },
             parentElm: document.getElementById('canvas'),
         };
-        this.options = Object.assign(defaultOptions, options);
+
+        this.options = mergeDeep(defaultOptions, options);
 
         this.backgroundTextStyle = {
             fill: 0x333333,
@@ -131,8 +147,18 @@ class DiffGrid {
         };
     }
 
+    updateWorkerSettings(key, value){
+        for(let worker of this.workers){
+            worker.postMessage({
+                cmd: 'settings',
+                key: key,
+                value: value
+            })
+        }
+    }
+
     makeRenderer() {
-        this.renderer = PIXI.autoDetectRenderer(800, 600, {transparent: false,
+        this.renderer = PIXI.autoDetectRenderer(this.options.screen.width, this.options.screen.height, {transparent: false,
             autoResize: false,
             backgroundColor: 0xffffff});
         this.stage = new PIXI.Container();
@@ -263,7 +289,7 @@ class DiffGrid {
                 this.sprites.addChild(dot);
             }
         }
-        console.log(amount, this.dots.length);
+        // console.log(amount, this.dots.length);
     }
 
     start() {
@@ -376,115 +402,86 @@ class DiffGrid {
         return (val - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
     }
 
-    addSolution(x,y) {
-        let start = [x,y];
+    _addSolution(data){
+        const self = scene;
+        if(data.data.cmd !== 'solution')
+            return;
 
+        if(data.data.id !== self.solutionID)
+            return;
+
+        let col = self.options.path.color;
+        if(self.options.path.color_random) col = self.getRandomColor(col);
+
+        console.log(data.data.result);
+        self.solutions.lineStyle(self.options.path.width, col);
+
+        for(let polygon of data.data.result) {
+            self.solutions.drawPolygon(polygon);
+        }
+    }
+
+    addSolution(x,y) {
         let directions = [];
         if(this.options.path.forwards) directions.push(1);
         if(this.options.path.backwards) directions.push(-1);
 
-        const maxLength = this.options.path.length / this.options.dot.step;
+        if(this.solutionID === undefined)
+            this.solutionID = 0;
 
-        let col = this.options.path.color;
-        if(this.options.path.color_random) col = this.getRandomColor(col);
-
-        this.solutions.lineStyle(this.options.path.width, col);
-
-        for(let dir of directions){
-            [x,y] = start;
-            let step = 0;
-            let xScreen = this.gridToScreenX(x);
-            let yScreen = this.gridToScreenY(y);
-            this.solutions.moveTo(xScreen,yScreen);
-
-            while(step < maxLength){
-                for(let i = 0; i < this.options.path.precision; i++){
-                    const dx = this.dx(x, y);
-                    const dy = this.dy(x, y);
-                    const norm = Math.sqrt(dx**2 + dy**2);
-
-                    x += dir * this.options.dot.step * dx / (this.options.path.precision * norm);
-                    y += dir * this.options.dot.step * dy / (this.options.path.precision * norm);
-                }
-
-                xScreen = this.gridToScreenX(x);
-                yScreen = this.gridToScreenY(y);
-
-                this.solutions.lineTo(xScreen, yScreen);
-
-                step++;
-            }
-        }
+        this.workerSolution.postMessage({
+            cmd: 'solution',
+            start: [x,y],
+            forwards: this.options.path.forwards,
+            backwards: this.options.path.backwards,
+            maxLength:  this.options.path.length / this.options.dot.step,
+            precision: this.options.path.precision,
+            step: this.options.dot.step,
+            id: this.solutionID
+        })
     }
 
     resetSolutions(){
+        this.solutionID = this.solutionID === undefined ? 0 : this.solutionID+1;
         this.solutions.clear();
         this.solutions.lineStyle(this.options.path.width, this.options.path.color);
         this.resetGrid();
     }
 
     //comment from Jim: not enough comments.
-    _drawNullcline(fn, col){
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = this.options.screen.width;
-        canvas.height = this.options.screen.height;
-        const data = new Uint8ClampedArray(this.options.screen.height * this.options.screen.width * 4);
+    _drawNullcline(result) {
+        const self = scene;
+        const data = result.data;
+        // console.log('receive cmd: '+ data.cmd);
+        if(data.cmd !== 'nullcline') return;
+        if(data.id !== self.nullclineID) return;
 
+        self.nullclines.removeChildren();
 
-        const r = (col & 0xff0000) >> 16;
-        const g = (col & 0x00ff00) >> 8;
-        const b = (col & 0x0000ff);
+        const width = self.options.screen.width;
+        const height = self.options.screen.height;
 
-        // console.log(r,g,b)
-
-        const dx = (this.options.screen.maxX - this.options.screen.minX) / this.options.screen.width;
-        const dy = (this.options.screen.maxY - this.options.screen.minY) / this.options.screen.height;
-        const epsilon = Number.EPSILON * 2**this.options.nullclines.tolerance;
-        const is0 = (x)=> Math.abs(x) <= epsilon;
-        let i = 0;
-        for(let py = 0; py < this.options.screen.height; py++){
-            let y = this.screenToGridY(py);
-            for(let px = 0; px < this.options.screen.width; px++){
-                let x = this.screenToGridX(px);
-                let vals = [fn(x,y), fn(x+dx,y), fn(x,y+dy), fn(x+dx,y+dy)];
-                let sign = Math.sign(vals[0]);
-
-                if(is0(vals[0]) || is0(vals[1]) || is0(vals[2]) || is0(vals[3]) ||
-                    Math.sign(vals[1]) !== sign || Math.sign(vals[2]) !== sign || Math.sign(vals[3]) !== sign){
-                    // debugger;
-                    data[i] = r;
-                    data[i+1] = g;
-                    data[i+2] = b;
-                    data[i+3] = 255;
-                }
-                i += 4;
-            }
-        }
-
-        const imgdata = new ImageData(data, this.options.screen.width, this.options.screen.height);
-        ctx.putImageData(imgdata, 0, 0);
-
-        return PIXI.Texture.fromCanvas(canvas);
+        self.nullclineX = new PIXI.Sprite(PIXI.Texture.fromImageData(data.result.dx, width, height));
+        self.nullclineY = new PIXI.Sprite(PIXI.Texture.fromImageData(data.result.dy, width, height));
+        self.nullclineX.visible = self.options.nullclines.enableX;
+        self.nullclineY.visible = self.options.nullclines.enableY;
+        self.nullclines.addChild(self.nullclineX, self.nullclineY);
     }
 
-
-
     drawNullcline() {
+        this.nullclineID = this.nullclineID === undefined ? 0 : this.nullclineID+1;
+
         this.nullclines.removeChildren();
-        const textureX = this._drawNullcline(this.dx, this.options.nullclines.colorX);
-        const textureY = this._drawNullcline(this.dy, this.options.nullclines.colorY);
-
-
-        this.nullclineX = new PIXI.Sprite(textureX);
-        this.nullclineY = new PIXI.Sprite(textureY);
-        this.nullclineX.visible = this.options.nullclines.enableX;
-        this.nullclineY.visible = this.options.nullclines.enableY;
-        this.nullclines.addChild(this.nullclineX);
-        this.nullclines.addChild(this.nullclineY);
+        this.workerNullcline.postMessage({
+            cmd: 'nullcline',
+            colors: [this.options.nullclines.colorX, this.options.nullclines.colorY],
+            epsilon: Number.EPSILON * 2**this.options.nullclines.tolerance,
+            id: this.nullclineID
+        });
     }
 
     resetNullcline() {
+        console.trace();
         if(this.options.nullclines.enableX || this.options.nullclines.enableY) {
             this.drawNullcline();
         }
@@ -496,24 +493,25 @@ class DiffGrid {
         this.resetSolutions();
 
         this.resetNullcline();
+        // this.updateWorkerSettings('dx', this.dx.toString());
+        // this.updateWorkerSettings('dy', this.dy.toString());
     }
 
     setPolar(dr, dtheta){
-        const toPolar = (x, y) => [Math.sqrt(x**2 + y**2), Math.atan2(y,x)];
-        this.dx = (x, y) => {
-            let [r, t] = toPolar(x, y);
+        const dx = (x, y) => {
+            let [r, t] = [Math.sqrt(x**2 + y**2), Math.atan2(y,x)];
             const dr_val = dr(r,t);
             const dt_val = dtheta(r,t);
             return Math.cos(t)*dr_val - Math.sin(t)/r * dt_val;
         };
-        this.dy = (x, y) =>  {
-            let [r, t] = toPolar(x,y);
+        const dy = (x, y) =>  {
+            let [r, t] = [Math.sqrt(x**2 + y**2), Math.atan2(y,x)];
             const dr_val = dr(r,t);
             const dt_val = dtheta(r,t);
             return Math.sin(t)*dr_val + Math.cos(t)/r * dt_val;
         };
-        this.resetSolutions()
-        this.resetNullcline();
+
+        this.setDxDy(dx, dy);
     }
 
     getRandomColor(hex){
@@ -540,6 +538,7 @@ class DiffGrid {
                 this.options.screen[id] = parseFloat(elm.value);
             }
 
+            this.updateWorkerSettings(id, this.options.screen[id]);
             this.updateBackground();
             this.resetSolutions();
             this.resetGrid();
@@ -604,5 +603,24 @@ class DiffGrid {
                 Logger.error('Unknown id ', id);
             }
         }
+
+        this.updateOptionsStorage(section, id);
+    }
+
+    updateOptionsStorage(section, id) {
+        const optionsString = localStorage.getItem('options');
+        const options = JSON.parse(optionsString);
+        if(options[section] === undefined)
+            options[section] = {};
+        options[section][id] = this.options[section][id];
+        localStorage.setItem('options', JSON.stringify(options))
     }
 }
+
+PIXI.Texture.fromImageData = function (data) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width =  data.width;
+    canvas.height = data.height;
+    ctx.putImageData(data, 0,0);
+    return PIXI.Texture.fromCanvas(canvas);        }
