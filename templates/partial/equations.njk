@@ -1,0 +1,28 @@
+<div class="tabs">
+    <input id="nav-input-1" class="nav-input" type="radio" name="nav" checked>
+    <input id="nav-input-2" class="nav-input" type="radio" name="nav">
+    <input id="nav-input-3" class="nav-input" type="radio" name="nav">
+
+    <div class="nav">
+        <label for="nav-input-1">\(\dot{x}, \dot{y}\)</label>
+        <label for="nav-input-2">\(\dot{\vec{x}} = A \vec{x}\)</label>
+        <label for="nav-input-3">\(\dot{r}, \dot{\theta}\)</label>
+    </div>
+
+    <div id="content-1" class="tab">
+        <label class="equations-label">\(\dot{x}=\)<input class="equations-input"></label>
+        <label class="equations-label">\(\dot{y}=\)<input class="equations-input"></label>
+        <button>apply</button>
+    </div>
+
+    <div id="content-2" class="tab">
+        {% include "./matrix.njk" %}
+        <button>apply</button>
+    </div>
+
+    <div id="content-3" class="tab">
+        <label class="equations-label">\(\dot{r}=\)<input class="equations-input"></label>
+        <label class="equations-label">\(\dot{\theta}=\)<input class="equations-input"></label>
+        <button>apply</button>
+    </div>
+</div>

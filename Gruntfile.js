@@ -2,10 +2,12 @@ const path = require('path');
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        /** Test localhost **/
         express: {
             all: {
                 options: {
-                    bases: path.resolve(__dirname),
+                    bases: path.resolve(__dirname, 'dist'),
                     port: 8080,
                     hostname: '0.0.0.0',
                     livereload: true
@@ -13,79 +15,141 @@ module.exports = function (grunt) {
             }
         },
 
+        open: {
+            all: {
+                path: 'http://localhost:8080/index.html'
+            }
+        },
+
+        /** Whatch **/
         watch: {
             css: {
-                files: ['css/**/*.css'],
+                files: ['sass/**/*.scss', 'sass/**/*.sass'],
+                tasks: ['compile-sass'],
                 options: {
+                    livereload: true
                 }
             },
-            js: {
-                files: ['js/**/*.js'],
+            ts: {
+                files: ['ts/**/*.ts'],
+                tasks: ['compile-ts'],
                 options: {
+                    livereload: true
                 }
             },
             njk: {
-                files: ['templates/**/*.njk', 'data.json'],
-                tasks: ['compile'],
+                files: ['templates/**/*.njk', 'pages/**/*.njk', 'cfg/data.json'],
+                tasks: ['compile-njk'],
                 options: {
                     livereload: true
                 }
             },
             gruntfile: {
-                files: "Gruntfile.js",
+                files: 'Gruntfile.js',
                 options: {
                     reload: true
                 }
             }
         },
 
+        /** Render nunjucks files to html **/
         nunjucks: {
             options: {
-                data: grunt.file.readJSON('data.json'),
-                paths: 'templates'
+                data: grunt.file.readJSON('cfg/data.json'),
+                paths: ['templates', 'pages']
             },
             render: {
                 files: [{
                     expand: true,
-                    cwd: 'templates',
-                    src: [
-                        '**/index.njk'
-                    ],
-                    dest: '',
+                    cwd: 'pages',
+                    src: '**/*.njk',
+                    dest: 'dist',
                     ext: '.html'
                 }]
             }
         },
+
+        sass: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: 'sass',
+                    src: ['*.scss', '*.sass'],
+                    dest: 'dist/css',
+                    ext: '.css'
+                }]
+            }
+        },
+
+        ts:{
+            default : {
+                tsconfig: 'cfg/tsconfig.json',
+            }
+        },
+
         prettify: {
             options: {
-                config: '.prettifyrc'
+                config: 'cfg/.prettifyrc'
             },
-            one: {
-                src: 'index.html',
-                dest: 'index.html'
-            }
-        },
-        open: {
             all: {
-                path: 'http://localhost:8080/index.html'
+                expand: true,
+                cwd: 'dist/',
+                ext: '.html',
+                src: ['*.html'],
+                dest: 'dist/'
             }
         },
+
+        autoprefixer: {
+            options: {
+                map: true
+                // Task-specific options go here.
+            },
+            dest: {
+                expand: true,
+                cwd: 'dist/css',
+                ext: '.css',
+                src: ['*.css'],
+                dest: 'dist/css'
+            },
+        },
+
+        mathjax_node_page: {
+            options: {
+                // Task-specific options go here.
+            },
+            files: {
+                expand: true,
+                cwd: 'dist/',
+                ext: '.html',
+                src: ['*.html'],
+                dest: 'dist/'
+            },
+        },
+
         cachebreaker: {
             dev: {
                 options: {
                     match: [{
-                        'particles.js':     'js/particles.js',
-                        'events.js':        'js/events.js',
-                        'main.js':          'js/main.js',
-                        'util.js':          'js/util.js',
-                        'style.css':        'css/style.css'
+                        'particles.js': 'js/particles.js',
+                        'events.js': 'js/events.js',
+                        'main.js': 'js/main.js',
+                        'util.js': 'js/util.js',
+                        'style.css': 'css/style.css'
                     }],
-                    replacement: 'md5'
+                    replacement: 'md5',
+                    src: {path: 'dist'}
                 },
                 files: {
                     src: ['index.html']
                 }
             }
+        },
+        clean:{
+            dist: ['dist'],
+            css: ['dist/**/*.css', 'dist/**/*.css.map'],
+            js: ['dist/**/*.js', 'dist/**/*.js.map'],
+            html: ['dist/**/*.html']
         }
     });
 
@@ -95,8 +159,10 @@ module.exports = function (grunt) {
     });
 
     // Default task(s).
-    grunt.registerTask('compile', ['nunjucks', 'prettify', 'cachebreaker']);
-    grunt.registerTask('web', ['compile', 'express', 'open', 'watch']);
-    grunt.registerTask('default', 'web')
-
+    grunt.registerTask('compile-njk', ['clean:html', 'nunjucks', 'mathjax_node_page', 'prettify']);
+    grunt.registerTask('compile-ts', ['clean:js', 'ts']);
+    grunt.registerTask('compile-sass', ['clean:css', 'sass', 'autoprefixer']);
+    grunt.registerTask('compile', ['compile-ts', 'compile-sass', 'compile-njk']);
+    grunt.registerTask('test', ['compile', 'express', 'open', 'watch']);
+    grunt.registerTask('default', 'compile');
 };

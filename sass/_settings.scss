@@ -1,0 +1,51 @@
+.collapsible{
+  //padding: 0 1em;
+
+  .collapsible-label{
+    display: block;
+    padding: 0.5em 1em;
+  }
+  .collapsible-label:before {
+    content: '►';
+    font-family: monospace;
+    display: inline-block;
+    margin-right: 0.5em;
+    transform: rotate(0deg);
+    transition: transform 200ms;
+  }
+  .collapsible-input{
+    display: none;
+  } 
+  .collapsible-content {
+    box-sizing: border-box;
+    background-color: darken(#333, 5%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 1em;
+    padding: 0 1em;
+    overflow-y: hidden;
+    height: 0;
+    transform-origin: top;
+    transition: padding 0.26s ease;
+  }
+
+  /* When panel is open */
+  .collapsible-input:checked {
+    & ~ .collapsible-content {
+      height: auto;
+      padding: 0.5em 1em;
+    }
+    & ~ .collapsible-label:before {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.settings{
+  padding-left: 0;
+  padding-right: 0;
+
+  input {
+    width: 100%;
+  }
+}

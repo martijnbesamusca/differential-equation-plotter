@@ -1,0 +1,19 @@
+$font-stack: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+
+html {
+  font-family: $font-stack;
+}
+
+h1 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0;
+}
+
+h2 {
+  height: 2.5em;
+  margin: 0;
+  padding-left: 1em;
+  padding: 0.5em;
+  background-color: #444;
+}

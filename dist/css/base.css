@@ -1,0 +1,257 @@
+@charset "UTF-8";
+html {
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+}
+
+h1 {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0;
+}
+
+h2 {
+  height: 2.5em;
+  margin: 0;
+  padding-left: 1em;
+  padding: 0.5em;
+  background-color: #444;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  width: 100%;
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  grid-template-areas: "header header" "main   settings" "equations   settings" "footer footer";
+  grid-template-rows: 2em 2fr 1fr max-content;
+  grid-template-columns: 5fr minmax(25em, 1fr);
+  grid-gap: 0.5em;
+  background-color: #151515;
+}
+@media (max-width: 767px) {
+  .container {
+    grid-template-areas: "header" "main" "equations" "settings" "footer";
+    grid-template-rows: 2em auto auto auto max-content;
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+.panel {
+  background-color: #333;
+  border-radius: 0.5em;
+  overflow-y: auto;
+}
+
+.header {
+  background-color: #333;
+  grid-area: header;
+  line-height: 2em;
+  font-size: 1em;
+  border-radius: 0 !important;
+  border-top: none;
+  padding-left: 2em;
+}
+
+.main {
+  grid-area: main;
+  padding: 0;
+  overflow: hidden;
+  background-color: transparent;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-pack: center;
+      justify-content: center;
+}
+
+.canvas {
+  background-color: #fff;
+  grid-area: main;
+  justify-self: center;
+  -ms-flex-item-align: center;
+      align-self: center;
+  border-radius: 0.5em;
+  width: 800px;
+  height: 600px;
+}
+
+.settings {
+  grid-area: settings;
+  overflow-y: auto;
+}
+
+.equations {
+  grid-area: equations;
+}
+
+.footer {
+  grid-area: footer;
+  line-height: 2em;
+  padding: 0 2em;
+}
+
+.footer {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.collapsible {
+  /* When panel is open */
+}
+.collapsible .collapsible-label {
+  display: block;
+  padding: 0.5em 1em;
+}
+.collapsible .collapsible-label:before {
+  content: "►";
+  font-family: monospace;
+  display: inline-block;
+  margin-right: 0.5em;
+  transform: rotate(0deg);
+  transition: transform 200ms;
+}
+.collapsible .collapsible-input {
+  display: none;
+}
+.collapsible .collapsible-content {
+  box-sizing: border-box;
+  background-color: #262626;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1em;
+  padding: 0 1em;
+  overflow-y: hidden;
+  height: 0;
+  transform-origin: top;
+  transition: padding 0.26s ease;
+}
+.collapsible .collapsible-input:checked ~ .collapsible-content {
+  height: auto;
+  padding: 0.5em 1em;
+}
+.collapsible .collapsible-input:checked ~ .collapsible-label:before {
+  transform: rotate(90deg);
+}
+
+.settings {
+  padding-left: 0;
+  padding-right: 0;
+}
+.settings input {
+  width: 100%;
+}
+
+/* Tabs */
+.equations {
+  display: grid;
+  grid-template-areas: "title" "tabs";
+  grid-template-rows: 3.5em auto;
+}
+.equations h2 {
+  margin-bottom: 0;
+  grid-area: title;
+  height: 100%;
+  line-height: 2em;
+  padding: 0 1em;
+}
+.equations .tabs {
+  grid-area: tabs;
+  display: grid;
+  grid-template-areas: "nav" "tab";
+  grid-template-rows: 2.5em auto;
+}
+.equations .nav-input {
+  display: none;
+}
+.equations .nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+  width: 100%;
+  grid-area: nav;
+}
+.equations .nav label {
+  display: inline-block;
+  width: 100%;
+  height: 2em;
+  font-size: 1.2em;
+  line-height: 2em;
+  text-align: center;
+  justify-self: center;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+.equations .nav label:hover {
+  background-color: #1d7d2c;
+}
+.equations .tab {
+  grid-area: tab;
+  display: none;
+  background-color: #262626;
+  min-height: available;
+  height: 100%;
+  padding: 1em;
+}
+.equations .equations-label {
+  display: block;
+  margin-bottom: 1em;
+}
+.equations .equations-input {
+  width: 20em;
+}
+.equations button {
+  border: none;
+  color: #fff;
+  width: 10em;
+  height: 2.5em;
+  border-radius: 0.5em;
+  background-color: #26a63b;
+}
+.equations .matrix {
+  display: grid;
+  grid-template-areas: "eq A11 A12" "eq A21 A22";
+  grid-template-columns: max-content minmax(auto, 20em) minmax(auto, 20em);
+  grid-gap: 0.1em;
+  margin-bottom: 1em;
+}
+.equations .matrix .equation {
+  grid-area: eq;
+  -ms-flex-item-align: center;
+      align-self: center;
+}
+.equations .nav-input#nav-input-1:checked ~ .tab#content-1 {
+  display: block;
+}
+.equations .nav-input#nav-input-1:checked ~ .nav label[for=nav-input-1] {
+  background-color: #26a63b;
+}
+.equations .nav-input#nav-input-2:checked ~ .tab#content-2 {
+  display: block;
+}
+.equations .nav-input#nav-input-2:checked ~ .nav label[for=nav-input-2] {
+  background-color: #26a63b;
+}
+.equations .nav-input#nav-input-3:checked ~ .tab#content-3 {
+  display: block;
+}
+.equations .nav-input#nav-input-3:checked ~ .nav label[for=nav-input-3] {
+  background-color: #26a63b;
+}
+
+/*# sourceMappingURL=base.css.map */

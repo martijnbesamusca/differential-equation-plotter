@@ -1,0 +1,20 @@
+{% extends "../templates/layout/layout.njk" %}
+
+{% block header %}
+    <h1>Dynamic Differential Equations Plotter</h1>
+{% endblock %}
+
+{% block equations %}
+    <h2>Equations</h2>
+    {% include "../templates/partial/equations.njk" %}
+{% endblock %}
+
+{% block settings %}
+    {% include "../templates/partial/settings.njk" %}
+{% endblock %}
+
+{% block footer %}
+    <span>View on GitHub</span>
+    <span>By Martijn Besamusca</span>
+    <span>Issue's or suggestions</span>
+{% endblock %}

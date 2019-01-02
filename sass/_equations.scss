@@ -1,0 +1,98 @@
+@import "colors";
+
+/* Tabs */
+.equations{
+  display: grid;
+  grid-template-areas: "title" "tabs";
+  grid-template-rows: 3.5em auto;
+
+  h2 {
+    margin-bottom: 0;
+    grid-area: title;
+    height: 100%;
+    line-height: 2em;
+    padding: 0 1em;
+  }
+
+  .tabs {
+    grid-area: tabs;
+    display: grid;
+    grid-template-areas: "nav" "tab";
+    grid-template-rows: 2.5em auto;
+  }
+
+  .nav-input{
+    display: none;
+  }
+
+  .nav{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+    width: 100%;
+    grid-area: nav;
+  }
+  .nav label{
+    display: inline-block;
+    width: 100%;
+    height: 2em;
+    font-size: 1.2em;
+    line-height: 2em;
+    text-align: center;
+    justify-self: center;
+    cursor: pointer;
+    transition: background-color 150ms;
+
+    &:hover{
+      background-color: darken($accent-color, 10%);
+    }
+  }
+
+  .tab{
+    grid-area: tab;
+    display: none;
+    background-color: #262626;
+    min-height: available;
+    height: 100%;
+    padding: 1em;
+  }
+
+  .equations-label{
+    display: block;
+    margin-bottom: 1em;
+  }
+
+  .equations-input{
+    width: 20em;
+  }
+
+  button {
+    border: none;
+    color: #fff;
+    width: 10em;
+    height: 2.5em;
+    border-radius: 0.5em;
+    background-color: $accent-color;
+  }
+
+  .matrix{
+    display: grid;
+    grid-template-areas:  "eq A11 A12"
+                          "eq A21 A22";
+    grid-template-columns: max-content minmax(auto, 20em) minmax(auto, 20em);
+    grid-gap: 0.1em;
+    margin-bottom: 1em;
+    .equation{
+      grid-area: eq;
+      align-self: center;
+    }
+  }
+
+  @for $i from 1 to 4{
+    .nav-input#nav-input-#{$i}:checked ~ .tab#content-#{$i} {
+      display: block;
+    }
+    .nav-input#nav-input-#{$i}:checked ~ .nav label[for="nav-input-#{$i}"]{
+      background-color: $accent-color;
+    }
+  }
+}
