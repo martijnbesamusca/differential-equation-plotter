@@ -85,6 +85,27 @@
       grid-area: eq;
       align-self: center;
     }
+
+    .mathfield{
+      width: 100%;
+      min-width: unset;
+    }
+  }
+
+  .mathfield{
+    display: inline-block;
+    background-color: white;
+    color: #000;
+    padding: 0 1em;
+    min-width: 20em;
+    max-width: 100%;
+    border-radius: 0.25em;
+    border: 2px solid #555;
+    cursor: text;
+    transition: border-color 150ms;
+    &.focus{
+      border-color: $accent-color;
+    }
   }
 
   @for $i from 1 to 4{

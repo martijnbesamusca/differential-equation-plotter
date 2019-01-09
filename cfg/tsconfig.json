@@ -2,9 +2,14 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
-//    "lib": [],
+    "baseUrl": "../ts",
+    "typeRoots" : ["../ts/types"],
+    //    "paths": {
+//      "@dist/*": ["../dist/*"]
+//    },
+    //    "lib": [],
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "jsx": "preserve",
     "rootDir": "ts",
     "outDir": "../dist/js",
@@ -24,6 +29,7 @@
 
   },
   "include": [
-    "../ts/**/*.ts"
+    "../ts/**/*.ts",
+    "../ts/types/*.d.ts"
   ]
 }

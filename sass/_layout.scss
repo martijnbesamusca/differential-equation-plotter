@@ -21,7 +21,7 @@ body {
           "main   settings"
           "equations   settings"
           "footer footer";
-  grid-template-rows: 2em 2fr 1fr max-content;
+  grid-template-rows: 2em 1fr minmax(max-content, 18em) max-content;
   grid-template-columns: 5fr minmax(25em, 1fr);
   grid-gap: 0.5em;
   background-color: #151515;

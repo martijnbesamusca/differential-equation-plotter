@@ -1,3 +1,5 @@
+{% from '../macros/mathfield.njk' import mathfield %}
+
 <div class="tabs">
     <input id="nav-input-1" class="nav-input" type="radio" name="nav" checked>
     <input id="nav-input-2" class="nav-input" type="radio" name="nav">
@@ -10,19 +12,19 @@
     </div>
 
     <div id="content-1" class="tab">
-        <label class="equations-label">\(\dot{x}=\)<input class="equations-input"></label>
-        <label class="equations-label">\(\dot{y}=\)<input class="equations-input"></label>
-        <button>apply</button>
+        {{ mathfield('dx', '\\(\\dot{x}=\\)') }}
+        {{ mathfield('dy', '\\(\\dot{y}=\\)') }}
+        <button id="apply-dxdy">apply</button>
     </div>
 
     <div id="content-2" class="tab">
         {% include "./matrix.njk" %}
-        <button>apply</button>
+        <button id="apply-A">apply</button>
     </div>
 
     <div id="content-3" class="tab">
-        <label class="equations-label">\(\dot{r}=\)<input class="equations-input"></label>
-        <label class="equations-label">\(\dot{\theta}=\)<input class="equations-input"></label>
-        <button>apply</button>
+        {{ mathfield('dr', '\\(\\dot{r}=\\)') }}
+        {{ mathfield('dt', '\\(\\dot{\\theta}=\\)') }}
+        <button id="apply-drdt">apply</button>
     </div>
 </div>

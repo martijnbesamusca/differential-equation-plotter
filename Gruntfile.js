@@ -84,6 +84,9 @@ module.exports = function (grunt) {
         ts:{
             default : {
                 tsconfig: 'cfg/tsconfig.json',
+                options: {
+                    verbose: true
+                }
             }
         },
 
@@ -147,8 +150,8 @@ module.exports = function (grunt) {
         },
         clean:{
             dist: ['dist'],
-            css: ['dist/**/*.css', 'dist/**/*.css.map'],
-            js: ['dist/**/*.js', 'dist/**/*.js.map'],
+            css: ['dist/css/**/*.css', 'dist/css/**/*.css.map'],
+            js: ['dist/js/**/*.js', 'dist/js/**/*.js.map'],
             html: ['dist/**/*.html']
         }
     });

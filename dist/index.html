@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="img/favicon.ico">
     <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/lib/mathlive.core.css">
+    <link rel="stylesheet" href="/lib/mathlive.css">
     <style type="text/css">
       .mjpage .MJX-monospace {
         font-family: monospace
@@ -309,7 +311,7 @@
                   </g>
                 </svg>
               </span>
-              <input class="equations-input">
+              <div class="mathfield" id="mathfield-dx"></div>
             </label>
             <label class="equations-label">
               <span class="mjpage">
@@ -327,9 +329,9 @@
                   </g>
                 </svg>
               </span>
-              <input class="equations-input">
+              <div class="mathfield" id="mathfield-dy"></div>
             </label>
-            <button>apply</button>
+            <button id="apply-dxdy">apply</button>
           </div>
           <div id="content-2" class="tab">
             <div class="matrix">
@@ -348,11 +350,12 @@
                   </svg>
                 </span>
               </span>
-              <input title="matrix entry [1,1]" type="text" id="mat11" required="">
-              <input title="matrix entry [1,2]" type="text" id="mat12" required="">
-              <input title="matrix entry [2,1]" type="text" id="mat21" required="">
-              <input title="matrix entry [2,2]" type="text" id="mat22" required=""> </div>
-            <button>apply</button>
+              <div class="mathfield" id="mathfield-mat11"></div>
+              <div class="mathfield" id="mathfield-mat12"></div>
+              <div class="mathfield" id="mathfield-mat21"></div>
+              <div class="mathfield" id="mathfield-mat22"></div>
+            </div>
+            <button id="apply-A">apply</button>
           </div>
           <div id="content-3" class="tab">
             <label class="equations-label">
@@ -371,7 +374,7 @@
                   </g>
                 </svg>
               </span>
-              <input class="equations-input">
+              <div class="mathfield" id="mathfield-dr"></div>
             </label>
             <label class="equations-label">
               <span class="mjpage">
@@ -389,9 +392,9 @@
                   </g>
                 </svg>
               </span>
-              <input class="equations-input">
+              <div class="mathfield" id="mathfield-dt"></div>
             </label>
-            <button>apply</button>
+            <button id="apply-drdt">apply</button>
           </div>
         </div>
       </div>
@@ -401,6 +404,9 @@
         <span>Issue's or suggestions</span>
       </div>
     </div>
+    <script src="/lib/mathlive.js"></script>
+    <script src="/lib/math.min.js"></script>
+    <script src="/js/mathfield.js"></script>
     <script src="/js/canvas.js"></script>
   </body>
 </html>
