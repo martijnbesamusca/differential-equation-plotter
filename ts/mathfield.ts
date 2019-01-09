@@ -2,20 +2,26 @@
 declare var MathLive: any;
 declare var MASTON: any;
 
-class myMathField {
-    cfg : object = {
-        onFocus: myMathField.toggleFocus,
-        onBlur: myMathField.toggleFocus,
-        onContentDidChange: myMathField.onContentDidChange
+interface IMathFieldConfig{
+    onFocus: (mathfield: any) => any,
+    onBlur: (mathfield: any) => any,
+    onContentDidChange: (mathfield: any) => any,
+}
+
+class equationMathField {
+    cfg : IMathFieldConfig = {
+        onFocus: equationMathField.toggleFocus,
+        onBlur: equationMathField.toggleFocus,
+        onContentDidChange: equationMathField.onContentDidChange
     };
 
-    element: any;
+    mathfield: any;
     mathJax: any;
 
-    constructor(id:string) {
-        this.element = MathLive.makeMathField(id, this.cfg);
-        this.element.boundTo = this;
-        this.element.element.classList.remove('focus');
+    constructor(id: string) {
+        this.mathfield = MathLive.makeMathField(id, this.cfg);
+        this.mathfield.boundTo = this;
+        this.mathfield.element.classList.remove('focus');
     }
 
     static toggleFocus(mathfield: any){
@@ -40,16 +46,16 @@ class myMathField {
 
 /* Making mathfield */
 
-const dxMathField = new myMathField('mathfield-dx');
-const dyMathField = new myMathField('mathfield-dy');
+const dxMathField = new equationMathField('mathfield-dx');
+const dyMathField = new equationMathField('mathfield-dy');
 
-const mat11MathField = new myMathField('mathfield-mat11');
-const mat12MathField = new myMathField('mathfield-mat12');
-const mat21MathField = new myMathField('mathfield-mat21');
-const mat22MathField = new myMathField('mathfield-mat22');
+const mat11MathField = new equationMathField('mathfield-mat11');
+const mat12MathField = new equationMathField('mathfield-mat12');
+const mat21MathField = new equationMathField('mathfield-mat21');
+const mat22MathField = new equationMathField('mathfield-mat22');
 
-const drMathField = new myMathField('mathfield-dr');
-const dtMathField = new myMathField('mathfield-dt');
+const drMathField = new equationMathField('mathfield-dr');
+const dtMathField = new equationMathField('mathfield-dt');
 
 /* Tabs */
 const applyDxDy = document.getElementById( 'apply-dxdy')!;
