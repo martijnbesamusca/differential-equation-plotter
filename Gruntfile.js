@@ -4,20 +4,15 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         /** Test localhost **/
-        express: {
-            all: {
+        connect: {
+            server: {
                 options: {
-                    bases: path.resolve(__dirname, 'dist'),
-                    port: 8080,
-                    hostname: '0.0.0.0',
-                    livereload: true
+                    port: 8000,
+                    base: 'dist',
+                    // protocol: 'https',
+                    livereload: true,
+                    open: true
                 }
-            }
-        },
-
-        open: {
-            all: {
-                path: 'http://localhost:8080/index.html'
             }
         },
 
@@ -166,6 +161,6 @@ module.exports = function (grunt) {
     grunt.registerTask('compile-ts', ['clean:js', 'ts']);
     grunt.registerTask('compile-sass', ['clean:css', 'sass', 'autoprefixer']);
     grunt.registerTask('compile', ['compile-ts', 'compile-sass', 'compile-njk']);
-    grunt.registerTask('test', ['compile', 'express', 'open', 'watch']);
+    grunt.registerTask('test', ['compile', 'connect', 'watch']);
     grunt.registerTask('default', 'compile');
 };

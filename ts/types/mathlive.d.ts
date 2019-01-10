@@ -1,5 +1,6 @@
 
-declare var MathLive: mathlive.IMathLive;
+declare const MathLive: mathlive.IMathLive;
+declare const MASTON: object;
 
 declare namespace mathlive {
 

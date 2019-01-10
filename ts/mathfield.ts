@@ -1,8 +1,6 @@
 ///<reference path="types/math.d.ts"/>
 ///<reference path="types/mathlive.d.ts"/>
 
-declare var MASTON: any;
-
 class equationMathField {
     cfg : mathlive.IMathFieldConfig = {
         onFocus: equationMathField.toggleFocus,
