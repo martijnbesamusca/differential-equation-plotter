@@ -1,30 +1,26 @@
-// import MathLive from './lib/mathlive.js';
-declare var MathLive: any;
+///<reference path="types/math.d.ts"/>
+///<reference path="types/mathlive.d.ts"/>
+
 declare var MASTON: any;
 
-interface IMathFieldConfig{
-    onFocus: (mathfield: any) => any,
-    onBlur: (mathfield: any) => any,
-    onContentDidChange: (mathfield: any) => any,
-}
-
 class equationMathField {
-    cfg : IMathFieldConfig = {
+    cfg : mathlive.IMathFieldConfig = {
         onFocus: equationMathField.toggleFocus,
         onBlur: equationMathField.toggleFocus,
         onContentDidChange: equationMathField.onContentDidChange
     };
 
-    mathfield: any;
-    mathJax: any;
+    mathfield: mathlive.IMathField;
+    equation: mathjs.MathNode | null;
 
     constructor(id: string) {
         this.mathfield = MathLive.makeMathField(id, this.cfg);
         this.mathfield.boundTo = this;
         this.mathfield.element.classList.remove('focus');
+        this.equation = null;
     }
 
-    static toggleFocus(mathfield: any){
+    static toggleFocus(mathfield: mathlive.IMathField){
         // debugger;
         if (mathfield.element.querySelector('textarea') === document.activeElement) {
             mathfield.element.classList.add('focus');
@@ -33,12 +29,13 @@ class equationMathField {
         }
     }
 
-    static onContentDidChange(mathfield: any) {
+    static onContentDidChange(mathfield: mathlive.IMathField) {
         try {
             const ast = MathLive.latexToAST(mathfield.latex());
-            mathfield.boundTo.mathJax = mastonToMathjs(ast, {});
+            mathfield.boundTo.equation = mastonToMathjs(ast, {});
             console.log(mathfield.boundTo.mathJax);
         } catch(e) {
+            mathfield.boundTo.
             console.log(e);
         }
     }
@@ -63,24 +60,24 @@ const applyA = document.getElementById( 'apply-A')!;
 const applyDrDt = document.getElementById( 'apply-drdt')!;
 
 applyDxDy.addEventListener('click', ()=>{
-    console.log('dx', dxMathField.mathJax);
-    console.log('dy', dyMathField.mathJax);
+    console.log('dx', dxMathField.equation);
+    console.log('dy', dyMathField.equation);
 });
 
 applyA.addEventListener('click', ()=>{
-    console.log('mat11', mat11MathField.mathJax);
-    console.log('mat12', mat12MathField.mathJax);
-    console.log('mat21', mat21MathField.mathJax);
-    console.log('mat22', mat22MathField.mathJax);
+    console.log('mat11', mat11MathField.equation);
+    console.log('mat12', mat12MathField.equation);
+    console.log('mat21', mat21MathField.equation);
+    console.log('mat22', mat22MathField.equation);
 });
 
 applyDrDt.addEventListener('click', ()=>{
-    console.log('dr', drMathField.mathJax);
-    console.log('dt', dtMathField.mathJax);
+    console.log('dr', drMathField.equation);
+    console.log('dt', dtMathField.equation);
 });
 
 /* MathLive to Mathjax */
-function applySuperscriptAsPower(mjs: any, maston: any, config: object) {
+function applySuperscriptAsPower(mjs: mathjs.MathNode, maston: any, config: object) {
     let result = mjs;
     if (typeof maston === 'object' && maston.sup !== undefined) {
         result = new math.expression.node.FunctionNode(
