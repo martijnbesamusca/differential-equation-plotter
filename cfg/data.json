@@ -1,5 +1,40 @@
 {
   "title": "Differential equations",
+  "test": {
+    "Test": {
+      "open": true,
+      "entries": [
+      {
+        "label": "group test",
+        "entries": [
+          {
+            "label": "1",
+            "type": "text",
+            "section": "test",
+            "name": "test1"
+          },
+          {
+            "label": "2",
+            "type": "text",
+            "section": "test",
+            "name": "test2"
+          },
+          {
+            "label": "3",
+            "type": "text",
+            "section": "test",
+            "name": "test3"
+          }
+        ]
+      },
+      {
+        "label": "Test individual",
+        "type": "text",
+        "section": "test",
+        "name": "test"
+      }
+    ]}
+  },
 
   "input" : {
     "Screen size" : [

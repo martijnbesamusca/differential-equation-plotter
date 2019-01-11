@@ -31,9 +31,9 @@ class equationMathField {
         try {
             const ast = MathLive.latexToAST(mathfield.latex());
             mathfield.boundTo.equation = mastonToMathjs(ast, {});
-            console.log(mathfield.boundTo.mathJax);
+            console.log(mathfield.boundTo.equation);
         } catch(e) {
-            mathfield.boundTo.
+            mathfield.boundTo.equation = null;
             console.log(e);
         }
     }

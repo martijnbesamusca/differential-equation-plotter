@@ -1,6 +1,7 @@
-.collapsible{
-  //padding: 0 1em;
+@import "colors";
+$radius: 0.5em;
 
+.collapsible{
   .collapsible-label{
     display: block;
     padding: 0.5em 1em;
@@ -47,5 +48,40 @@
 
   input {
     width: 100%;
+    padding: 0.3em 0.5em;
+    border: 0.1em solid #555;
+    outline: none;
+    border-radius: $radius;
+
+    &:focus {
+      border-color: $accent-color;
+    }
+  }
+
+  .inputGroup {
+    grid-column: 1 / span 2;
+
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    grid-column-gap: 1em;
+    margin-bottom: 1em  ;
+
+    span {
+      grid-column: 1 / span 1;
+    }
+    label {
+      grid-column: 2 / span 1;
+    }
+    input {
+      grid-column: 3 / span 1;
+      border-radius: 0;
+
+      &:first-of-type {
+        border-radius: $radius $radius 0 0;
+      }
+      &:last-of-type {
+        border-radius: 0 0 $radius $radius;
+      }
+    }
   }
 }

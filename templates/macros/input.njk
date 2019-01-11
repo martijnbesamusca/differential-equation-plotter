@@ -1,33 +1,22 @@
 {% set reg= r/^(type|name|section|label)$/i %}
+
 {% macro field(values) %}
 {% set id= values.section + '.' + values.name %}
 
-{% if values.type == 'switch' %}
-    <div class="col s6 input-field">
-        <div class="switch">
-            <label>
-                {{ values.label }}
-                <input type="checkbox" id="{{ id }}" data-section="{{ values.section }}" data-name="{{ values.name }}">
-                <span class="lever"></span>
-            </label>
-        </div>
-    </div>
-{% elseif values.type == 'color' %}
-    <div class="col s6">
-        <label for="{{ id }}">{{ values.label }}</label>
-        <input id="{{ id }}" type="color" value="#000000" style="color:#00FF44" data-section="{{ values.section }}" data-name="{{ values.name }}"/>
-    </div>
-{% else %}
-    <div class="col s6 input-field">
-        <label for="{{ id }}">{{ values.label }}</label>
-        <input id="{{ id }}" type="{{ values.type }}" data-section="{{ values.section }}" data-name="{{ values.name }}"
-        {% for name, val in values %} {# add attributes #}
-            {% if not reg.test(name)%}
-                {{ name }} = "{{ val }}"
-            {% endif %}
+<label for="{{ id }}">{{ values.label }}</label>
+<input id="{{ id }}" type="{{ values.type }}" value="" data-section="{{ values.section }}" data-name="{{ values.name }}"/>
+
+{% endmacro %}
+
+
+{% macro fieldgroup(values) %}
+    <label class="inputGroup">
+        <span>{{ values.label }}</span>
+
+        {#<div class="inputFields">#}
+        {% for entry in values.entries %}
+            {{ field(entry) }}
         {% endfor %}
-        data-thing = "hey"
-        >
-    </div>
-{% endif %}
+        {#</div>#}
+    </label>
 {% endmacro %}

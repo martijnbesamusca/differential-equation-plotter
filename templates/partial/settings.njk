@@ -1,8 +1,9 @@
 {#{% extends "basic.njk" %}#}
+{% from "../macros/input.njk" import field, fieldgroup %}
 
-{% macro collapsible(label) %}
+{% macro collapsible(label, open=false) %}
 <div class="collapsible">
-    <input id="{{ label }}-collapsible" class="collapsible-input" type="checkbox">
+    <input id="{{ label }}-collapsible" class="collapsible-input" type="checkbox" {{ "checked" if open }}>
     <label class="collapsible-label" for="{{ label }}-collapsible">{{ label }}</label>
     <div class="collapsible-content">
         {% endmacro %}
@@ -14,11 +15,16 @@
 
 <h2>Settings</h2>
 
-{% for name, fields in input %}
-{{ collapsible(name) }}
-    {% for values in fields %}
-        <label for="{{ id }}">{{ values.label }}</label>
-        <input id="{{ id }}" type="{{ values.type }}" value="" data-section="{{ values.section }}" data-name="{{ values.name }}"/>
+{% for name, fields in test %}
+{{ collapsible(name, fields.open) }}
+    {% for values in fields.entries %}
+        {% if values.entries %}
+            {{ fieldgroup(values) }}
+        {% else %}
+            {{ field(values) }}
+            {#<label for="{{ id }}">{{ values.label }} individual</label>#}
+        {% endif %}
+        {#<input id="{{ id }}" type="{{ values.type }}" value="" data-section="{{ values.section }}" data-name="{{ values.name }}"/>#}
     {% endfor %}
 {{ endcollapsible() }}
 {% endfor %}

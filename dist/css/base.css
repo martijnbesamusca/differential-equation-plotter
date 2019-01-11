@@ -156,6 +156,36 @@ body {
 }
 .settings input {
   width: 100%;
+  padding: 0.3em 0.5em;
+  border: 0.1em solid #555;
+  outline: none;
+  border-radius: 0.5em;
+}
+.settings input:focus {
+  border-color: #31c14b;
+}
+.settings .inputGroup {
+  grid-column: 1/span 2;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  grid-column-gap: 1em;
+  margin-bottom: 1em;
+}
+.settings .inputGroup span {
+  grid-column: 1/span 1;
+}
+.settings .inputGroup label {
+  grid-column: 2/span 1;
+}
+.settings .inputGroup input {
+  grid-column: 3/span 1;
+  border-radius: 0;
+}
+.settings .inputGroup input:first-of-type {
+  border-radius: 0.5em 0.5em 0 0;
+}
+.settings .inputGroup input:last-of-type {
+  border-radius: 0 0 0.5em 0.5em;
 }
 
 /* Tabs */
@@ -175,14 +205,14 @@ body {
   grid-area: tabs;
   display: grid;
   grid-template-areas: "nav" "tab";
-  grid-template-rows: 2.5em auto;
+  grid-template-rows: min-content auto;
 }
 .equations .nav-input {
   display: none;
 }
 .equations .nav {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(5em, 1fr));
   width: 100%;
   grid-area: nav;
 }
