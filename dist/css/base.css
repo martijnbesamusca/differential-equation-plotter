@@ -168,8 +168,8 @@ body {
   grid-column: 1/span 2;
   display: grid;
   grid-template-columns: max-content max-content 1fr;
-  grid-column-gap: 1em;
-  margin-bottom: 1em;
+  grid-column-gap: 0.5em;
+  margin-bottom: 0.5em;
 }
 .settings .inputGroup span {
   grid-column: 1/span 1;
