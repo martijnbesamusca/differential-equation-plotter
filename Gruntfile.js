@@ -1,4 +1,6 @@
 const path = require('path');
+require('json5/lib/register');
+
 module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -9,6 +11,7 @@ module.exports = function (grunt) {
                 options: {
                     port: 8000,
                     base: 'dist',
+                    hostname: 'localhost',
                     // protocol: 'https',
                     livereload: true,
                     open: true
@@ -33,7 +36,7 @@ module.exports = function (grunt) {
                 }
             },
             njk: {
-                files: ['templates/**/*.njk', 'pages/**/*.njk', 'cfg/data.json'],
+                files: ['templates/**/*.njk', 'pages/**/*.njk', 'cfg/data.json5'],
                 tasks: ['compile-njk'],
                 options: {
                     livereload: true
@@ -48,9 +51,19 @@ module.exports = function (grunt) {
         },
 
         /** Render nunjucks files to html **/
+        json5_to_json: {
+            options: {
+            },
+            target: {
+                files: {
+                    'cfg/data.json': 'cfg/data.json5'
+                }
+            },
+        },
+
         nunjucks: {
             options: {
-                data: grunt.file.readJSON('cfg/data.json'),
+                data: require('./cfg/data.json5'),
                 paths: ['templates', 'pages']
             },
             render: {

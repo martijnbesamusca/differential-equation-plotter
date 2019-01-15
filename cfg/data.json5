@@ -1,0 +1,370 @@
+{
+  title: "Differential equations",
+  test: {
+    Test: {
+      open: true,
+      entries: [
+        {
+          label: "group test",
+          entries: [
+            {
+              label: "1",
+              type: "text",
+              section: "test",
+              name: "test1",
+              tooltip: "A value for testing purposes"
+            },
+            {
+              label: "2",
+              type: "text",
+              section: "test",
+              name: "test2"
+            },
+            {
+              label: "3",
+              type: "text",
+              section: "test",
+              name: "test3"
+            }
+          ]
+        },
+        {
+          label: "Test individual",
+          type: "text",
+          section: "test",
+          name: "test"
+        }
+      ]}
+  },
+
+  input: {
+    // Panel
+    "Window": {
+      open: true,
+      entries: [
+        // Group input
+        {
+          label: "resolution",
+          entries: [
+            // Input field
+            {
+              label: "width",
+              type: "number",
+              section: "screen",
+              name: "width"
+            },
+            // Input field
+            {
+              label: "height",
+              type: "number",
+              section: "screen",
+              name: "height"
+            }
+          ],
+        },
+
+        // Group input
+        {
+          label: "grid",
+          entries: [
+            // Input field
+            {
+              label: "min x",
+              type: "number",
+              section: "screen",
+              name: "minx"
+            },
+            // Input field
+            {
+              label: "max x",
+              type: "number",
+              section: "screen",
+              name: "maxx"
+            },
+            // Input field
+            {
+              label: "min y",
+              type: "number",
+              section: "screen",
+              name: "miny"
+            },
+            // Input field
+            {
+              label: "max y",
+              type: "number",
+              section: "screen",
+              name: "maxy"
+            }
+          ],
+        },
+
+        // Input field
+        {
+          label: "grid type",
+          type: "selection",
+          section: "screen",
+          name: "type",
+          options: [
+            "auto",
+            "cartesian",
+            "polar",
+            "none",
+          ]
+        },
+
+        // Group input
+        {
+          label: "grid res",
+          entries: [
+            // Input field
+            {
+              label: "x",
+              type: "number",
+              section: "screen",
+              name: "resx",
+              activation: "screen.type == cartesian "
+            },
+            // Input field
+            {
+              label: "y",
+              type: "number",
+              section: "screen",
+              name: "resy",
+              activation: "screen.type == cartesian || screen.type == auto"
+            },
+            {
+              label: "r",
+              type: "number",
+              section: "screen",
+              name: "resr",
+              activation: "screen.type == polar "
+            },
+            // Input field
+            {
+              label: "θ",
+              type: "number",
+              section: "screen",
+              name: "resy",
+              activation: "screen.type == polar || screen.type == auto"
+            }
+          ],
+        },
+      ]
+    },
+/*
+    "Screen size": [
+      {
+        label: "Resolution width",
+        type: "number",
+        section: "screen",
+        name: "width"
+      },
+      {
+        label: "Resolution height",
+        type: "number",
+        section: "screen",
+        name: "height"
+      },
+      {
+        label: "Min x",
+        type: "number",
+        section: "screen",
+        name: "minX"
+      },
+      {
+        label: "Max x",
+        type: "number",
+        section: "screen",
+        name: "maxX"
+      },
+      {
+        label: "Min y",
+        type: "number",
+        section: "screen",
+        name: "minY"
+      },
+      {
+        label: "Max y",
+        type: "number",
+        section: "screen",
+        name: "maxY"
+      },
+      {
+        label: "Resolution grid x",
+        type: "number",
+        section: "screen",
+        name: "gridResX"
+      },
+      {
+        label: "Resolution grid y",
+        type: "number",
+        section: "screen",
+        name: "gridResY"
+      }
+    ],
+
+    "Arrow style":[
+      {
+        label: "Step size (smaller is preciser, but slower)",
+        type: "number",
+        section: "dot",
+        name: "step",
+        min: 0.0001,
+        step: 0.01
+      },
+      {
+        label: "Arrow density",
+        type: "number",
+        section: "dot",
+        name: "density",
+        min: 0.0001,
+        step: 0.01
+      },
+      {
+        label: "Arrow size",
+        type: "number",
+        section: "dot",
+        name: "size",
+        min: 0,
+        step: 0.1
+      },
+      {
+        label: "Arrow color",
+        type: "color",
+        section: "dot",
+        name: "color"
+      },
+      {
+        label: "Randomize color",
+        type: "switch",
+        section: "dot",
+        name: "color_random"
+      },
+      {
+        label: "Average age (-1 for no respawn, 0 for static arrows)",
+        type: "number",
+        section: "dot",
+        name: "maxAge",
+        min: 0
+      },
+      {
+        label: "Normalize speed",
+        type: "switch",
+        section: "dot",
+        name: "normalize"
+      },
+      {
+        label: "Random max age",
+        type: "switch",
+        section: "dot",
+        name: "age_random"
+      },
+      {
+        label: "Loop back if outside",
+        type: "switch",
+        section: "dot",
+        name: "loop_back"
+      }
+    ],
+    "Solution path style": [
+      {
+        label: "Path length",
+        type: "number",
+        section: "path",
+        name: "length",
+        min: 0,
+        step: 1
+      },
+      {
+        label: "Path precision boost",
+        type: "number",
+        section: "path",
+        name: "precision",
+        min: 0,
+        step: 1
+      },
+      {
+        label: "Path width",
+        type: "number",
+        section: "path",
+        name: "width",
+        min: 0,
+        step: 0.1
+      },
+      {
+        label: "Path color",
+        type: "color",
+        section: "path",
+        name: "color"
+      },
+      {
+        label: "Randomize color",
+        type: "switch",
+        section: "path",
+        name: "color_random"
+      },
+      {
+        label: "Solution forwards",
+        type: "switch",
+        section: "path",
+        name: "forwards"
+      },
+      {
+        label: "Solution backwards",
+        type: "switch",
+        section: "path",
+        name: "backwards"
+      }
+    ],
+    Nullclines: [
+      {
+        label: "Enable x nullcline (\\(\\dot{x}=0\\))",
+        type: "switch",
+        section: "nullclines",
+        name: "enableX"
+      },
+      {
+        label: "Enable y nullcline (\\(\\dot{y}=0\\))",
+        type: "switch",
+        section: "nullclines",
+        name: "enableY"
+      },
+      {
+        label: "Color x nullcline",
+        type: "color",
+        section: "nullclines",
+        name: "colorX"
+      },
+      {
+        label: "Color y nullcline",
+        type: "color",
+        section: "nullclines",
+        name: "colorY"
+      },
+      {
+        label: "Tolerance",
+        type: "number",
+        section: "nullclines",
+        name: "tolerance"
+      }
+    ],
+    GIF:[
+      {
+        label: "Number of frames recorded",
+        type: "number",
+        section: "gif",
+        name: "length",
+        min: 1,
+        step: 1
+      },
+      {
+        label: "Amount of frames skipped. (makes a faster gif)",
+        type: "number",
+        section: "gif",
+        name: "skip",
+        min: 0,
+        step: 1
+      }
+    ]*/
+  }
+}

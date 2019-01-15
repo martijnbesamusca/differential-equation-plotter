@@ -4,8 +4,19 @@
 {% set id= values.section + '.' + values.name %}
 
 <label for="{{ id }}">{{ values.label }}</label>
-<input id="{{ id }}" type="{{ values.type }}" value="" data-section="{{ values.section }}" data-name="{{ values.name }}"/>
-
+<div class="inputContainer {{"tooltip" if values.tooltip}}" data-tooltip-text="{{ values.tooltip }}">
+    {% if values.type == 'selection' %}
+        <select>
+            {% for option in values.options %}
+                <option>{{ option }}</option>
+            {% endfor %}
+        </select>
+    {% else %}
+        {{"data-activation=\"" + values.activation + "\""  if values.activation}}
+        <input id="{{ id }}" type="{{ values.type }}" value=""
+               data-section="{{ values.section }}" data-name="{{ values.name }}" {% if values.activation %} data-activation="{{ values.activation }}" {% endif %}/>
+    {% endif %}
+</div>
 {% endmacro %}
 
 
@@ -13,10 +24,8 @@
     <label class="inputGroup">
         <span>{{ values.label }}</span>
 
-        {#<div class="inputFields">#}
         {% for entry in values.entries %}
-            {{ field(entry) }}
+            {{ field(entry, values) }}
         {% endfor %}
-        {#</div>#}
     </label>
 {% endmacro %}

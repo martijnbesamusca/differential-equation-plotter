@@ -1,0 +1,17 @@
+.tooltip{
+  position: relative;
+
+  &:hover::after{
+    content: attr(data-tooltip-text);
+    display: block;
+    position: absolute;
+    width: 100%;
+    padding: 0.5em;
+    border-radius: $radius;
+    background-color: rgba(0,0,0, 0.85);
+    z-index: 2;
+    box-sizing: border-box;
+    margin-top: 0em;
+    pointer-events: none;
+  }
+}

@@ -15,7 +15,7 @@
 
 <h2>Settings</h2>
 
-{% for name, fields in test %}
+{% for name, fields in input %}
 {{ collapsible(name, fields.open) }}
     {% for values in fields.entries %}
         {% if values.entries %}
