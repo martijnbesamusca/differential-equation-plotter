@@ -328,6 +328,11 @@ body {
   box-sizing: border-box;
   margin-top: 0em;
   pointer-events: none;
+  text-align: left;
+}
+
+.hide {
+  display: none;
 }
 
 /*# sourceMappingURL=base.css.map */

@@ -3,18 +3,17 @@
 {% macro field(values) %}
 {% set id= values.section + '.' + values.name %}
 
-<label for="{{ id }}">{{ values.label }}</label>
-<div class="inputContainer {{"tooltip" if values.tooltip}}" data-tooltip-text="{{ values.tooltip }}">
+<label for="{{ id }}" {% if values.activation %} data-activation="{{ values.activation }}" {% endif %}>{{ values.label }}</label>
+<div class="inputContainer {{"tooltip" if values.tooltip}}" data-tooltip-text="{{ values.tooltip }}" {% if values.activation %} data-activation="{{ values.activation }}" {% endif %}>
     {% if values.type == 'selection' %}
-        <select>
+        <select id="{{ id }}" data-section="{{ values.section }}" data-name="{{ values.name }}">
             {% for option in values.options %}
                 <option>{{ option }}</option>
             {% endfor %}
         </select>
     {% else %}
-        {{"data-activation=\"" + values.activation + "\""  if values.activation}}
         <input id="{{ id }}" type="{{ values.type }}" value=""
-               data-section="{{ values.section }}" data-name="{{ values.name }}" {% if values.activation %} data-activation="{{ values.activation }}" {% endif %}/>
+               data-section="{{ values.section }}" data-name="{{ values.name }}"/>
     {% endif %}
 </div>
 {% endmacro %}

@@ -3,27 +3,39 @@ const conditional = {
         const elems = document.querySelectorAll('[data-activation]');
         elems.forEach((elm)=>{
             const condition = elm.getAttribute('data-activation')!;
-            // const condition_function = this.parse.expression(condition);
-            const trigger_elem_names = condition.match(/[a-z0-9._]*(?:[^'"])/gi);
-            console.log(trigger_elem_names);
-            // this.parse.triggerElms.forEach((trigger)=>{
-            //     trigger.addEventListener('change', ()=>{
-            //         if(condition_function()) {
-            //             elm.classList.add('hide');
-            //         } else {
-            //             elm.classList.remove('hide');
-            //         }
-            //     })
-            // })
+            let trigger_elem_names = condition.match(/[a-z0-9._'"]+/gi);
+            if(!trigger_elem_names) return;
+            trigger_elem_names = trigger_elem_names.filter((s)=>s.charAt(0) != "'" && s.charAt(0) != '"');
+
+            for(const trigger_elem_name of trigger_elem_names){
+                const trigger_elm = document.getElementById(trigger_elem_name);
+                if(!trigger_elm){
+                    console.warn(trigger_elem_name, 'not found');
+                    continue;
+                }
+
+                const condition_s = 'return '+condition.replace(new RegExp(trigger_elem_name, 'g'), `document.getElementById("${trigger_elem_name}").value`);
+                const conditionFunc = new Function(condition_s);
+
+                for(const trigger_elem_name of trigger_elem_names) {
+                    const trigger_elm = document.getElementById(trigger_elem_name);
+                    if (!trigger_elm) {
+                        console.warn(trigger_elem_name, 'not found');
+                        continue;
+                    }
+                    const listener = ()=>{
+                        if(conditionFunc()){
+                            elm.classList.remove('hide');
+                        } else {
+                            elm.classList.add('hide');
+                        }
+                    };
+                    trigger_elm.addEventListener('change', listener);
+                    listener();
+                }
+            }
         })
     },
-
-    parse: {
-        expression(code: string) {
-            console.log(code);
-            return ()=>{return Math.random() < 0.5}
-        }
-    }
 };
 
 conditional.init();

@@ -99,10 +99,12 @@
             <label class="inputGroup">
               <span>resolution</span>
               <label for="screen.width">width</label>
-              <div class="inputContainer " data-tooltip-text="">
+              <div class="inputContainer tooltip" data-tooltip-text="The number of pixels horizontally.
+ Higher value looks better, but gives lower performance.">
                 <input id="screen.width" type="number" value="" data-section="screen" data-name="width"> </div>
               <label for="screen.height">height</label>
-              <div class="inputContainer " data-tooltip-text="">
+              <div class="inputContainer tooltip" data-tooltip-text="The number of pixels vertically.
+ Higher value looks better, but gives lower performance.">
                 <input id="screen.height" type="number" value="" data-section="screen" data-name="height"> </div>
             </label>
             <label class="inputGroup">
@@ -122,7 +124,7 @@
             </label>
             <label for="screen.type">grid type</label>
             <div class="inputContainer " data-tooltip-text="">
-              <select>
+              <select id="screen.type" data-section="screen" data-name="type">
                 <option>auto</option>
                 <option>cartesian</option>
                 <option>polar</option>
@@ -131,18 +133,18 @@
             </div>
             <label class="inputGroup">
               <span>grid res</span>
-              <label for="screen.resx">x</label>
-              <div class="inputContainer " data-tooltip-text=""> data-activation="screen.type == cartesian "
-                <input id="screen.resx" type="number" value="" data-section="screen" data-name="resx" data-activation="screen.type == cartesian "> </div>
-              <label for="screen.resy">y</label>
-              <div class="inputContainer " data-tooltip-text=""> data-activation="screen.type == cartesian || screen.type == auto"
-                <input id="screen.resy" type="number" value="" data-section="screen" data-name="resy" data-activation="screen.type == cartesian || screen.type == auto"> </div>
-              <label for="screen.resr">r</label>
-              <div class="inputContainer " data-tooltip-text=""> data-activation="screen.type == polar "
-                <input id="screen.resr" type="number" value="" data-section="screen" data-name="resr" data-activation="screen.type == polar "> </div>
-              <label for="screen.resy">θ</label>
-              <div class="inputContainer " data-tooltip-text=""> data-activation="screen.type == polar || screen.type == auto"
-                <input id="screen.resy" type="number" value="" data-section="screen" data-name="resy" data-activation="screen.type == polar || screen.type == auto"> </div>
+              <label for="screen.resx" data-activation="screen.type == 'cartesian'">x</label>
+              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'cartesian'">
+                <input id="screen.resx" type="number" value="" data-section="screen" data-name="resx"> </div>
+              <label for="screen.resy" data-activation="screen.type == 'cartesian' || screen.type == 'auto'">y</label>
+              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'cartesian' || screen.type == 'auto'">
+                <input id="screen.resy" type="number" value="" data-section="screen" data-name="resy"> </div>
+              <label for="screen.resr" data-activation="screen.type == 'polar'">r</label>
+              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'polar'">
+                <input id="screen.resr" type="number" value="" data-section="screen" data-name="resr"> </div>
+              <label for="screen.resy" data-activation="screen.type == 'polar' || screen.type == 'auto'">θ</label>
+              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'polar' || screen.type == 'auto'">
+                <input id="screen.resy" type="number" value="" data-section="screen" data-name="resy"> </div>
             </label>
           </div>
         </div>

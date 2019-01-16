@@ -1,41 +1,5 @@
 {
   title: "Differential equations",
-  test: {
-    Test: {
-      open: true,
-      entries: [
-        {
-          label: "group test",
-          entries: [
-            {
-              label: "1",
-              type: "text",
-              section: "test",
-              name: "test1",
-              tooltip: "A value for testing purposes"
-            },
-            {
-              label: "2",
-              type: "text",
-              section: "test",
-              name: "test2"
-            },
-            {
-              label: "3",
-              type: "text",
-              section: "test",
-              name: "test3"
-            }
-          ]
-        },
-        {
-          label: "Test individual",
-          type: "text",
-          section: "test",
-          name: "test"
-        }
-      ]}
-  },
 
   input: {
     // Panel
@@ -51,14 +15,16 @@
               label: "width",
               type: "number",
               section: "screen",
-              name: "width"
+              name: "width",
+              tooltip: "The number of pixels horizontally.\n Higher value looks better, but gives lower performance.",
             },
             // Input field
             {
               label: "height",
               type: "number",
               section: "screen",
-              name: "height"
+              name: "height",
+              tooltip: "The number of pixels vertically.\n Higher value looks better, but gives lower performance.",
             }
           ],
         },
@@ -122,7 +88,7 @@
               type: "number",
               section: "screen",
               name: "resx",
-              activation: "screen.type == cartesian "
+              activation: "screen.type == 'cartesian'"
             },
             // Input field
             {
@@ -130,14 +96,14 @@
               type: "number",
               section: "screen",
               name: "resy",
-              activation: "screen.type == cartesian || screen.type == auto"
+              activation: "screen.type == 'cartesian' || screen.type == 'auto'"
             },
             {
               label: "r",
               type: "number",
               section: "screen",
               name: "resr",
-              activation: "screen.type == polar "
+              activation: "screen.type == 'polar'"
             },
             // Input field
             {
@@ -145,7 +111,7 @@
               type: "number",
               section: "screen",
               name: "resy",
-              activation: "screen.type == polar || screen.type == auto"
+              activation: "screen.type == 'polar' || screen.type == 'auto'"
             }
           ],
         },
