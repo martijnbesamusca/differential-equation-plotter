@@ -131,21 +131,30 @@
                 <option>none</option>
               </select>
             </div>
-            <label class="inputGroup">
+            <label class="inputGroup" data-activation="screen.type != 'none'">
               <span>grid res</span>
-              <label for="screen.resx" data-activation="screen.type == 'cartesian'">x</label>
-              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'cartesian'">
+              <label for="screen.resx" data-activation="screen.type == 'cartesian' || screen.type == 'auto'">x</label>
+              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'cartesian' || screen.type == 'auto'">
                 <input id="screen.resx" type="number" value="" data-section="screen" data-name="resx"> </div>
               <label for="screen.resy" data-activation="screen.type == 'cartesian' || screen.type == 'auto'">y</label>
               <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'cartesian' || screen.type == 'auto'">
                 <input id="screen.resy" type="number" value="" data-section="screen" data-name="resy"> </div>
-              <label for="screen.resr" data-activation="screen.type == 'polar'">r</label>
-              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'polar'">
+              <label for="screen.resr" data-activation="screen.type == 'polar' || screen.type == 'auto'">r</label>
+              <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'polar' || screen.type == 'auto'">
                 <input id="screen.resr" type="number" value="" data-section="screen" data-name="resr"> </div>
               <label for="screen.resy" data-activation="screen.type == 'polar' || screen.type == 'auto'">θ</label>
               <div class="inputContainer " data-tooltip-text="" data-activation="screen.type == 'polar' || screen.type == 'auto'">
                 <input id="screen.resy" type="number" value="" data-section="screen" data-name="resy"> </div>
             </label>
+          </div>
+        </div>
+        <div class="collapsible">
+          <input id="Arrow style-collapsible" class="collapsible-input" type="checkbox">
+          <label class="collapsible-label" for="Arrow style-collapsible">Arrow style</label>
+          <div class="collapsible-content">
+            <label for="dot.step">Step size</label>
+            <div class="inputContainer tooltip" data-tooltip-text="Number of pixels a arrow moves when the length of">
+              <input id="dot.step" type="number" value="" data-section="dot" data-name="step"> </div>
           </div>
         </div>
       </div>

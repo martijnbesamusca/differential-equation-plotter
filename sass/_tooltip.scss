@@ -1,9 +1,9 @@
 .tooltip{
   position: relative;
 
-  &:hover::after{
+  &::after{
     content: attr(data-tooltip-text);
-    display: block;
+    display: none;
     position: absolute;
     width: 100%;
     padding: 0.5em;
@@ -15,4 +15,9 @@
     pointer-events: none;
     text-align: left;
   }
+
+  &:hover::after{
+    display: block;
+  }
+
 }

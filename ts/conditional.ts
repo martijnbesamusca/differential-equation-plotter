@@ -23,11 +23,16 @@ const conditional = {
                         console.warn(trigger_elem_name, 'not found');
                         continue;
                     }
+                    const elm_comment = document.createComment(elm.outerHTML);
                     const listener = ()=>{
-                        if(conditionFunc()){
-                            elm.classList.remove('hide');
+                        if(conditionFunc()) {
+                            if(elm_comment.parentElement) {
+                                elm_comment.parentElement.replaceChild(elm, elm_comment);
+                            }
                         } else {
-                            elm.classList.add('hide');
+                            if(elm.parentElement) {
+                                elm.parentElement.replaceChild(elm_comment, elm);
+                            }
                         }
                     };
                     trigger_elm.addEventListener('change', listener);

@@ -20,7 +20,7 @@
 
 
 {% macro fieldgroup(values) %}
-    <label class="inputGroup">
+    <label class="inputGroup" {% if values.activation %} data-activation="{{ values.activation }}" {% endif %}>
         <span>{{ values.label }}</span>
 
         {% for entry in values.entries %}

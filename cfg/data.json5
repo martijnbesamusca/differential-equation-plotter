@@ -81,6 +81,7 @@
         // Group input
         {
           label: "grid res",
+          activation: "screen.type != 'none'",
           entries: [
             // Input field
             {
@@ -88,7 +89,7 @@
               type: "number",
               section: "screen",
               name: "resx",
-              activation: "screen.type == 'cartesian'"
+              activation: "screen.type == 'cartesian' || screen.type == 'auto'"
             },
             // Input field
             {
@@ -103,7 +104,7 @@
               type: "number",
               section: "screen",
               name: "resr",
-              activation: "screen.type == 'polar'"
+              activation: "screen.type == 'polar' || screen.type == 'auto'"
             },
             // Input field
             {
@@ -114,6 +115,19 @@
               activation: "screen.type == 'polar' || screen.type == 'auto'"
             }
           ],
+        },
+      ]
+    },
+    "Arrow style": {
+      label: "grid",
+      entries: [
+        {
+          label: "Step size",
+          type: "number",
+          section: "dot",
+          name: "step",
+          min: 0,
+          tooltip: "Number of pixels a arrow moves when the length of",
         },
       ]
     },

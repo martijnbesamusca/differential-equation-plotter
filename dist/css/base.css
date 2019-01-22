@@ -316,9 +316,9 @@ body {
 .tooltip {
   position: relative;
 }
-.tooltip:hover::after {
+.tooltip::after {
   content: attr(data-tooltip-text);
-  display: block;
+  display: none;
   position: absolute;
   width: 100%;
   padding: 0.5em;
@@ -330,9 +330,12 @@ body {
   pointer-events: none;
   text-align: left;
 }
+.tooltip:hover::after {
+  display: block;
+}
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 /*# sourceMappingURL=base.css.map */
