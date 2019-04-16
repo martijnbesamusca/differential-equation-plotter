@@ -12,7 +12,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "webgl2"
     ],
     "paths": {
       "@/*": [
@@ -34,6 +35,6 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+//    "node_modules"
   ]
 }

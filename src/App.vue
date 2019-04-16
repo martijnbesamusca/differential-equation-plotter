@@ -1,29 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <app-plot :height="canvasHeight" :width="canvasWidth"></app-plot>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import {Component, Vue, Watch} from "vue-property-decorator";
+import AppPlot from './components/AppPlot.vue';
 
 @Component({
   components: {
-    HelloWorld,
+    AppPlot,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  canvasHeight = window.innerHeight;
+  canvasWidth = window.innerWidth;
+
+  mounted(){
+    window.addEventListener('resize', ()=>{
+      this.canvasHeight = window.innerHeight;
+      this.canvasWidth = window.innerWidth;
+    })
+  }
+}
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  body, html {
+    padding: 0;
+    margin: 0;
+  }
+
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
 </style>
