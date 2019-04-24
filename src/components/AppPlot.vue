@@ -1,5 +1,11 @@
 <template>
-    <canvas id="plot" ref="plot" :width="width" :height="height"></canvas>
+    <div id="plot">
+        <svg id="svg" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' :width="width" :height="height" viewPort='0 0 100 100'>
+            <!-- put some content in here -->
+            <rect x='0' y='0' width='100' height='100' fill='red'></rect>
+        </svg>
+        <canvas ref="plot" :width="width" :height="height"></canvas>
+    </div>
 </template>
 
 <script lang="ts">
@@ -49,6 +55,17 @@
 <style scoped>
     #plot {
         grid-area: plot;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    #plot canvas{
+        height: 100%;
+        width: 100%;
+    }
+    #svg {
+        position: absolute;
         height: 100%;
         width: 100%;
     }

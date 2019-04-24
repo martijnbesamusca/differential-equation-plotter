@@ -45,7 +45,7 @@ export default class App extends Vue {
     display: grid;
     width: 100%;
     font-family: 'Open Sans', sans-serif;
-    min-height: 100%;
+    height: 100%;
     grid-template-areas:  "plot settings"
                           "plot settings";
   }

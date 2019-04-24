@@ -2,16 +2,15 @@
     <div id="settings">
         <h1>Settings</h1>
         <app-input-panel title="hey">
-            <app-input-group label="view" type="number"
-                             :inputs="[
-                             {label:'x min', key:'xmin', type: 'number'},
-                             {label:'x max', key:'xmax', type: 'number'},
-                             {label:'y min', key:'ymin', type: 'number'},
-                             {label:'y max', key:'ymax', type: 'number'}
-                             ]" :bind="this"/>
-            <label>
-                Speed <input type="number" v-model="speed" step="0.01">
-            </label>
+            <app-input-group title="view">
+                <label for="x_min">x min</label><input id="x_min" ref="x_min" type="number" :max="xmax" v-model="xmin">
+                <label for="x_min">x max</label><input id="x_max" ref="x_max" type="number" :min="xmin" v-model="xmax">
+                <label for="y_min">y min</label><input id="y_min" ref="y_min" type="number" :max="ymax" v-model="ymin">
+                <label for="y_min">y max</label><input id="y_max" ref="y_max" type="number" :min="ymin" v-model="ymax">
+            </app-input-group>
+
+            <label>Speed<input type="number" v-model="speed" step="0.01"></label>
+
         </app-input-panel>
     </div>
 </template>
@@ -22,6 +21,7 @@
     import {IViewbox} from '@/store/modules/settings';
     import AppInputGroup from '@/components/input/AppInputGroup.vue';
     import AppInputPanel from '@/components/input/AppInputPanel.vue';
+    import AppInputGroup2 from "@/components/input/AppInputGroup2.vue";
 
     @Component({
         components: {
@@ -30,6 +30,17 @@
         },
     })
     export default class AppSettingsMenu extends Vue {
+        private settingsHandler = {
+            menu: this,
+            get(obj, prop) {
+                return this.menu.$store.state.settings[prop];
+            },
+            set(obj, prop, value) {
+                debugger;
+                this.$store.commit('settings/changeNumber', {key: prop, val: value})
+            },
+        } as ProxyHandler;
+        private settings: {[key: string]: any} =  new Proxy({}, this.settingsHandler);
 
         mounted(){
         }
@@ -61,8 +72,14 @@
     }
 
 
+    #settings label {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-column-gap: 0.5em;
+    }
     #settings input {
         @extend %input;
+        width: auto;
     }
 
 </style>

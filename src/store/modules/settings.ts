@@ -42,8 +42,8 @@ export default class SettingsStore extends VuexModule {
     @getter public speed = 1.0;
     @getter public drawFunctionBackground = false;
     @getter public useCached = false;
-    @getter public dxFunction = (x: number, y: number): number => Math.sin(x + Math.cos(y));
-    @getter public dyFunction = (x: number, y: number): number => Math.cos(x + Math.sin(y));
+    @getter public dxFunction = (x: number, y: number): number => Math.sin(x);
+    @getter public dyFunction = (x: number, y: number): number => y;
 
     @mutation public changeVal(valKey: IValKey) {
         // @ts-ignore
