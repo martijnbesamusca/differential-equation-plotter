@@ -1,7 +1,6 @@
 import {VuexModule, mutation, action, getter, Module} from 'vuex-class-component';
-import get = Reflect.get;
 
-interface IViewbox {
+export interface IViewbox {
     x: IViewboxRange;
     y: IViewboxRange;
 }
@@ -14,9 +13,24 @@ interface IViewboxRange {
 interface ISettings {
     viewbox: IViewbox;
     speed: number;
+    drawFunctionBackground: boolean;
+    useCached: boolean;
     dxFunction: (x: number, y: number) => number;
     dyFunction: (x: number, y: number) => number;
+}
 
+interface IViewBoxKey {
+    axis: 'x' | 'y';
+    side: 'min' | 'max';
+}
+
+interface IViewBoxValKey {
+    key: IViewBoxKey;
+    val: any;
+}
+interface IValKey{
+    key: string;
+    val: any;
 }
 
 @Module({namespacedPath: 'settings/'})
@@ -25,27 +39,35 @@ export default class SettingsStore extends VuexModule {
         x: {min: -6, max: 6},
         y: {min: -3, max: 3},
     };
-    @getter public speed = 0.01;
-    @getter public functionCacheResolution = 5;
-    @getter public drawFunctionBackground = true;
-    @getter public useCached = true;
-    @getter public dxFunction = (x: number, y: number): number => x;
-    @getter public dyFunction = (x: number, y: number): number => x * y;
+    @getter public speed = 1.0;
+    @getter public drawFunctionBackground = false;
+    @getter public useCached = false;
+    @getter public dxFunction = (x: number, y: number): number => Math.sin(x + Math.cos(y));
+    @getter public dyFunction = (x: number, y: number): number => Math.cos(x + Math.sin(y));
 
-    @mutation public changeViewBox({x, y}: IViewbox) {
-        this.viewbox.x.min = x.min;
-        this.viewbox.x.max = x.max;
-        this.viewbox.y.min = y.min;
-        this.viewbox.y.max = y.max;
+    @mutation public changeVal(valKey: IValKey) {
+        // @ts-ignore
+        this[valKey.key] = valKey.key;
     }
 
-    get object(): ISettings {
-        return {
-            viewbox: this.viewbox,
-            speed: this.speed,
-            dxFunction: this.dxFunction,
-            dyFunction: this.dyFunction,
-        };
+    @mutation public changeNumber(valKey: IValKey) {
+        if (typeof valKey.val === 'string') {
+            valKey.val = parseFloat(valKey.val);
+            if (Number.isNaN(valKey.val)) {
+                return;
+            }
+        }
+        // @ts-ignore
+        this[valKey.key] = valKey.val;
     }
 
+    @mutation public changeViewBox(valKey: IViewBoxValKey) {
+        if (typeof valKey.val === 'string') {
+            valKey.val = parseFloat(valKey.val);
+            if (Number.isNaN(valKey.val)) {
+                return;
+            }
+        }
+        this.viewbox[valKey.key.axis][valKey.key.side] = valKey.val;
+    }
 }

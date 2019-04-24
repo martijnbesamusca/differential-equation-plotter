@@ -1,0 +1,13 @@
+@import "variables.scss";
+%input {
+  width: 100%;
+  padding: 0.3em 0.5em;
+  border: 0.15em solid #555;
+  outline: none;
+  border-radius: $input-radius;
+  margin-bottom: 0.5em;
+  
+  &:focus {
+    border-color: $accent-color;
+  }
+}
