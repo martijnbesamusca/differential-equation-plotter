@@ -5,8 +5,8 @@
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import {State} from "vuex-class-component";
-    import ParticleTest from "@/api/particleTest";
-    import ParticleRenderer from "@/api/particleRenderer";
+    import ParticleTest from "@/api/arrowCloud";
+    import PlotRenderer from "@/api/plotRenderer";
     import {cloneDeep, throttle} from 'lodash'
 
     @Component({})
@@ -17,17 +17,16 @@
         @Prop(Number) width!: number;
         @Prop(Number) height!: number;
 
-        private particleRenderer: ParticleRenderer | ParticleTest;
+        private particleRenderer: PlotRenderer;
 
         private onResizeThrottled: (event?: Event) => null;
 
         mounted() {
-            // this.particleRenderer = new ParticleRenderer(this.$refs.plot, cloneDeep(this.$store.state.settings));
-            this.particleRenderer = new ParticleTest(this.$refs.plot, cloneDeep(this.$store.state.settings));
+            this.particleRenderer = new PlotRenderer(this.$refs.plot, cloneDeep(this.$store.state.settings));
             window.particleRenderer = this.particleRenderer;
             this.particleRenderer.render();
 
-            this.onResizeThrottled = throttle(this.onResize, 500, {leading: false}) as (event?: Event) => null;
+            this.onResizeThrottled = throttle(this.onResize, 100, {leading: false}) as (event?: Event) => null;
         }
 
         @Watch('width')

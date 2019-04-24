@@ -53,10 +53,11 @@
     @import "../style/variables.scss";
     #settings {
         background-color: #333;
-        height: 100%;
+        height: 100vh;
         padding: 0 2em;
         grid-area: settings;
         color: #fff;
+        overflow-y: auto;
     }
 
 
