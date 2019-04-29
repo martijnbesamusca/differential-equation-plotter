@@ -42,7 +42,7 @@ export default class SettingsStore extends VuexModule {
     @getter public speed = 1.0;
     @getter public drawFunctionBackground = false;
     @getter public useCached = false;
-    @getter public dxFunction = (x: number, y: number): number => Math.sin(x);
+    @getter public dxFunction = (x: number, y: number): number => -Math.sin(2* Math.PI * x);
     @getter public dyFunction = (x: number, y: number): number => y;
 
     @mutation public changeVal(valKey: IValKey) {
