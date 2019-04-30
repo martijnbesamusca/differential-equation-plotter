@@ -1,9 +1,10 @@
 <template>
     <div id="plot">
         <svg id="svg" preserveAspectRatio="none" ref="grid" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 100 100'>
+            <rect x="0" y="0" height="20" width="20"/>
             <!-- put some content in here -->
         </svg>
-        <canvas ref="plot"></canvas>
+        <canvas ref="plot" style="display: none;"></canvas>
     </div>
 </template>
 

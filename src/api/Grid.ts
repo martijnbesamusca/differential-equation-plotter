@@ -24,7 +24,7 @@ export default class Grid {
         this.gridNumX = Math.floor(this.svg.clientWidth / this.minGap);
         this.gridNumY = Math.floor(this.svg.clientHeight / this.minGap);
 
-        for(let i = 0; i < this.gridNumX; i++){
+        for(let i = 0; i < this.gridNumX; i++) {
             const line = document.createElementNS('http://www.w3.org/2000/svg','line');
             line.classList.add('line_grid');
             line.classList.add('line_vertical');
@@ -60,6 +60,8 @@ export default class Grid {
         const resX = 10**(Math.ceil(Math.log10(width / this.gridNumX)));
         const resY = 10**(Math.ceil(Math.log10(height / this.gridNumY)));
 
+        console.log(this.findOptimalRes(width, this.gridNumX));
+
         this.svg.setAttribute('viewBox', `0 0 ${this.svg.clientWidth} ${this.svg.clientHeight}`);
 
         const startX = Math.floor(this.settings.viewbox.x.min / resX) * resX;
@@ -76,12 +78,12 @@ export default class Grid {
 
             this.setClass(line, 'line_axis', x === 0);
             line.setAttribute('data-x', `${x}`);
-            line.classList.remove('line_extra')
+            line.classList.remove('line_extra');
         }
 
         const temp = Math.ceil(this.settings.viewbox.x.min / (resX * 10)) * 10 -  Math.floor(this.settings.viewbox.x.min / resX);
-        for(let i = 0; i * 10 + temp<this.gridNumX; i++) {
-            const line = this.linesVertical[temp + i*10];
+        for(let i = 0; i * 10 + temp < this.gridNumX; i++) {
+            const line = this.linesVertical[temp + i * 10];
             const number = this.numbersVertical[i];
             // if(!number){ console.log('nah', i); return;}
             line.classList.add('line_extra');
@@ -119,6 +121,17 @@ export default class Grid {
         } else {
             elm.classList.remove(className);
         }
+    }
+
+    findOptimalRes(length: number, maxLines: number): number {
+        const options = [1, 2, 5];
+        const res = 10 ** (Math.floor(Math.log10(length / maxLines)));
+        for (let option of [1, 2, 5]){
+            if (res * option * maxLines >= length ) {
+                return res * option;
+            }
+        }
+        return res * 10;
     }
 
     updateSettings(settings: settings) {
