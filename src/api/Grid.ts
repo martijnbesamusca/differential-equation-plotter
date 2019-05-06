@@ -1,4 +1,5 @@
 import settings from "@/store/modules/settings";
+import NumberFormat from "@/api/NumberFormat";
 
 export default class Grid {
     private svg: SVGElement;
@@ -11,10 +12,12 @@ export default class Grid {
     private minGap = 20;
     private gridNumX: number;
     private gridNumY: number;
+    private format: NumberFormat;
 
     constructor(svg: SVGElement, settings: settings){
         this.svg = svg;
         this.settings = settings;
+        this.format = new NumberFormat(5);
         this.numbersHorizantal = [];
         this.numbersVertical = [];
 
@@ -32,16 +35,6 @@ export default class Grid {
             this.svg.appendChild(line);
         }
 
-        for(let i = 0; i < this.gridNumX / 10; i++){
-            const number = document.createElementNS('http://www.w3.org/2000/svg','text');
-            number.classList.add('text_grid');
-            number.classList.add('text_vertical');
-            this.numbersVertical.push(number);
-            this.svg.appendChild(number);
-            number.setAttribute('y','50%');
-            number.setAttribute('dy','1em');
-        }
-
         for(let i = 0; i < this.gridNumY; i++){
             const line = document.createElementNS('http://www.w3.org/2000/svg','line');
             line.classList.add('line_grid');
@@ -50,6 +43,28 @@ export default class Grid {
             this.svg.appendChild(line);
         }
 
+        for(let i = 0; i < this.gridNumX / 10; i++){
+            const number = document.createElementNS('http://www.w3.org/2000/svg','text');
+            number.classList.add('text_grid');
+            number.classList.add('text_vertical');
+            this.numbersVertical.push(number);
+            this.svg.appendChild(number);
+            number.setAttribute('y','50%');
+            number.setAttribute('dx','-0.2em');
+            number.setAttribute('dy','1.2em');
+        }
+
+        for(let i = 0; i < this.gridNumY / 10; i++){
+            const number = document.createElementNS('http://www.w3.org/2000/svg','text');
+            number.classList.add('text_grid');
+            number.classList.add('text_horizontal');
+            this.numbersHorizantal.push(number);
+            this.svg.appendChild(number);
+            number.setAttribute('x','50%');
+            number.setAttribute('dy','0.4em');
+        }
+
+
         this.render();
     }
 
@@ -57,14 +72,18 @@ export default class Grid {
         const width = this.settings.viewbox.x.max - this.settings.viewbox.x.min;
         const height = this.settings.viewbox.y.max - this.settings.viewbox.y.min;
 
-        const resX = 10**(Math.ceil(Math.log10(width / this.gridNumX)));
-        const resY = 10**(Math.ceil(Math.log10(height / this.gridNumY)));
+        const resX = this.findOptimalRes(width, this.gridNumX);
+        const resY = this.findOptimalRes(height, this.gridNumY);
 
-        console.log(this.findOptimalRes(width, this.gridNumX));
+        const startX = Math.floor(this.settings.viewbox.x.min / resX) * resX;
+        const startY = Math.floor(this.settings.viewbox.y.min / resY) * resY;
+
+        const startMainX = Math.ceil(this.settings.viewbox.x.min / (resX * 10)) * 10 -  Math.floor(this.settings.viewbox.x.min / resX);
+        const startMainY = Math.ceil(this.settings.viewbox.y.min / (resY * 10)) * 10 -  Math.floor(this.settings.viewbox.y.min / resY);
 
         this.svg.setAttribute('viewBox', `0 0 ${this.svg.clientWidth} ${this.svg.clientHeight}`);
 
-        const startX = Math.floor(this.settings.viewbox.x.min / resX) * resX;
+
         for(let i = 0; i < this.gridNumX; i++) {
             const line = this.linesVertical[i];
 
@@ -77,32 +96,35 @@ export default class Grid {
             line.setAttribute('y2', `${this.svg.clientHeight}`);
 
             this.setClass(line, 'line_axis', x === 0);
-            line.setAttribute('data-x', `${x}`);
+            line.setAttribute('data-x', `${this.format.format(x)}`);
             line.classList.remove('line_extra');
         }
 
-        const temp = Math.ceil(this.settings.viewbox.x.min / (resX * 10)) * 10 -  Math.floor(this.settings.viewbox.x.min / resX);
-        for(let i = 0; i * 10 + temp < this.gridNumX; i++) {
-            const line = this.linesVertical[temp + i * 10];
-            const number = this.numbersVertical[i];
-            // if(!number){ console.log('nah', i); return;}
+        for(let i = 0; i * 10 + startMainX < this.gridNumX; i++) {
+            const line = this.linesVertical[startMainX + i * 10];
             line.classList.add('line_extra');
-            number.textContent =  line.getAttribute('data-x')!;
-            number.setAttribute('x', line.getAttribute('x1')!);
-        }
 
-        for(let i = 0; i < this.gridNumX / 10; i++){
-            const number = this.numbersHorizantal[i];
-            const x = startX + i * resX * 10;
-            // console.log(x.toFixed(Math.max(0, Math.ceil(Math.log10(width / this.gridNumX)) + 1)) , x.toFixed());
-            const xPer = (x - this.settings.viewbox.x.min) / width * 100;
+            const number = this.numbersVertical[i];
+            number.textContent =  line.getAttribute('data-x')!;
+            let numberY = this.svg.clientHeight * (-this.settings.viewbox.y.min / height);
+            number.setAttribute('x', line.getAttribute('x1')!);
+            number.setAttribute('y', numberY.toString());
+            number.setAttribute('dy', '1.2em');
+
+            const bbox = number.getBBox();
+            if (bbox.y + bbox.height > this.svg.clientHeight) {
+                number.setAttribute('y', this.svg.clientHeight.toString());
+                number.setAttribute('dy', '-0.1em');
+            }
+
+            this.setClass(number, 'text_zero', number.textContent === '0');
         }
 
         // Set vertical lines
-        const startY = Math.floor(this.settings.viewbox.y.min / resY) * resY;
         for(let i = 0; i < this.gridNumY; i++) {
             const line = this.linesHorizontal[i];
-            const y = startY + (i + 1) * resY;
+
+            const y = startY + i * resY;
             const yPer = (y - this.settings.viewbox.y.min) / height * 100;
 
             line.setAttribute('x1', `0`);
@@ -111,7 +133,29 @@ export default class Grid {
             line.setAttribute('y2', `${yPer}%`);
 
             this.setClass(line, 'line_axis', y === 0);
-            this.setClass(line, 'line_extra', y % (resY * 10) === 0);
+            line.setAttribute('data-y', `${this.format.format(y)}`);
+            line.classList.remove('line_extra');
+        }
+
+        for(let i = 0; i * 10 + startMainY < this.gridNumY; i++) {
+            const line = this.linesHorizontal[startMainY + i * 10];
+            line.classList.add('line_extra');
+
+            const number = this.numbersHorizantal[i];
+            number.textContent =  line.getAttribute('data-y')!;
+            let numberX = this.svg.clientWidth * (-this.settings.viewbox.x.min / width);
+            number.setAttribute('x', numberX.toString());
+            number.setAttribute('y', line.getAttribute('y1')!);
+            number.setAttribute('dx', '-0.3em');
+
+            const bbox = number.getBBox();
+            if (bbox.x < 0) {
+                number.setAttribute('x', '0');
+                number.setAttribute('dx', '0.2em');
+            }
+
+            this.setClass(number, 'text_border', bbox.x < 0);
+            this.setClass(number, 'text_zero', number.textContent === '0');
         }
     }
 
@@ -126,12 +170,14 @@ export default class Grid {
     findOptimalRes(length: number, maxLines: number): number {
         const options = [1, 2, 5];
         const res = 10 ** (Math.floor(Math.log10(length / maxLines)));
-        for (let option of [1, 2, 5]){
+        let multiple = 1;
+        for (let option of [1, 2, 5, 10]){
             if (res * option * maxLines >= length ) {
-                return res * option;
+                multiple = option;
+                break;
             }
         }
-        return res * 10;
+        return res * multiple;
     }
 
     updateSettings(settings: settings) {

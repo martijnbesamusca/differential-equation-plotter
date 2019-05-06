@@ -2,9 +2,8 @@ import Settings from '@/store/modules/settings';
 import CachedFunction from '@/api/CachedFunction';
 import store from '../store/';
 import {cloneDeep} from 'lodash';
-import arrowCloud from '@/api/arrowCloud';
 import {m4} from 'twgl.js';
-import ArrowCloud from '@/api/arrowCloud';
+import ArrowCloud from '@/api/ArrowCloud';
 import Grid from "@/api/Grid";
 
 export default class PlotRenderer {
@@ -13,7 +12,7 @@ export default class PlotRenderer {
     private cachedFunction: CachedFunction;
 
     private settings!: Settings;
-    private arrowCloud: arrowCloud;
+    private arrowCloud: ArrowCloud;
     private grid: Grid;
     private uniforms!: {[key: string]: any};
 
@@ -46,8 +45,14 @@ export default class PlotRenderer {
             this.settings = cloneDeep(state.settings);
             this.arrowCloud.updateSettings(this.settings);
             this.grid.updateSettings(this.settings);
-            if(mutation.type === 'settings/changeViewBox') {
+
+            if(mutation.type === 'settings/changeViewBox'||
+                (mutation.type === 'settings/changeNumber' && mutation.payload.key.startsWith('viewbox'))) {
                 this.updateViewBox();
+            }
+
+            if (mutation.type === 'settings/changeValue' && mutation.payload.key === 'arrowColor') {
+                this.arrowCloud.colorArrows();
             }
         });
     }

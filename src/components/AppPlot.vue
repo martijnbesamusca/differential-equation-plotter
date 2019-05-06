@@ -1,18 +1,26 @@
 <template>
     <div id="plot">
         <svg id="svg" preserveAspectRatio="none" ref="grid" xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 100 100'>
-            <rect x="0" y="0" height="20" width="20"/>
+            <defs>
+                <filter id="backdrop">
+                    <feMorphology operator="dilate" radius="2" in="SourceAlpha" result="dilated"/>
+                    <feColorMatrix in="dilated" type="matrix" values="-1 0 0 0 1
+                                                              0 -1 0 0 1
+                                                              0 0 -1 0 1
+                                                              0 0 0 1 0"/>
+                    <feComposite in="SourceGraphic"/>
+                </filter>
+            </defs>
             <!-- put some content in here -->
         </svg>
-        <canvas ref="plot" style="display: none;"></canvas>
+        <canvas ref="plot"></canvas>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
     import {State} from "vuex-class-component";
-    import ParticleTest from "@/api/arrowCloud";
-    import PlotRenderer from "@/api/plotRenderer";
+    import PlotRenderer from "@/api/PlotRenderer";
     import {cloneDeep, throttle} from 'lodash'
 
     @Component({})
@@ -98,5 +106,22 @@
 
     .text_grid {
         font: bold 1em sans-serif;
+        fill: #333;
+        filter: url('#backdrop');
+
+        &.text_horizontal {
+            text-anchor: end;
+
+        }
+        &.text_vertical {
+            text-anchor: middle;
+
+            &.text_zero {
+                display: none;
+            }
+        }
+        &.text_border {
+            text-anchor: start;
+        }
     }
 </style>

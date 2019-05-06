@@ -30,7 +30,8 @@
     body, html {
         padding: 0;
         margin: 0;
-        height: 100%
+        overflow: hidden;
+        height: 100%;
     }
 
     *{
@@ -45,5 +46,6 @@
         grid-template-areas:  "plot settings"
         "plot settings";
         grid-template-columns: 1fr auto;
+        overflow: hidden;
     }
 </style>

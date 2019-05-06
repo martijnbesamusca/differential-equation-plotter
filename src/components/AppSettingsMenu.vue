@@ -1,76 +1,68 @@
 <template>
     <div id="settings">
-        <h1>Settings</h1>
-        <app-input-panel title="hey">
+        <h1 id="title">Settings</h1>
+        <app-input-panel title="window">
             <app-input-group title="view">
-                <label for="x_min">x min</label><input id="x_min" ref="x_min" type="number" :max="xmax" v-model="xmin">
-                <label for="x_min">x max</label><input id="x_max" ref="x_max" type="number" :min="xmin" v-model="xmax">
-                <label for="y_min">y min</label><input id="y_min" ref="y_min" type="number" :max="ymax" v-model="ymin">
-                <label for="y_min">y max</label><input id="y_max" ref="y_max" type="number" :min="ymin" v-model="ymax">
+                <app-input label="x min" varName="viewbox.x.min" type="number" :store="this.$store" :max="this.$store.state.settings.viewbox.x.max - 0.001"/>
+                <app-input label="x max" varName="viewbox.x.max" type="number" :store="this.$store"/>
+                <app-input label="y min" varName="viewbox.y.min" type="number" :store="this.$store"/>
+                <app-input label="y max" varName="viewbox.y.max" type="number" :store="this.$store"/>
             </app-input-group>
-
-            <label>Speed<input type="number" v-model="speed" step="0.01"></label>
-
         </app-input-panel>
+        <app-input-panel title="arrows">
+            <app-input-number label="Number of arrows" varName="numArrows" type="number" :store="this.$store" :max="this.maxNumArrow"/>
+            <app-input-number label="Speed" varName="speed" type="number" :store="this.$store" step="0.1"/>
+            <app-input label="Color" varName="arrowColor" type="color" :store="this.$store"/>
+        </app-input-panel>
+
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-    import {cloneDeep} from 'lodash'
-    import {IViewbox} from '@/store/modules/settings';
     import AppInputGroup from '@/components/input/AppInputGroup.vue';
     import AppInputPanel from '@/components/input/AppInputPanel.vue';
-    import AppInputGroup2 from "@/components/input/AppInputGroup2.vue";
+    import AppInput from "@/components/input/AppInput.vue";
+    import ArrowCloud from "@/api/ArrowCloud";
+    import AppInputNumber from "@/components/input/AppInputNumber.vue";
+    import {vuexLocal} from '@/store';
 
     @Component({
         components: {
+            AppInput,
+            AppInputNumber,
             AppInputGroup,
             AppInputPanel,
         },
     })
     export default class AppSettingsMenu extends Vue {
-        private settingsHandler = {
-            menu: this,
-            get(obj, prop) {
-                return this.menu.$store.state.settings[prop];
-            },
-            set(obj, prop, value) {
-                debugger;
-                this.$store.commit('settings/changeNumber', {key: prop, val: value})
-            },
-        } as ProxyHandler;
-        private settings: {[key: string]: any} =  new Proxy({}, this.settingsHandler);
+        private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
 
         mounted(){
+            debugger;
+            vuexLocal.restoreState('arrowColor', window.localStorage);
         }
-
-        set xmin(num) { this.$store.commit('settings/changeViewBox', {key: {axis:'x', side: 'min'}, val: num}); }
-        get xmin() { return this.$store.state.settings.viewbox.x.min; }
-        set xmax(num) { this.$store.commit('settings/changeViewBox', {key: {axis:'x', side: 'max'}, val: num}); }
-        get xmax() { return this.$store.state.settings.viewbox.x.max; }
-        set ymin(num) { this.$store.commit('settings/changeViewBox', {key: {axis:'y', side: 'min'}, val: num}); }
-        get ymin() { return this.$store.state.settings.viewbox.y.min; }
-        set ymax(num) { this.$store.commit('settings/changeViewBox', {key: {axis:'y', side: 'max'}, val: num}); }
-        get ymax() { return this.$store.state.settings.viewbox.y.max; }
-
-        set speed(num) { this.$store.commit('settings/changeNumber', {key: 'speed', val: num}); }
-        get speed() { return this.$store.state.settings.speed; }
     }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
     @import "../style/mixins.scss";
     @import "../style/variables.scss";
     #settings {
         background-color: #333;
         height: 100vh;
-        padding: 0 2em;
         grid-area: settings;
         color: #fff;
         overflow-y: auto;
     }
 
+    #title {
+        padding: 0.5em 0;
+        margin: 0;
+        font-size: 2.5em;
+        text-align: center;
+        border-bottom: #666 3px solid;
+    }
 
     #settings label {
         display: grid;
@@ -80,6 +72,13 @@
     #settings input {
         @extend %input;
         width: auto;
+
+        &[type="color"] {
+            padding: 0;
+            &::-webkit-color-swatch-wrapper {
+                padding: 0;
+            }
+        }
     }
 
 </style>

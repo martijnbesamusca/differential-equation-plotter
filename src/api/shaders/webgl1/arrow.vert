@@ -14,11 +14,12 @@ varying vec3 v_color;
 varying float v_alpha;
 
 void main() {
-    float width = 2.0 / u_screen[0][0] + 2.0 / u_camera[0][0];
-    float height = 2.0 / u_screen[1][1] + 2.0 / u_camera[1][1];
+//    float width = 2.0 / u_screen[0][0] + 2.0 / u_camera[0][0];
+//    float height = 2.0 / u_screen[1][1] + 2.0 / u_camera[1][1];
     vec2 direction = vec2(a_dx, a_dy);
     vec2 distance = abs(direction);
-    float rotation = atan(direction.x * width, direction.y * height);
+    float rotation = atan(direction.x, direction.y);
+//    float rotation = atan(direction.x * width, direction.y * height);
     mat2 rot_mat = mat2(
         cos(rotation), -sin(rotation),
         sin(rotation), cos(rotation)

@@ -4,7 +4,7 @@ import SetttingsStore from './modules/settings';
 import VuexPersistence from 'vuex-persist';
 
 Vue.use(Vuex);
-const vuexLocal = new VuexPersistence({
+export const vuexLocal = new VuexPersistence({
     storage: window.localStorage,
 });
 

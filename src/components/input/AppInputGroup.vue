@@ -7,8 +7,6 @@
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-    import AppSettingsMenu from '@/components/AppSettingsMenu.vue';
-    import {VNode} from "vue";
 
     @Component()
     export default class AppInputGroup extends Vue{
@@ -21,6 +19,7 @@
     @import "../../style/mixins.scss";
 
     .groupLabel {
+        grid-column: 1 / 3;
         display: grid !important;
         grid-template-columns: auto auto auto;
         margin-bottom: 0.5em;

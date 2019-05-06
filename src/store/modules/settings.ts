@@ -1,4 +1,5 @@
 import {VuexModule, mutation, action, getter, Module} from 'vuex-class-component';
+import {get, set} from 'lodash';
 
 export interface IViewbox {
     x: IViewboxRange;
@@ -39,15 +40,20 @@ export default class SettingsStore extends VuexModule {
         x: {min: -6, max: 6},
         y: {min: -3, max: 3},
     };
+
     @getter public speed = 1.0;
+    @getter public numArrows = 5000;
+    @getter public arrowColor = '#00ff00';
+
     @getter public drawFunctionBackground = false;
     @getter public useCached = false;
+
     @getter public dxFunction = (x: number, y: number): number => -Math.sin(2* Math.PI * x);
     @getter public dyFunction = (x: number, y: number): number => y;
 
-    @mutation public changeVal(valKey: IValKey) {
+    @mutation public changeValue(valKey: IValKey) {
         // @ts-ignore
-        this[valKey.key] = valKey.key;
+        this[valKey.key] = valKey.val;
     }
 
     @mutation public changeNumber(valKey: IValKey) {
@@ -57,8 +63,7 @@ export default class SettingsStore extends VuexModule {
                 return;
             }
         }
-        // @ts-ignore
-        this[valKey.key] = valKey.val;
+        set(this, valKey.key, valKey.val);
     }
 
     @mutation public changeViewBox(valKey: IViewBoxValKey) {
@@ -70,4 +75,6 @@ export default class SettingsStore extends VuexModule {
         }
         this.viewbox[valKey.key.axis][valKey.key.side] = valKey.val;
     }
+
+
 }
