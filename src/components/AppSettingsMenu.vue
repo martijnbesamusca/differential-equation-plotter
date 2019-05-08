@@ -39,7 +39,6 @@
         private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
 
         mounted(){
-            debugger;
             vuexLocal.restoreState('arrowColor', window.localStorage);
         }
     }

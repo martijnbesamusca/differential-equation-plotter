@@ -44,7 +44,7 @@
             this.onResizeThrottled = throttle(this.onResize, 100, {leading: false}) as (event?: Event) => null;
             addEventListener('resize', this.onResizeThrottled);
 
-            this.onResize();
+            setTimeout(()=>this.onResize(), 1);
         }
 
         onResize() {

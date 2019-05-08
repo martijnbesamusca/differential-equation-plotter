@@ -39,7 +39,7 @@
                             return;
                         }
 
-                        context.props.store.commit('settings/changeNumber',  {key: context.props.varName, val: e.target.value});
+                        context.props.store.commit('settings/changeValue',  {key: context.props.varName, val: e.target.value});
                     },
                 },
 
