@@ -10,8 +10,10 @@
             </app-input-group>
         </app-input-panel>
         <app-input-panel title="arrows">
-            <app-input-number label="Number of arrows" varName="numArrows" type="number" :store="this.$store" :max="this.maxNumArrow"/>
+            <app-input-number label="Number of arrows" varName="arrowAmount" type="number" :store="this.$store" :max="this.maxNumArrow"/>
             <app-input-number label="Speed" varName="speed" type="number" :store="this.$store" step="0.1"/>
+            <app-input-number label="Maximal age" varName="arrowMaxAge" type="number" :store="this.$store" step="1"/>
+            <app-input-number label="Size" varName="arrowSize" type="number" :store="this.$store" min="1.0" step="0.1"/>
             <app-input label="Color" varName="arrowColor" type="color" :store="this.$store"/>
         </app-input-panel>
 
@@ -19,29 +21,28 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-    import AppInputGroup from '@/components/input/AppInputGroup.vue';
-    import AppInputPanel from '@/components/input/AppInputPanel.vue';
-    import AppInput from "@/components/input/AppInput.vue";
-    import ArrowCloud from "@/api/ArrowCloud";
-    import AppInputNumber from "@/components/input/AppInputNumber.vue";
-    import {vuexLocal} from '@/store';
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import AppInputGroup from '@/components/input/AppInputGroup.vue';
+import AppInputPanel from '@/components/input/AppInputPanel.vue';
+import AppInput from '@/components/input/AppInput.vue';
+import ArrowCloud from '@/api/ArrowCloud';
+import AppInputNumber from '@/components/input/AppInputNumber.vue';
 
-    @Component({
-        components: {
-            AppInput,
-            AppInputNumber,
-            AppInputGroup,
-            AppInputPanel,
-        },
-    })
-    export default class AppSettingsMenu extends Vue {
-        private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
+@Component({
+    components: {
+        AppInput,
+        AppInputNumber,
+        AppInputGroup,
+        AppInputPanel,
+    },
+})
+export default class AppSettingsMenu extends Vue {
+    private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
 
-        mounted(){
-            vuexLocal.restoreState('arrowColor', window.localStorage);
-        }
+    public mounted() {
+        // vuexLocal.restoreState('arrowColor', window.localStorage);
     }
+}
 </script>
 
 <style lang="scss">
@@ -64,19 +65,28 @@
     }
 
     #settings label {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-column-gap: 0.5em;
     }
+
     #settings input {
         @extend %input;
-        width: auto;
 
         &[type="color"] {
             padding: 0;
             &::-webkit-color-swatch-wrapper {
                 padding: 0;
             }
+        }
+    }
+
+    #settings .inputWrapper {
+        display : flex;
+        input {
+            border-radius: $input-radius 0 0 $input-radius;
+        }
+
+        button {
+            @extend %resetbutton;
+            border-radius: 0 $input-radius $input-radius 0;
         }
     }
 

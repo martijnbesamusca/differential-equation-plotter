@@ -8,22 +8,22 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-    @Component({
-        filters: {
-            capitalize(value: string) {
-                if (!value) return '';
-                value = value.toString();
-                return value.charAt(0).toUpperCase() + value.slice(1);
-            }
-        }
-    })
-    export default class AppInputPanel extends Vue{
-        @Prop(String) title:string;
-        isActive = true;
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+@Component({
+    filters: {
+        capitalize(value: string) {
+            if (!value) { return ''; }
+            value = value.toString();
+            return value.charAt(0).toUpperCase() + value.slice(1);
+        },
+    },
+})
+export default class AppInputPanel extends Vue {
+    @Prop(String) public title: string;
+    public isActive = true;
 
 
-    }
+}
 </script>
 
 <style scoped>
@@ -49,15 +49,16 @@
     .collapsible {
         display: grid;
         grid-template-columns: auto auto;
-        grid-row-gap: 0.1em;
+        grid-row-gap: 0.5em;
+        grid-column-gap: 1em;
         padding: 0 2em;
         background-color: #222;
         height: 0;
         overflow: hidden;
         transition: padding 200ms;
         box-shadow:
-                inset 0px 11px 8px -10px rgba(0, 0, 0, 0.5),
-                inset 0px -11px 8px -10px rgba(0, 0, 0, 0.5);
+                inset 0 11px 8px -10px rgba(0, 0, 0, 0.5),
+                inset 0 -11px 8px -10px rgba(0, 0, 0, 0.5);
     }
     .active .collapsible {
         height: auto;

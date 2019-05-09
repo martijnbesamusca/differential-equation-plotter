@@ -8,11 +8,11 @@ export default class NumberFormat {
             'en-US',
             {
                 maximumSignificantDigits: maxLength,
-            }
+            },
         );
     }
 
-    format(number: number) {
+    public format(number: number) {
         let string = this.decimalFormat.format(number);
         if (string.length > this.maxLength) {
             string = number.toExponential(0);

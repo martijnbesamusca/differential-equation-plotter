@@ -1,5 +1,5 @@
-import settings from "@/store/modules/settings";
-import NumberFormat from "@/api/NumberFormat";
+import {Settings} from '@/store/modules/settings';
+import NumberFormat from '@/api/NumberFormat';
 
 export default class Grid {
     private svg: SVGElement;
@@ -7,14 +7,14 @@ export default class Grid {
     private numbersVertical: SVGTextElement[];
     private linesHorizontal: SVGLineElement[];
     private linesVertical: SVGLineElement[];
-    private settings: settings;
+    private settings: Settings;
 
-    private minGap = 20;
+    private minGap = 10;
     private gridNumX: number;
     private gridNumY: number;
     private format: NumberFormat;
 
-    constructor(svg: SVGElement, settings: settings){
+    constructor(svg: SVGElement, settings: Settings) {
         this.svg = svg;
         this.settings = settings;
         this.format = new NumberFormat(5);
@@ -27,41 +27,41 @@ export default class Grid {
         this.gridNumX = Math.floor(this.svg.clientWidth / this.minGap);
         this.gridNumY = Math.floor(this.svg.clientHeight / this.minGap);
 
-        for(let i = 0; i < this.gridNumX; i++) {
-            const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        for (let i = 0; i < this.gridNumX; i++) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line.classList.add('line_grid');
             line.classList.add('line_vertical');
             this.linesVertical.push(line);
             this.svg.appendChild(line);
         }
 
-        for(let i = 0; i < this.gridNumY; i++){
-            const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+        for (let i = 0; i < this.gridNumY; i++) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line.classList.add('line_grid');
             line.classList.add('line_horizontal');
             this.linesHorizontal.push(line);
             this.svg.appendChild(line);
         }
 
-        for(let i = 0; i < this.gridNumX / 10; i++){
-            const number = document.createElementNS('http://www.w3.org/2000/svg','text');
+        for (let i = 0; i < this.gridNumX / 10; i++) {
+            const number = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             number.classList.add('text_grid');
             number.classList.add('text_vertical');
             this.numbersVertical.push(number);
             this.svg.appendChild(number);
-            number.setAttribute('y','50%');
-            number.setAttribute('dx','-0.2em');
-            number.setAttribute('dy','1.2em');
+            number.setAttribute('y', '50%');
+            number.setAttribute('dx', '-0.2em');
+            number.setAttribute('dy', '1.2em');
         }
 
-        for(let i = 0; i < this.gridNumY / 10; i++){
-            const number = document.createElementNS('http://www.w3.org/2000/svg','text');
+        for (let i = 0; i < this.gridNumY / 10; i++) {
+            const number = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             number.classList.add('text_grid');
             number.classList.add('text_horizontal');
             this.numbersHorizantal.push(number);
             this.svg.appendChild(number);
-            number.setAttribute('x','50%');
-            number.setAttribute('dy','0.4em');
+            number.setAttribute('x', '50%');
+            number.setAttribute('dy', '0.4em');
         }
 
 
@@ -84,12 +84,12 @@ export default class Grid {
         this.svg.setAttribute('viewBox', `0 0 ${this.svg.clientWidth} ${this.svg.clientHeight}`);
 
 
-        for(let i = 0; i < this.gridNumX; i++) {
+        for (let i = 0; i < this.gridNumX; i++) {
             const line = this.linesVertical[i];
 
             const x = startX + i * resX;
             const xPer = (x - this.settings.viewbox.x.min) / width * 100;
-            
+
             line.setAttribute('x1', `${xPer}%`);
             line.setAttribute('x2', `${xPer}%`);
             line.setAttribute('y1', `0`);
@@ -100,13 +100,13 @@ export default class Grid {
             line.classList.remove('line_extra');
         }
 
-        for(let i = 0; i * 10 + startMainX < this.gridNumX; i++) {
+        for (let i = 0; i * 10 + startMainX < this.gridNumX; i++) {
             const line = this.linesVertical[startMainX + i * 10];
             line.classList.add('line_extra');
 
             const number = this.numbersVertical[i];
             number.textContent =  line.getAttribute('data-x')!;
-            let numberY = this.svg.clientHeight * (-this.settings.viewbox.y.min / height);
+            const numberY = this.svg.clientHeight * (-this.settings.viewbox.y.min / height);
             number.setAttribute('x', line.getAttribute('x1')!);
             number.setAttribute('y', numberY.toString());
             number.setAttribute('dy', '1.2em');
@@ -121,7 +121,7 @@ export default class Grid {
         }
 
         // Set vertical lines
-        for(let i = 0; i < this.gridNumY; i++) {
+        for (let i = 0; i < this.gridNumY; i++) {
             const line = this.linesHorizontal[i];
 
             const y = startY + i * resY;
@@ -137,13 +137,13 @@ export default class Grid {
             line.classList.remove('line_extra');
         }
 
-        for(let i = 0; i * 10 + startMainY < this.gridNumY; i++) {
+        for (let i = 0; i * 10 + startMainY < this.gridNumY; i++) {
             const line = this.linesHorizontal[startMainY + i * 10];
             line.classList.add('line_extra');
 
             const number = this.numbersHorizantal[i];
             number.textContent =  line.getAttribute('data-y')!;
-            let numberX = this.svg.clientWidth * (-this.settings.viewbox.x.min / width);
+            const numberX = this.svg.clientWidth * (-this.settings.viewbox.x.min / width);
             number.setAttribute('x', numberX.toString());
             number.setAttribute('y', line.getAttribute('y1')!);
             number.setAttribute('dx', '-0.3em');
@@ -159,7 +159,7 @@ export default class Grid {
         }
     }
 
-    setClass(elm: Element, className: string, enable: boolean) {
+    public setClass(elm: Element, className: string, enable: boolean) {
         if (enable) {
             elm.classList.add(className);
         } else {
@@ -167,11 +167,11 @@ export default class Grid {
         }
     }
 
-    findOptimalRes(length: number, maxLines: number): number {
+    public findOptimalRes(length: number, maxLines: number): number {
         const options = [1, 2, 5];
         const res = 10 ** (Math.floor(Math.log10(length / maxLines)));
         let multiple = 1;
-        for (let option of [1, 2, 5, 10]){
+        for (const option of [1, 2, 5, 10]) {
             if (res * option * maxLines >= length ) {
                 multiple = option;
                 break;
@@ -180,7 +180,7 @@ export default class Grid {
         return res * multiple;
     }
 
-    updateSettings(settings: settings) {
+    public updateSettings(settings: Settings) {
         this.settings = settings;
     }
 }

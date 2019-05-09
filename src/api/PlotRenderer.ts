@@ -4,19 +4,19 @@ import store from '../store/';
 import {cloneDeep} from 'lodash';
 import {m4} from 'twgl.js';
 import ArrowCloud from '@/api/ArrowCloud';
-import Grid from "@/api/Grid";
+import Grid from '@/api/Grid';
 
 export default class PlotRenderer {
     private canvas: HTMLCanvasElement;
     private gl: WebGLRenderingContext;
     private cachedFunction: CachedFunction;
 
-    private settings!: Settings;
+    private settings!: any;
     private arrowCloud: ArrowCloud;
     private grid: Grid;
     private uniforms!: {[key: string]: any};
 
-    constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: Settings) {
+    constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
         this.canvas = canvas;
         this.settings = settings;
         this.cachedFunction = new CachedFunction(
@@ -46,19 +46,23 @@ export default class PlotRenderer {
             this.arrowCloud.updateSettings(this.settings);
             this.grid.updateSettings(this.settings);
 
-            if(mutation.type === 'settings/changeViewBox'||
-                (mutation.type === 'settings/changeNumber' && mutation.payload.key.startsWith('viewbox'))) {
-                this.updateViewBox();
+            if (mutation.type === 'changeValue') {
+                const key = mutation.payload.key;
+
+                if (key.startsWith('viewbox')) {
+                    this.updateViewBox();
+                } else if (key === 'arrowColor') {
+                    this.arrowCloud.colorArrows();
+                } else if (key === 'arrowSize') {
+                    this.arrowCloud.resizeArrows();
+                }
             }
 
-            if (mutation.type === 'settings/changeValue' && mutation.payload.key === 'arrowColor') {
-                this.arrowCloud.colorArrows();
-            }
         });
     }
 
     public updateScreenSize() {
-        console.log(this.gl.canvas.width, this.gl.canvas.height)
+        console.log(this.gl.canvas.width, this.gl.canvas.height);
         this.uniforms.u_screen = m4.ortho(
                 -this.gl.canvas.width / 2, this.gl.canvas.width / 2,
                 -this.gl.canvas.height / 2, this.gl.canvas.height / 2,
@@ -79,13 +83,5 @@ export default class PlotRenderer {
         this.arrowCloud.render();
 
         requestAnimationFrame(() => this.render());
-    }
-
-    private makeArrow(size = 0.025) {
-        return [
-            size, 0, 0,
-            -size, 0, 0,
-            0, size, 0,
-        ];
     }
 }

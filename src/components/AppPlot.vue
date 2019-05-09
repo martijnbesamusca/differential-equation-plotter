@@ -18,49 +18,49 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
-    import {State} from "vuex-class-component";
-    import PlotRenderer from "@/api/PlotRenderer";
-    import {cloneDeep, throttle} from 'lodash'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import {State} from 'vuex-class-component';
+import PlotRenderer from '@/api/PlotRenderer';
+import {cloneDeep, throttle} from 'lodash';
 
-    @Component({})
-    export default class AppPlot extends Vue {
-        $refs!: {
-            plot: HTMLCanvasElement
-            grid: SVGElement
-        };
+@Component({})
+export default class AppPlot extends Vue {
+    public $refs!: {
+        plot: HTMLCanvasElement
+        grid: SVGElement,
+    };
 
-        private particleRenderer: PlotRenderer;
+    private particleRenderer: PlotRenderer;
 
-        private onResizeThrottled: (event?: Event) => null;
+    private onResizeThrottled: (event?: Event) => null;
 
-        mounted() {
-            this.particleRenderer = new PlotRenderer(this.$refs.plot, this.$refs.grid, cloneDeep(this.$store.state.settings));
-            window.particleRenderer = this.particleRenderer;
+    public mounted() {
+        this.particleRenderer = new PlotRenderer(this.$refs.plot, this.$refs.grid, cloneDeep(this.$store.state.settings));
+        window.particleRenderer = this.particleRenderer;
 
-            this.onResize();
-            this.particleRenderer.render();
+        this.onResize();
+        this.particleRenderer.render();
 
-            this.onResizeThrottled = throttle(this.onResize, 100, {leading: false}) as (event?: Event) => null;
-            addEventListener('resize', this.onResizeThrottled);
+        this.onResizeThrottled = throttle(this.onResize, 100, {leading: false}) as (event?: Event) => null;
+        addEventListener('resize', this.onResizeThrottled);
 
-            setTimeout(()=>this.onResize(), 1);
-        }
-
-        onResize() {
-            if(!this.$el || !this.$refs.plot) {
-                return;
-            }
-
-            const width = this.$el.clientWidth;
-            const height = this.$el.clientHeight;
-            this.$refs.plot.setAttribute('width', `${width}`);
-            this.$refs.plot.setAttribute('height',  `${height}`);
-            this.$refs.grid.setAttribute('width', `${width}`);
-            this.$refs.grid.setAttribute('height',  `${height}`);
-            this.particleRenderer.updateScreenSize();
-        }
+        setTimeout(() => this.onResize(), 1000);
     }
+
+    public onResize() {
+        if (!this.$el || !this.$refs.plot) {
+            return;
+        }
+
+        const width = this.$el.clientWidth;
+        const height = this.$el.clientHeight;
+        this.$refs.plot.setAttribute('width', `${width}`);
+        this.$refs.plot.setAttribute('height',  `${height}`);
+        this.$refs.grid.setAttribute('width', `${width}`);
+        this.$refs.grid.setAttribute('height',  `${height}`);
+        this.particleRenderer.updateScreenSize();
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -69,14 +69,21 @@
         height: 100vh;
         width: 100%;
         overflow: hidden;
+        position: relative;;
     }
 
     #plot canvas{
+        position: absolute;
         height: 100%;
         width: 100%;
+        z-index: 1;
     }
     #svg {
         position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+        pointer-events: none;
     }
 </style>
 

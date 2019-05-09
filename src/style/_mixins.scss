@@ -1,13 +1,32 @@
 @import "variables.scss";
 %input {
-  width: 100%;
+  width: calc(100% - 2em);
   padding: 0.3em 0.5em;
   border: 0.15em solid #555;
   outline: none;
   border-radius: $input-radius;
-  //margin-bottom: 0.5em;
+  height: 2em;
+  border-right-width: 0;
   
   &:focus {
     border-color: $accent-color;
+  }
+}
+
+%resetbutton {
+  display: inline-block;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  height: 2em;
+  line-height: 1em;
+  width: 2em;
+  background-color: #555;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #444;
   }
 }

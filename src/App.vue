@@ -6,23 +6,23 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from "vue-property-decorator";
-    import AppPlot from './components/AppPlot.vue';
-    import AppSettingsMenu from '@/components/AppSettingsMenu.vue';
+import {Component, Vue, Watch} from 'vue-property-decorator';
+import AppPlot from './components/AppPlot.vue';
+import AppSettingsMenu from '@/components/AppSettingsMenu.vue';
 
-    @Component({
-        components: {
-            AppPlot,
-            AppSettingsMenu
-        },
-    })
-    export default class App extends Vue {
-        private canvasHeight: number;
-        private canvasWidth: number;
+@Component({
+    components: {
+        AppPlot,
+        AppSettingsMenu,
+    },
+})
+export default class App extends Vue {
+    private canvasHeight: number;
+    private canvasWidth: number;
 
-        mounted() {
-        }
+    public mounted() {
     }
+}
 </script>
 
 <style lang="scss">
@@ -45,7 +45,7 @@
         height: 100%;
         grid-template-areas:  "plot settings"
         "plot settings";
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr max-content;
         overflow: hidden;
     }
 </style>

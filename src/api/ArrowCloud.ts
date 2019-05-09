@@ -1,9 +1,7 @@
 import {
     createBufferInfoFromArrays,
     drawBufferInfo,
-    m4,
     ProgramInfo,
-    resizeCanvasToDisplaySize,
     setUniforms,
     VertexArrayInfo,
     addExtensionsToContext,
@@ -11,7 +9,6 @@ import {
     createVertexArrayInfo,
     setBuffersAndAttributes, setAttribInfoBufferFromArray, BufferInfo,
 } from 'twgl.js';
-import settings from '@/store/modules/settings';
 import chroma from 'chroma-js';
 // @ts-ignore
 import arrowFrag from './shaders/webgl1/arrow.frag';
@@ -19,6 +16,8 @@ import arrowFrag from './shaders/webgl1/arrow.frag';
 import arrowVert from './shaders/webgl1/arrow.vert';
 
 export default class ArrowCloud {
+    public static MAX_NUM_ARROWS = 10000;
+
     private gl: WebGLRenderingContext;
     private arrowVertexArray: VertexArrayInfo;
     private programInfo: ProgramInfo;
@@ -30,15 +29,13 @@ export default class ArrowCloud {
     private dx: Float32Array;
     private dy: Float32Array;
 
-    public static MAX_NUM_ARROWS = 10000;
-
-    private MAX_AGE = 500;
-    private settings: settings;
+    private settings: any;
     private uniforms: {[key: string]: any};
     private arrowInfoBuffer: BufferInfo;
     private arrowArray: {[key: string]: any};
+    private arrow: number[];
 
-    constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: settings) {
+    constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: any) {
         this.gl = gl;
         this.settings = settings;
 
@@ -46,7 +43,9 @@ export default class ArrowCloud {
         addExtensionsToContext(this.gl);
         this.programInfo = createProgramInfo(this.gl, [arrowVert, arrowFrag]);
 
-        const arrow = this.makeArrow(1, 0.3, 1.5, 5);
+        this.arrow = [];
+        this.resizeArrows(false);
+
         this.pos = new Float32Array(ArrowCloud.MAX_NUM_ARROWS * 2);
         this.age = new Uint16Array(ArrowCloud.MAX_NUM_ARROWS);
         this.color = new Float32Array(ArrowCloud.MAX_NUM_ARROWS * 3);
@@ -59,7 +58,7 @@ export default class ArrowCloud {
         this.arrowArray = {
             a_vert_pos: {
                 numComponents: 2,
-                data: arrow,
+                data: this.arrow,
             },
             a_glob_pos: {
                 numComponents: 2,
@@ -115,16 +114,46 @@ export default class ArrowCloud {
             this.gl.TRIANGLES,
             this.arrowVertexArray.numElements,
             0,
-            this.settings.numArrows,
+            this.settings.arrowAmount,
         );
     }
 
-    public updateSettings(settings: settings) {
+    public updateSettings(settings: any) {
         this.settings = settings;
     }
 
+    public resizeArrows(update = true) {
+        const newArrow = this.makeArrow(1, 0.3, 1.5, this.settings.arrowSize);
+        if (update) {
+            for (let i = 0; i < newArrow.length; i++) {
+                this.arrow[i] = newArrow[i];
+            }
+            setAttribInfoBufferFromArray(this.gl, this.arrowInfoBuffer.attribs!.a_vert_pos, this.arrowArray.a_vert_pos);
+        } else {
+            this.arrow = newArrow;
+        }
+    }
+
+    public colorArrows() {
+        const color = chroma(this.settings.arrowColor);
+        const [h, s, l] = color.hsl();
+        const hueSpread = 20;
+        const saturationSpread = 0.2;
+        const lightnessSpread = 0.2;
+        for (let i = 0; i < this.pos.length; i++) {
+            const [r, g, b] = color
+                .set('hsl.h', h + this.randomInt(-hueSpread, hueSpread))
+                .set('hsl.s', s + this.randomFloat(-saturationSpread, saturationSpread))
+                .set('hsl.l', l + this.randomFloat(-lightnessSpread, lightnessSpread))
+                .gl();
+            this.color[i * 3] = r;
+            this.color[i * 3 + 1] = g;
+            this.color[i * 3 + 2] = b;
+        }
+    }
+
     private move() {
-        for (let i = 0; i < this.settings.numArrows; i++) {
+        for (let i = 0; i < this.settings.arrowAmount; i++) {
             this.pos[i * 2] += this.dx[i] * this.settings.speed / 100;
             this.pos[i * 2 + 1] += this.dy[i] * this.settings.speed / 100;
 
@@ -141,11 +170,11 @@ export default class ArrowCloud {
 
             if (isNaN(dx) || isNaN(dy)) {
                 this.alpha[i] = 0.0;
-                this.age[i] = this.MAX_AGE;
+                this.age[i] = this.settings.arrowMaxAge;
             }
 
             this.age[i] += 1;
-            if (this.age[i] >= this.MAX_AGE || !this.isInBounds(x, y)) {
+            if (this.age[i] >= this.settings.arrowMaxAge || !this.isInBounds(x, y)) {
                 const x = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
                 const y = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
                 this.pos[i * 2] = x;
@@ -158,44 +187,27 @@ export default class ArrowCloud {
         }
     }
 
-    private isInBounds(x: number ,y: number ){
+    private isInBounds(x: number , y: number ) {
         return this.settings.viewbox.x.min <= x && this.settings.viewbox.x.max >= x &&
-            this.settings.viewbox.y.min <= y && this.settings.viewbox.y.max >= y
+            this.settings.viewbox.y.min <= y && this.settings.viewbox.y.max >= y;
     }
 
     private initArrows() {
         for (let i = 0; i < this.pos.length; i++) {
             this.pos[i * 2] = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
             this.pos[i * 2 + 1] = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
-            this.age[i] = this.randomInt(0, this.MAX_AGE);
+            this.age[i] = this.randomInt(0, this.settings.arrowMaxAge);
             this.alpha[i] = 0.0;
         }
-        this.colorArrows()
+
+        this.colorArrows();
     }
 
-    public colorArrows() {
-        const color = chroma(this.settings.arrowColor);
-        const [h, s, l] = color.hsl();
-        const hueSpread= 20;
-        const saturationSpread= 0.2;
-        const lightnessSpread= 0.2;
-        for (let i = 0; i < this.pos.length; i++) {
-            const [r, g, b] = color
-                .set('hsl.h', h + this.randomInt(-hueSpread, hueSpread))
-                .set('hsl.s', s + this.randomFloat(-saturationSpread, saturationSpread))
-                .set('hsl.l', l + this.randomFloat(-lightnessSpread, lightnessSpread))
-                .gl();
-            this.color[i * 3] = r;
-            this.color[i * 3 + 1] = g;
-            this.color[i * 3 + 2] = b;
-        }
-    }
-
-    private randomFloat(min:number, max:number) {
+    private randomFloat(min: number, max: number) {
         return min + Math.random() * (max - min);
     }
 
-    private randomInt(min:number, max:number) {
+    private randomInt(min: number, max: number) {
         return Math.floor(min + Math.random() * (max - min));
     }
 
