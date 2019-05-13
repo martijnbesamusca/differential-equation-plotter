@@ -106,7 +106,7 @@ export default class Grid {
 
             const number = this.numbersVertical[i];
             number.textContent =  line.getAttribute('data-x')!;
-            const numberY = this.svg.clientHeight * (-this.settings.viewbox.y.min / height);
+            const numberY = this.svg.clientHeight - this.svg.clientHeight * (-this.settings.viewbox.y.min / height);
             number.setAttribute('x', line.getAttribute('x1')!);
             number.setAttribute('y', numberY.toString());
             number.setAttribute('dy', '1.2em');
@@ -125,7 +125,7 @@ export default class Grid {
             const line = this.linesHorizontal[i];
 
             const y = startY + i * resY;
-            const yPer = (y - this.settings.viewbox.y.min) / height * 100;
+            const yPer = 100 - (y - this.settings.viewbox.y.min) / height * 100;
 
             line.setAttribute('x1', `0`);
             line.setAttribute('x2', `${this.svg.clientWidth}`);

@@ -1,6 +1,6 @@
 <template>
     <div id="settings">
-        <h1 id="title">Settings</h1>
+        <h1 id="settings_title">Settings</h1>
         <app-input-panel title="window">
             <app-input-group title="view">
                 <app-input label="x min" varName="viewbox.x.min" type="number" :store="this.$store" :max="this.$store.state.settings.viewbox.x.max - 0.001"/>
@@ -38,10 +38,6 @@ import AppInputNumber from '@/components/input/AppInputNumber.vue';
 })
 export default class AppSettingsMenu extends Vue {
     private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
-
-    public mounted() {
-        // vuexLocal.restoreState('arrowColor', window.localStorage);
-    }
 }
 </script>
 
@@ -50,13 +46,10 @@ export default class AppSettingsMenu extends Vue {
     @import "../style/variables.scss";
     #settings {
         background-color: #333;
-        height: 100vh;
-        grid-area: settings;
         color: #fff;
-        overflow-y: auto;
     }
 
-    #title {
+    #settings_title {
         padding: 0.5em 0;
         margin: 0;
         font-size: 2.5em;

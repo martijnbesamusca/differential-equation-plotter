@@ -87,12 +87,8 @@ const actions = {
 };
 
 export default {
-    // state: cloneDeep( defaults),
     state: loadState(),
     mutations,
     actions,
-    getters: {
-
-    },
-
+    getters: {},
 };

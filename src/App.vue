@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <app-plot ref="plot"></app-plot>
-        <app-settings-menu></app-settings-menu>
+        <app-side-bar></app-side-bar>
     </div>
 </template>
 
@@ -9,11 +9,12 @@
 import {Component, Vue, Watch} from 'vue-property-decorator';
 import AppPlot from './components/AppPlot.vue';
 import AppSettingsMenu from '@/components/AppSettingsMenu.vue';
+import AppSideBar from "@/components/AppSideBar.vue";
 
 @Component({
     components: {
         AppPlot,
-        AppSettingsMenu,
+        AppSideBar,
     },
 })
 export default class App extends Vue {
@@ -48,4 +49,9 @@ export default class App extends Vue {
         grid-template-columns: 1fr max-content;
         overflow: hidden;
     }
+</style>
+
+<style>
+    @import "style/mathlive.core.css";
+    @import "style/mathlive.css";
 </style>
