@@ -6,13 +6,15 @@
             <h2 id="author">by Martijn Besamusca</h2>
         </div>
         <app-tabs>
-            <app-tab>
-                <div> hey </div>
+            <app-tab title="functions" icon="functions">
+                <div> 1 </div>
             </app-tab>
-            <settings-icon/>
-            <settings-icon/>
-            <settings-icon/>
-            <settings-icon/>
+            <app-tab title="settings" icon="menu">
+                <div> 2 </div>
+            </app-tab>
+            <app-tab title="export/import" icon="save-alt">
+                <div> 3 </div>
+            </app-tab>
         </app-tabs>
         <app-settings-menu />
     </div>

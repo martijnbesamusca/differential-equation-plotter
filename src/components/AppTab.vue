@@ -1,16 +1,17 @@
 <template>
-    <div>
+    <div v-if="activated">
         <slot/>
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 
     @Component({})
     export default class AppTabs extends Vue {
-        activated = false;
-        icon = '';
+        public activated = false;
+        public icon: Vue;
+        title = '';
     }
 </script>
 
