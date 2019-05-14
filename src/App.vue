@@ -8,7 +8,6 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator';
 import AppPlot from './components/AppPlot.vue';
-import AppSettingsMenu from '@/components/AppSettingsMenu.vue';
 import AppSideBar from "@/components/AppSideBar.vue";
 
 @Component({
@@ -28,6 +27,8 @@ export default class App extends Vue {
 
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+    @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
     body, html {
         padding: 0;
         margin: 0;

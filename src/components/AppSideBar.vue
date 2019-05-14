@@ -7,16 +7,14 @@
         </div>
         <app-tabs>
             <app-tab title="functions" icon="functions">
-                <div> 1 </div>
             </app-tab>
             <app-tab title="settings" icon="menu">
-                <div> 2 </div>
+                <app-settings-menu />
             </app-tab>
-            <app-tab title="export/import" icon="save-alt">
+            <app-tab title="export/import" icon="save_alt">
                 <div> 3 </div>
             </app-tab>
         </app-tabs>
-        <app-settings-menu />
     </div>
 </template>
 

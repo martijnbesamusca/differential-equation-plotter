@@ -1,5 +1,5 @@
 <template>
-    <div v-if="activated">
+    <div class="tab" :class="{activated: activated}">
         <slot/>
     </div>
 </template>
@@ -10,11 +10,20 @@
     @Component({})
     export default class AppTabs extends Vue {
         public activated = false;
-        public icon: Vue;
-        title = '';
+        @Prop(String) public icon: string;
+        @Prop(String) public title: string;
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .tab {
+        height: 0;
+        overflow-y: hidden;
 
+        &.activated{
+            height: auto;
+            overflow-y: auto;
+        }
+
+    }
 </style>
