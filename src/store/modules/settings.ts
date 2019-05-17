@@ -37,6 +37,9 @@ const defaults: Settings = {
     drawFunctionBackground: false,
     useCached: false,
 
+    dxString: 'sin(x)',
+    dyString: 'x * sin(y)',
+
     dxFunction: (x: number, y: number): number => -Math.sin(2 * Math.PI * x),
     dyFunction: (x: number, y: number): number => y,
 };

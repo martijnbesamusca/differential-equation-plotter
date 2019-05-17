@@ -1,6 +1,7 @@
 <template>
     <div id="app">
         <app-plot ref="plot"></app-plot>
+        <app-title-bar></app-title-bar>
         <app-side-bar></app-side-bar>
     </div>
 </template>
@@ -8,12 +9,14 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator';
 import AppPlot from './components/AppPlot.vue';
-import AppSideBar from "@/components/AppSideBar.vue";
+import AppSideBar from "./components/AppSideBar.vue";
+import AppTitleBar from "./components/AppTitleBar.vue";
 
 @Component({
     components: {
         AppPlot,
         AppSideBar,
+        AppTitleBar,
     },
 })
 export default class App extends Vue {
@@ -45,9 +48,10 @@ export default class App extends Vue {
         width: 100%;
         font-family: 'Open Sans', sans-serif;
         height: 100%;
-        grid-template-areas:  "plot settings"
-        "plot settings";
+        grid-template-areas:  "plot title"
+        "plot side";
         grid-template-columns: 1fr max-content;
+        grid-template-rows: min-content 1fr;
         overflow: hidden;
     }
 </style>

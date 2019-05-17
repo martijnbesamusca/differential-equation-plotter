@@ -52,7 +52,7 @@ export default class AppSettingsMenu extends Vue {
     #settings_title {
         padding: 0.5em 0;
         margin: 0;
-        font-size: 2.5em;
+        font-size: 1.5em;
         text-align: center;
         border-bottom: #666 3px solid;
         background-color: #222;

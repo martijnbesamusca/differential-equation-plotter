@@ -2,10 +2,9 @@ import Vue from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
 import store from './store';
-// import Fragment from 'vue-fragment'
 Vue.config.productionTip = false;
-// Vue.use(Fragment.Plugin);
-Vue.config.performance = true;
+Vue.config.performance = false;
+
 
 new Vue({
   store,

@@ -6,7 +6,8 @@
                 :class="{active: tab.activated}"
                 @click="activate(tab)"
                 :title="tab.$props.title">
-                <i class="material-icons">{{ tab.$props.icon }}</i>
+                <i ref="icon" v-if="tab.$props.icon" class="material-icons">{{ tab.$props.icon }}</i>
+                <span ref="text" v-if="tab.$props.text" class="">{{ tab.$props.text }}</span>
             </li>
         </ul>
         <slot />
@@ -16,6 +17,7 @@
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import AppTab from '@/components/AppTab.vue';
+    import MathLive from 'mathlive';
 
     @Component({})
     export default class AppTabs extends Vue {
@@ -27,11 +29,17 @@
 
         mounted() {
             const activatedTab = this.tabs.find((tab)=> tab.activated) || this.tabs[0];
-            for(let tab of this.tabs) {
-                this.activate(tab);
-            }
 
             this.activate(activatedTab);
+        }
+
+        updated() {
+            console.log('updated', this.$refs);
+
+            const texts = this.$refs.text || [];
+            for(let text of texts) {
+                MathLive.renderMathInElement(text);
+            }
         }
 
         activate(tab: AppTab) {
@@ -42,6 +50,12 @@
         }
     }
 </script>
+
+<style>
+    .menuItem .ML__base {
+        cursor: inherit;
+    }
+</style>
 
 <style scoped lang="scss">
 .tabs .menu {
