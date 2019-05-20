@@ -1,10 +1,10 @@
 <template>
     <div class="matrix">
         <span ref="label" class="matrixLabel">{{ label }}</span>
-        <input type="number" class="matrixInput mat11">
-        <input type="number" class="matrixInput mat12">
-        <input type="number" class="matrixInput mat21">
-        <input type="number" class="matrixInput mat22">
+        <input type="number" class="matrixInput mat11" v-model.number="value[0]" @input="input">
+        <input type="number" class="matrixInput mat12" v-model.number="value[1]" @input="input">
+        <input type="number" class="matrixInput mat21" v-model.number="value[2]" @input="input">
+        <input type="number" class="matrixInput mat22" v-model.number="value[3]" @input="input">
     </div>
 
 </template>
@@ -16,10 +16,18 @@
     @Component
     export default class AppInputMatrix extends Vue{
         @Prop(String) label: string;
+        @Prop({default: [2, -2, 2, 1]}) value: Number[4];
+
+        $refs: {
+            label: HTMLSpanElement,
+        };
 
         mounted() {
-            console.log(this.$refs.label)
             MathLive.renderMathInElement(this.$refs.label);
+        }
+
+        input(){
+            this.$emit('input', this.value)
         }
     };
 </script>

@@ -16,6 +16,12 @@ interface IValKey {
     val: any;
 }
 
+export const enum ODETypes {
+    Cartesian,
+    Polar,
+    Matrix,
+}
+
 export interface Settings {
     [key: string]: any;
 }
@@ -30,24 +36,27 @@ const defaults: Settings = {
 
     speed: 1.0,
     arrowAmount: 5000,
-    arrowMaxAge: 1000,
+    arrowMaxAge: 200,
     arrowSize: 5,
     arrowColor: '#00ff00',
 
     drawFunctionBackground: false,
     useCached: false,
 
-    dxString: 'sin(x)',
-    dyString: 'x * sin(y)',
+    dxString: String.raw`\sin (x)`,
+    dyString: String.raw`\sin(y)`,
+    drString: String.raw`r \cdot (r-1) \cdot (r-2)`,
+    dtString: String.raw`1`,
+    AMatrix: [2, 1, -1, 2],
 
-    dxFunction: (x: number, y: number): number => -Math.sin(2 * Math.PI * x),
-    dyFunction: (x: number, y: number): number => y,
+    ODEType: ODETypes.Matrix,
+    // dxFunction: (x: number, y: number): number => -Math.sin(2 * Math.PI * x),
+    // dyFunction: (x: number, y: number): number => y,
 };
 
 function loadState() {
     const state = cloneDeep(defaults);
     for (let i = 0; i < localStorage.length; i++) {
-        // debugger;
         let key = localStorage.key(i);
         if (!key || !key.startsWith(prefixPersist)) { continue; }
         const val = JSON.parse(localStorage.getItem(key)!);

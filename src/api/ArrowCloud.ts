@@ -14,6 +14,7 @@ import chroma from 'chroma-js';
 import arrowFrag from './shaders/webgl1/arrow.frag';
 // @ts-ignore
 import arrowVert from './shaders/webgl1/arrow.vert';
+import {ODETypes} from '@/store/modules/settings';
 
 export default class ArrowCloud {
     public static MAX_NUM_ARROWS = 10000;
@@ -35,10 +36,12 @@ export default class ArrowCloud {
     private arrowArray: {[key: string]: any};
     private arrow: number[];
 
+    private dxFunction!: (x:number, y: number) => number;
+    private dyFunction!: (x:number, y: number) => number;
+
     constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: any) {
         this.gl = gl;
         this.settings = settings;
-
 
         addExtensionsToContext(this.gl);
         this.programInfo = createProgramInfo(this.gl, [arrowVert, arrowFrag]);
@@ -52,6 +55,7 @@ export default class ArrowCloud {
         this.alpha = new Float32Array(ArrowCloud.MAX_NUM_ARROWS);
         this.dx = new Float32Array(ArrowCloud.MAX_NUM_ARROWS);
         this.dy = new Float32Array(ArrowCloud.MAX_NUM_ARROWS);
+        this.updateODE();
         this.initArrows();
 
 
@@ -122,6 +126,21 @@ export default class ArrowCloud {
         this.settings = settings;
     }
 
+    public updateODE() {
+        const ODEType = this.settings.ODEType;
+
+        if (ODEType === ODETypes.Cartesian) {
+
+        } else if (ODEType === ODETypes.Matrix) {
+            const mat = this.settings.AMatrix;
+            this.dxFunction = (x, y) => mat[0] * x + mat[1] * y;
+            this.dyFunction = (x, y) => mat[2] * x + mat[3] * y;
+
+        } else if (ODEType === ODETypes.Polar) {
+
+        }
+    }
+
     public resizeArrows(update = true) {
         const newArrow = this.makeArrow(1, 0.3, 1.5, this.settings.arrowSize);
         if (update) {
@@ -152,6 +171,17 @@ export default class ArrowCloud {
         }
     }
 
+    public initArrows() {
+        for (let i = 0; i < this.pos.length; i++) {
+            this.pos[i * 2] = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
+            this.pos[i * 2 + 1] = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
+            this.age[i] = this.randomInt(0, this.settings.arrowMaxAge);
+            this.alpha[i] = 0.0;
+        }
+
+        this.colorArrows();
+    }
+
     private move() {
         for (let i = 0; i < this.settings.arrowAmount; i++) {
             this.pos[i * 2] += this.dx[i] * this.settings.speed / 100;
@@ -160,8 +190,8 @@ export default class ArrowCloud {
             const x = this.pos[i * 2];
             const y = this.pos[i * 2 + 1];
 
-            const dx = this.settings.dxFunction(x, y);
-            const dy = this.settings.dyFunction(x, y);
+            const dx = this.dxFunction(x, y);
+            const dy = this.dyFunction(x, y);
 
             this.dx[i] = dx;
             this.dy[i] = dy;
@@ -179,8 +209,8 @@ export default class ArrowCloud {
                 const y = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
                 this.pos[i * 2] = x;
                 this.pos[i * 2 + 1] = y;
-                this.dx[i] = this.settings.dxFunction(x, y);
-                this.dy[i] = this.settings.dyFunction(x, y);
+                this.dx[i] = this.dxFunction(x, y);
+                this.dy[i] = this.dyFunction(x, y);
                 this.age[i] = 0;
                 this.alpha[i] = isNaN(this.dx[i]) || isNaN(this.dy[i]) ? 0.0 : 1.0;
             }
@@ -190,17 +220,6 @@ export default class ArrowCloud {
     private isInBounds(x: number , y: number ) {
         return this.settings.viewbox.x.min <= x && this.settings.viewbox.x.max >= x &&
             this.settings.viewbox.y.min <= y && this.settings.viewbox.y.max >= y;
-    }
-
-    private initArrows() {
-        for (let i = 0; i < this.pos.length; i++) {
-            this.pos[i * 2] = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
-            this.pos[i * 2 + 1] = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
-            this.age[i] = this.randomInt(0, this.settings.arrowMaxAge);
-            this.alpha[i] = 0.0;
-        }
-
-        this.colorArrows();
     }
 
     private randomFloat(min: number, max: number) {

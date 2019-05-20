@@ -1,6 +1,10 @@
 declare const MathLive: mathlive.IMathLive;
 declare const MASTON: object;
 
+interface Maston {
+    [key: string]: any;
+}
+
 declare namespace mathlive {
 
     export interface IMathLive {

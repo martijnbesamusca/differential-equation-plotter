@@ -9,7 +9,7 @@ import Grid from '@/api/Grid';
 export default class PlotRenderer {
     private canvas: HTMLCanvasElement;
     private gl: WebGLRenderingContext;
-    private cachedFunction: CachedFunction;
+    // private cachedFunction: CachedFunction;
 
     private settings!: any;
     private arrowCloud: ArrowCloud;
@@ -19,13 +19,13 @@ export default class PlotRenderer {
     constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
         this.canvas = canvas;
         this.settings = settings;
-        this.cachedFunction = new CachedFunction(
-            this.settings.dxFunction,
-            this.settings.dyFunction,
-            this.settings.viewbox,
-            canvas.width,
-            canvas.height,
-        );
+        // this.cachedFunction = new CachedFunction(
+        //     this.settings.dxFunction,
+        //     this.settings.dyFunction,
+        //     this.settings.viewbox,
+        //     canvas.width,
+        //     canvas.height,
+        // );
         this.grid = new Grid(svg, this.settings);
 
         const gl = canvas.getContext('webgl');
@@ -51,10 +51,15 @@ export default class PlotRenderer {
 
                 if (key.startsWith('viewbox')) {
                     this.updateViewBox();
+                } else if (key === 'arrowMaxAge') {
+                    this.arrowCloud.initArrows();
                 } else if (key === 'arrowColor') {
                     this.arrowCloud.colorArrows();
                 } else if (key === 'arrowSize') {
                     this.arrowCloud.resizeArrows();
+                } else if (key === 'ODEType') {
+                    this.arrowCloud.initArrows();
+                    this.arrowCloud.updateODE();
                 }
             }
 
