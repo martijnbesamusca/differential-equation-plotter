@@ -1,8 +1,18 @@
 <template>
     <div id="app">
-        <app-plot ref="plot"></app-plot>
-        <app-title-bar></app-title-bar>
-        <app-side-bar></app-side-bar>
+        <modular-panes>
+            <modular-pane>
+                <app-title-bar/>
+            </modular-pane>
+
+            <modular-pane>
+                <app-side-bar/>
+            </modular-pane>
+
+            <modular-pane>
+                <app-plot/>
+            </modular-pane>
+        </modular-panes>
     </div>
 </template>
 
@@ -11,9 +21,13 @@ import {Component, Vue, Watch} from 'vue-property-decorator';
 import AppPlot from './components/AppPlot.vue';
 import AppSideBar from './components/AppSideBar.vue';
 import AppTitleBar from './components/AppTitleBar.vue';
+import ModularPanes from "@/components/ModularPanes.vue";
+import ModularPane from "@/components/ModularPane.vue";
 
 @Component({
     components: {
+        ModularPanes,
+        ModularPane,
         AppPlot,
         AppSideBar,
         AppTitleBar,
@@ -44,15 +58,8 @@ export default class App extends Vue {
     }
 
     #app {
-        display: grid;
-        width: 100%;
-        font-family: 'Open Sans', sans-serif;
-        height: 100%;
-        grid-template-areas:  "plot title"
-        "plot side";
-        grid-template-columns: 1fr 25em;
-        grid-template-rows: min-content 1fr;
-        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
     }
 </style>
 
