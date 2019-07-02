@@ -1,22 +1,31 @@
 <template>
-    <div>
-        <div>hey</div>
+    <div :style="style" class="pane">
         <slot></slot>
-        <!--<app-plot v-if="paneType === 'plot'"/>-->
-        <!--<app-title-bar v-if="paneType === 'bar'"></app-title-bar>-->
-        <!--<app-side-bar></app-side-bar>-->
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue, Prop} from 'vue-property-decorator';
 
     @Component({
         components: {
         },
     })
     export default class ModularPane extends Vue {
+        @Prop(String) readonly paneName: string | undefined;
+        @Prop(Number) readonly size: number | undefined;
+        @Prop(String) readonly minSize: string | undefined;
+
         public paneType = null; // vertical - horizontal
+
+        get style () {
+            const style =  {
+                flexGrow: this.size,
+                minWidth: this.minSize,
+                minHeight: this.minSize,
+            };
+            return style
+        }
 
         public mounted() {
         }
@@ -24,5 +33,8 @@
 </script>
 
 <style scoped>
-
+.pane {
+    flex-basis: 0;
+    flex-shrink: 1;
+}
 </style>

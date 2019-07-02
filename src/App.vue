@@ -1,16 +1,22 @@
 <template>
     <div id="app">
-        <modular-panes>
-            <modular-pane>
-                <app-title-bar/>
-            </modular-pane>
-
-            <modular-pane>
-                <app-side-bar/>
-            </modular-pane>
-
-            <modular-pane>
+        <modular-panes direction="row">
+            <modular-pane :size="10">
                 <app-plot/>
+            </modular-pane>
+
+            <modular-pane :size="5" min-size="20em">
+                <modular-panes direction="column">
+
+                    <modular-pane :size="1">
+                        <app-title-bar/>
+                    </modular-pane>
+
+                    <modular-pane :size=4>
+                        <app-side-bar/>
+                    </modular-pane>
+
+                </modular-panes>
             </modular-pane>
         </modular-panes>
     </div>
