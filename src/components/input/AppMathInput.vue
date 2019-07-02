@@ -6,52 +6,52 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop} from 'vue-property-decorator';
-    import MathLive from 'mathlive';
+import {Component, Vue, Prop} from 'vue-property-decorator';
+import MathLive from 'mathlive';
 
-    @Component
-    export default class AppMathInput extends Vue{
-        @Prop({default: ''}) id: string;
-        @Prop({default: ''}) label: string;
-        @Prop({default: ''}) value: string;
-        @Prop({default: ()=>{}}) config: object;
+@Component
+export default class AppMathInput extends Vue {
+    @Prop({default: ''}) public id: string;
+    @Prop({default: ''}) public label: string;
+    @Prop({default: ''}) public value: string;
+    @Prop({default: () => {}}) public config: object;
 
-        $refs: {
-            mathfield: HTMLDivElement;
-            label: HTMLDivElement;
-        };
+    public $refs: {
+        mathfield: HTMLDivElement;
+        label: HTMLDivElement;
+    };
 
-        mounted() {
-            MathLive.makeMathField(
-                this.$refs.mathfield,
-                {
-                    onFocus: (mathfield: mathlive.IMathField) => {
-                        this.$refs.mathfield.classList.add('focus');
-                        this.$emit('focus', mathfield);
-                    },
+    public mounted() {
+        MathLive.makeMathField(
+            this.$refs.mathfield,
+            {
+                onFocus: (mathfield: mathlive.IMathField) => {
+                    this.$refs.mathfield.classList.add('focus');
+                    this.$emit('focus', mathfield);
+                },
 
-                    onBlur: (mathfield: mathlive.IMathField) => {
-                        this.$refs.mathfield.classList.remove('focus');
-                        this.$emit('focus', mathfield);
-                    },
+                onBlur: (mathfield: mathlive.IMathField) => {
+                    this.$refs.mathfield.classList.remove('focus');
+                    this.$emit('focus', mathfield);
+                },
 
-                    onKeystroke: (mathfield: mathlive.IMathField, keystroke:string, ev:Event) => {
-                        this.$emit('focus', ev);
-                        return true;
-                    },
+                onKeystroke: (mathfield: mathlive.IMathField, keystroke: string, ev: Event) => {
+                    this.$emit('focus', ev);
+                    return true;
+                },
 
-                    onContentDidChange: (mathfield: mathlive.IMathField) => {
-                        this.$emit('input', mathfield);
-                        return true;
-                    }
+                onContentDidChange: (mathfield: mathlive.IMathField) => {
+                    this.$emit('input', mathfield);
+                    return true;
+                },
 
 
-                }
-            );
-            MathLive.renderMathInElement(this.$refs.label);
-        }
-
+            },
+        );
+        MathLive.renderMathInElement(this.$refs.label);
     }
+
+}
 </script>
 
 <style scoped lang="scss">

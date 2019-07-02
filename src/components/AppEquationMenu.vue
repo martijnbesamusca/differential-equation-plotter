@@ -19,91 +19,93 @@
                 </span>
                 <app-math-input label="$$\dot{r}=$$" class="mathInput" @input="dr = $event">{{ dr }}</app-math-input>
                 <app-math-input label="$$\dot{\theta}=$$" class="mathInput" @input="dt = $event">{{ dt }}</app-math-input>
-                <button class="applyButton">Apply</button>
+                <button class="applyButton" @click="enablePolar">Apply</button>
             </app-tab>
         </app-tabs>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop} from 'vue-property-decorator';
-    import AppMathInput from "@/components/input/AppMathInput.vue";
-    import AppInputMatrix from "@/components/input/AppInputMatrix.vue";
-    import AppTabs from "@/components/AppTabs.vue";
-    import AppTab from "@/components/AppTab.vue";
-    import {ODETypes} from '@/store/modules/settings';
-    import MathLive from 'mathlive';
-    import {JSFunctionGen} from '@/api/MastonConvert';
+import {Component, Vue, Prop} from 'vue-property-decorator';
+import AppMathInput from '@/components/input/AppMathInput.vue';
+import AppInputMatrix from '@/components/input/AppInputMatrix.vue';
+import AppTabs from '@/components/AppTabs.vue';
+import AppTab from '@/components/AppTab.vue';
+import {ODETypes} from '@/store/modules/settings';
+import MathLive from 'mathlive';
+import {JSFunctionGen} from '@/api/MastonConvert';
 
-    @Component({
-        components: {
-            AppMathInput,
-            AppInputMatrix,
-            AppTabs,
-            AppTab,
-        }
-    })
-    export default class AppEquationMenu extends Vue {
-        formula: string = '';
+@Component({
+    components: {
+        AppMathInput,
+        AppInputMatrix,
+        AppTabs,
+        AppTab,
+    },
+})
+export default class AppEquationMenu extends Vue {
+    public formula: string = '';
 
-        $refs: {
-            polarNotice,
-        };
-
-        mounted() {
-            MathLive.renderMathInElement(this.$refs.polarNotice);
-        }
-
-        enableMatrix() {
-            this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Matrix});
-        }
-        enableCartesian() {
-            const mast = MathLive.latexToAST(this.$store.state.settings.dxString);
-
-            console.log(mast);
-            console.log(JSFunctionGen(mast, ['x', 'y']))
-        }
-
-        get dx(){
-            return this.$store.state.settings.dxString;
-        }
-
-        set dx(mathfield) {
-            this.$store.commit('changeValue', {key: 'dxString', val: mathfield.text('latex')});
-        }
-
-        get dy(){
-            return this.$store.state.settings.dyString;
-        }
-
-        set dy(mathfield) {
-            this.$store.commit('changeValue', {key: 'dyString', val: mathfield.text('latex')});
-        }
-
-        get dr(){
-            return this.$store.state.settings.drString;
-        }
-
-        set dr(mathfield) {
-            this.$store.commit('changeValue', {key: 'drString', val: mathfield.text('latex')});
-        }
-
-        get dt(){
-            return this.$store.state.settings.dtString;
-        }
-
-        set dt(mathfield) {
-            this.$store.commit('changeValue', {key: 'dtString', val: mathfield.text('latex')});
-        }
-
-        get A() {
-            return this.$store.state.settings.AMatrix;
-        }
-
-        set A(value) {
-            this.$store.commit('changeValue', {key: 'AMatrix', val: value});
-        }
+    public $refs: {
+        polarNotice,
     };
+
+    public mounted() {
+        MathLive.renderMathInElement(this.$refs.polarNotice);
+    }
+
+    public enableMatrix() {
+        this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Matrix});
+    }
+
+    public enableCartesian() {
+        this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Cartesian});
+    }
+
+    public enablePolar() {
+        this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Polar});
+    }
+
+    get dx() {
+        return this.$store.state.settings.dxString;
+    }
+
+    set dx(mathfield) {
+        this.$store.commit('changeValue', {key: 'dxString', val: mathfield.text('latex')});
+    }
+
+    get dy() {
+        return this.$store.state.settings.dyString;
+    }
+
+    set dy(mathfield) {
+        this.$store.commit('changeValue', {key: 'dyString', val: mathfield.text('latex')});
+    }
+
+    get dr() {
+        return this.$store.state.settings.drString;
+    }
+
+    set dr(mathfield) {
+        this.$store.commit('changeValue', {key: 'drString', val: mathfield.text('latex')});
+    }
+
+    get dt() {
+        return this.$store.state.settings.dtString;
+    }
+
+    set dt(mathfield) {
+        this.$store.commit('changeValue', {key: 'dtString', val: mathfield.text('latex')});
+    }
+
+    get A() {
+        return this.$store.state.settings.AMatrix;
+    }
+
+    set A(value) {
+        this.$store.commit('changeValue', {key: 'AMatrix', val: value});
+    }
+}
 </script>
 
 <style scoped lang="scss">

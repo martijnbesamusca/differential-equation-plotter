@@ -10,26 +10,26 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop} from 'vue-property-decorator';
-    import MathLive from 'mathlive';
+import {Component, Vue, Prop} from 'vue-property-decorator';
+import MathLive from 'mathlive';
 
-    @Component
-    export default class AppInputMatrix extends Vue{
-        @Prop(String) label: string;
-        @Prop({default: [2, -2, 2, 1]}) value: Number[4];
+@Component
+export default class AppInputMatrix extends Vue {
+    @Prop(String) public label: string;
+    @Prop({default: [2, -2, 2, 1]}) public value: Number[4];
 
-        $refs: {
-            label: HTMLSpanElement,
-        };
-
-        mounted() {
-            MathLive.renderMathInElement(this.$refs.label);
-        }
-
-        input(){
-            this.$emit('input', this.value)
-        }
+    public $refs: {
+        label: HTMLSpanElement,
     };
+
+    public mounted() {
+        MathLive.renderMathInElement(this.$refs.label);
+    }
+
+    public input() {
+        this.$emit('input', this.value);
+    }
+}
 </script>
 
 <style scoped lang="scss">

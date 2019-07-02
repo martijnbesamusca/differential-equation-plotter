@@ -11,6 +11,53 @@
   &:focus {
     border-color: $accent-color;
   }
+
+  &[type='checkbox'] {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    width: 5em;
+    line-height: 2em;
+    cursor: pointer;
+    transition: background-color 500ms;
+
+    &:before {
+      content: 'off';
+      display: inline-block;
+      width: 0;
+      transform: translateX(1em);
+      color: #fff;
+      line-height: 2em;
+      transition: transform 500ms;
+    }
+
+    &:after{
+      content: '';
+      display: inline-block;
+      background-color: #fff;
+      text-align: center;
+      width: 1em;
+      height: 1em;
+      border-radius: 0.5em;
+      font-weight: 900;
+      position: relative;
+      left: 3em;
+      transition: left 500ms;
+    }
+    &[checked] {
+      background-color: $accent-color;
+      &:before {
+        content: 'on';
+        transform: translateX(2.5em);
+      }
+      &:after {
+        content: '';
+        left: 0.5em;
+
+        //color: $background-color;
+      }
+    }
+  }
 }
 
 %resetbutton {

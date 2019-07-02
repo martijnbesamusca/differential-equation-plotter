@@ -1,20 +1,24 @@
 import {
-    createBufferInfoFromArrays,
-    drawBufferInfo,
-    ProgramInfo,
-    setUniforms,
-    VertexArrayInfo,
     addExtensionsToContext,
+    BufferInfo,
+    createBufferInfoFromArrays,
     createProgramInfo,
     createVertexArrayInfo,
-    setBuffersAndAttributes, setAttribInfoBufferFromArray, BufferInfo,
+    drawBufferInfo,
+    ProgramInfo,
+    setAttribInfoBufferFromArray,
+    setBuffersAndAttributes,
+    setUniforms,
+    VertexArrayInfo,
 } from 'twgl.js';
 import chroma from 'chroma-js';
 // @ts-ignore
 import arrowFrag from './shaders/webgl1/arrow.frag';
 // @ts-ignore
 import arrowVert from './shaders/webgl1/arrow.vert';
-import {ODETypes} from '@/store/modules/settings';
+import {ODEAprox, ODETypes} from '@/store/modules/settings';
+import {MastonToJSFunction} from '@/api/MastonConvert';
+import mathlive from 'mathlive';
 
 export default class ArrowCloud {
     public static MAX_NUM_ARROWS = 10000;
@@ -36,8 +40,8 @@ export default class ArrowCloud {
     private arrowArray: {[key: string]: any};
     private arrow: number[];
 
-    private dxFunction!: (x:number, y: number) => number;
-    private dyFunction!: (x:number, y: number) => number;
+    private dxFunction!: (x: number, y: number) => number;
+    private dyFunction!: (x: number, y: number) => number;
 
     constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: any) {
         this.gl = gl;
@@ -96,9 +100,6 @@ export default class ArrowCloud {
     }
 
     public render() {
-        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.move();
 
         this.gl.useProgram(this.programInfo.program);
@@ -130,6 +131,19 @@ export default class ArrowCloud {
         const ODEType = this.settings.ODEType;
 
         if (ODEType === ODETypes.Cartesian) {
+            const dx = this.dxFunction ? this.dxFunction : (x: number, y: number) => 0;
+            const dy = this.dyFunction ? this.dyFunction : (x: number, y: number) => 0;
+            try {
+                this.dxFunction = MastonToJSFunction(mathlive.latexToAST(this.settings.dxString));
+                this.dyFunction = MastonToJSFunction(mathlive.latexToAST(this.settings.dyString));
+                // Test validity
+                this.dxFunction(0, 0);
+                this.dyFunction(0, 0);
+            } catch (e) {
+                this.dxFunction = dx;
+                this.dyFunction = dy;
+                console.log(e);
+            }
 
         } else if (ODEType === ODETypes.Matrix) {
             const mat = this.settings.AMatrix;
@@ -137,7 +151,35 @@ export default class ArrowCloud {
             this.dyFunction = (x, y) => mat[2] * x + mat[3] * y;
 
         } else if (ODEType === ODETypes.Polar) {
+            // debugger;
+            const dx = this.dxFunction ? this.dxFunction : (r: number, t: number) => 0;
+            const dy = this.dyFunction ? this.dyFunction : (r: number, t: number) => 0;
 
+            try {
+                const dr = MastonToJSFunction(mathlive.latexToAST(this.settings.drString), ['r', 't']);
+                const dt = MastonToJSFunction(mathlive.latexToAST(this.settings.dtString), ['r', 't']);
+
+                // x' = r' cos(t) - r sin(t) t'
+                this.dxFunction = (x, y) => {
+                    const r = Math.sqrt(x ** 2 + y ** 2);
+                    const t = Math.atan2(y, x);
+                    return dr(r, t) * Math.cos(t) - dt(r, t) * r * Math.sin(t);
+                };
+
+                // y' = r' sin(t) + r cos(t) t'
+                this.dyFunction = (x, y) => {
+                    const r = Math.sqrt(x ** 2 + y ** 2);
+                    const t = Math.atan2(y, x);
+                    return dr(r, t) * Math.sin(t) + dt(r, t) * r * Math.cos(t);
+                };
+
+
+                this.dxFunction(0, 0);
+            } catch (e) {
+                this.dxFunction = dx;
+                this.dyFunction = dy;
+                console.log(e);
+            }
         }
     }
 
@@ -155,19 +197,28 @@ export default class ArrowCloud {
 
     public colorArrows() {
         const color = chroma(this.settings.arrowColor);
-        const [h, s, l] = color.hsl();
-        const hueSpread = 20;
-        const saturationSpread = 0.2;
-        const lightnessSpread = 0.2;
-        for (let i = 0; i < this.pos.length; i++) {
-            const [r, g, b] = color
-                .set('hsl.h', h + this.randomInt(-hueSpread, hueSpread))
-                .set('hsl.s', s + this.randomFloat(-saturationSpread, saturationSpread))
-                .set('hsl.l', l + this.randomFloat(-lightnessSpread, lightnessSpread))
-                .gl();
-            this.color[i * 3] = r;
-            this.color[i * 3 + 1] = g;
-            this.color[i * 3 + 2] = b;
+        if (this.settings.arrowRandomColor) {
+            const [h, s, l] = color.hsl();
+            const hueSpread = 20;
+            const saturationSpread = 0.2;
+            const lightnessSpread = 0.2;
+            for (let i = 0; i < this.pos.length; i++) {
+                const [r, g, b] = color
+                    .set('hsl.h', h + this.randomInt(-hueSpread, hueSpread))
+                    .set('hsl.s', s + this.randomFloat(-saturationSpread, saturationSpread))
+                    .set('hsl.l', l + this.randomFloat(-lightnessSpread, lightnessSpread))
+                    .gl();
+                this.color[i * 3] = r;
+                this.color[i * 3 + 1] = g;
+                this.color[i * 3 + 2] = b;
+            }
+        } else {
+            const [r, g, b] = color.gl();
+            for (let i = 0; i < this.pos.length; i++) {
+                this.color[i * 3] = r;
+                this.color[i * 3 + 1] = g;
+                this.color[i * 3 + 2] = b;
+            }
         }
     }
 
@@ -183,9 +234,42 @@ export default class ArrowCloud {
     }
 
     private move() {
+        const speed = this.settings.speed / 100;
+
+        let stepX, stepY: number;
         for (let i = 0; i < this.settings.arrowAmount; i++) {
-            this.pos[i * 2] += this.dx[i] * this.settings.speed / 100;
-            this.pos[i * 2 + 1] += this.dy[i] * this.settings.speed / 100;
+            const x_k1 = this.dx[i];
+            const y_k1 = this.dy[i];
+
+            if (this.settings.ODEAproxmethod === ODEAprox.EULER) {
+                stepX = x_k1;
+                stepY = y_k1;
+            } else {
+                const x_k2 = this.dxFunction(this.pos[i * 2] + 0.5 * speed * x_k1, this.pos[i * 2 + 1] + 0.5 * speed * y_k1);
+                const y_k2 = this.dyFunction(this.pos[i * 2] + 0.5 * speed * x_k1, this.pos[i * 2 + 1] + 0.5 * speed * y_k1);
+                if (this.settings.ODEAproxmethod === ODEAprox.RK2) {
+                    stepX = (x_k1 + x_k2) / 2;
+                    stepY = (y_k1 + y_k2) / 2;
+                } else {
+                    const x_k3 = this.dxFunction(this.pos[i * 2] + 0.5 * speed * x_k2, this.pos[i * 2 + 1] + 0.5 * speed * y_k2);
+                    const y_k3 = this.dyFunction(this.pos[i * 2] + 0.5 * speed * x_k2, this.pos[i * 2 + 1] + 0.5 * speed * y_k2);
+                    const x_k4 = this.dxFunction(this.pos[i * 2] + speed * x_k3, this.pos[i * 2 + 1] + speed * y_k3);
+                    const y_k4 = this.dyFunction(this.pos[i * 2] + speed * x_k3, this.pos[i * 2 + 1] + speed * y_k3);
+
+                    stepX = (x_k1 + 2 * x_k2  + 2 * x_k3 + x_k4) / 6;
+                    stepY = (y_k1 + 2 * y_k2  + 2 * y_k3 + y_k4) / 6;
+
+                }
+            }
+
+            if (this.settings.normalizeSpeed) {
+                const mag = Math.sqrt(stepX ** 2 + stepY ** 2);
+                stepX /= mag;
+                stepY /= mag;
+            }
+
+            this.pos[i * 2] += speed * stepX;
+            this.pos[i * 2 + 1] += speed * stepY;
 
             const x = this.pos[i * 2];
             const y = this.pos[i * 2 + 1];
@@ -209,9 +293,19 @@ export default class ArrowCloud {
                 const y = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
                 this.pos[i * 2] = x;
                 this.pos[i * 2 + 1] = y;
-                this.dx[i] = this.dxFunction(x, y);
-                this.dy[i] = this.dyFunction(x, y);
-                this.age[i] = 0;
+
+                const dx = this.dxFunction(x, y);
+                const dy = this.dyFunction(x, y);
+                const mag = this.settings.normalizeSpeed ? Math.sqrt(dx ** 2 + dy ** 2) : 1;
+                this.dx[i] = dx / mag;
+                this.dy[i] = dy / mag;
+
+                if (this.settings.arrowRandomizeMaxAge) {
+                    this.age[i] = Math.round((Math.random()) * this.settings.arrowMaxAge * 0.1);
+                } else {
+                    this.age[i] = 0;
+                }
+
                 this.alpha[i] = isNaN(this.dx[i]) || isNaN(this.dy[i]) ? 0.0 : 1.0;
             }
         }

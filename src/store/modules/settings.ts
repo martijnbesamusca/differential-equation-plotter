@@ -22,6 +22,12 @@ export const enum ODETypes {
     Matrix,
 }
 
+export const enum ODEAprox {
+    EULER,
+    RK2,
+    RK4,
+}
+
 export interface Settings {
     [key: string]: any;
 }
@@ -33,12 +39,17 @@ const defaults: Settings = {
         x: {min: -6, max: 6},
         y: {min: -3, max: 3},
     },
+    keepAspectRatio: true,
 
     speed: 1.0,
+    normalizeSpeed: false,
+    ODEAproxmethod: ODEAprox.EULER,
     arrowAmount: 5000,
     arrowMaxAge: 200,
+    arrowRandomizeMaxAge: false,
     arrowSize: 5,
-    arrowColor: '#00ff00',
+    arrowColor: '#3f95eb',
+    arrowRandomColor: false,
 
     drawFunctionBackground: false,
     useCached: false,
@@ -49,7 +60,7 @@ const defaults: Settings = {
     dtString: String.raw`1`,
     AMatrix: [2, 1, -1, 2],
 
-    ODEType: ODETypes.Matrix,
+    ODEType: ODETypes.Polar,
     // dxFunction: (x: number, y: number): number => -Math.sin(2 * Math.PI * x),
     // dyFunction: (x: number, y: number): number => y,
 };
@@ -63,6 +74,7 @@ function loadState() {
         key = key.replace(prefixPersist, '');
         set(state, key, val);
     }
+
     return state;
 }
 
@@ -85,6 +97,37 @@ const mutations = {
             set(state, key, val);
         } else {
             set(state, key, val);
+        }
+
+        if ((key.startsWith('viewbox') && state.keepAspectRatio) ||
+            (key === 'keepAspectRatio' && val)) {
+            const precision = 100;
+            const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+            const widthView = state.viewbox.x.max - state.viewbox.x.min;
+            const heightView = state.viewbox.y.max - state.viewbox.y.min;
+            if (key.startsWith('viewbox.x')) {
+                const newHeight = widthView * canvas.height / canvas.width;
+                state.viewbox.y.min += (heightView - newHeight) / 2;
+                state.viewbox.y.max -= (heightView - newHeight) / 2;
+
+                // round
+                state.viewbox.y.min = Math.round(state.viewbox.y.min * precision) / precision;
+                state.viewbox.y.max = Math.round(state.viewbox.y.max * precision) / precision;
+
+                // save
+                localStorage.setItem(prefixPersist + 'viewbox.y.min', state.viewbox.y.min);
+                localStorage.setItem(prefixPersist + 'viewbox.y.max', state.viewbox.y.max);
+            } else {
+                const newWidth = heightView * canvas.width / canvas.height;
+                state.viewbox.x.min += (widthView - newWidth) / 2;
+                state.viewbox.x.max -= (widthView - newWidth) / 2;
+                // round
+                state.viewbox.x.min = Math.round(state.viewbox.x.min * precision) / precision;
+                state.viewbox.x.max = Math.round(state.viewbox.x.max * precision) / precision;
+                // save
+                localStorage.setItem(prefixPersist + 'viewbox.x.min', state.viewbox.x.min);
+                localStorage.setItem(prefixPersist + 'viewbox.x.max', state.viewbox.x.max);
+            }
         }
 
         localStorage.setItem(prefixPersist + key, JSON.stringify(val));

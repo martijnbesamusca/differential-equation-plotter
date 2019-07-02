@@ -1,5 +1,5 @@
 <template>
-    <div class="tab" :class="{activated: activated}">
+    <div class="tab" v-show="activated" :class="{activated: activated}">
         <slot/>
     </div>
 </template>
@@ -18,14 +18,18 @@
 
 <style scoped lang="scss">
     .tab {
-        height: 0;
-        width: 100%;
-        overflow-y: hidden;
-
-        &.activated{
-            height: auto;
-            overflow-y: auto;
-        }
-
+        height: 100%;
+        overflow-y: auto;
     }
+    /*.tab {*/
+        /*height: 0;*/
+        /*width: 100%;*/
+        /*overflow-y: hidden;*/
+
+        /*&.activated{*/
+            /*height: 100%;*/
+            /*overflow-y: auto;*/
+        /*}*/
+
+    /*}*/
 </style>

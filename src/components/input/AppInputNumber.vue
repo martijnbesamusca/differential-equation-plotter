@@ -35,7 +35,7 @@ export default class AppInputNumber extends AppInput {
             },
 
             domProps: {
-                type: context.props.type,
+                type: 'number',
                 value: get(context.props.store.state.settings, context.props.varName),
                 id: prefix + context.props.varName,
             },

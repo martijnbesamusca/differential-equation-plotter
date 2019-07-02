@@ -9,8 +9,8 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator';
 import AppPlot from './components/AppPlot.vue';
-import AppSideBar from "./components/AppSideBar.vue";
-import AppTitleBar from "./components/AppTitleBar.vue";
+import AppSideBar from './components/AppSideBar.vue';
+import AppTitleBar from './components/AppTitleBar.vue';
 
 @Component({
     components: {
@@ -50,7 +50,7 @@ export default class App extends Vue {
         height: 100%;
         grid-template-areas:  "plot title"
         "plot side";
-        grid-template-columns: 1fr max-content;
+        grid-template-columns: 1fr 25em;
         grid-template-rows: min-content 1fr;
         overflow: hidden;
     }

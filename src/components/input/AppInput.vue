@@ -43,7 +43,11 @@ export default class AppInput extends Vue {
                         return;
                     }
 
-                    context.props.store.commit('changeValue',  {key: context.props.varName, val: e.target.value});
+                    if (context.props.type === 'checkbox') {
+                        context.props.store.commit('changeValue',  {key: context.props.varName, val: e.target.checked});
+                    } else {
+                        context.props.store.commit('changeValue',  {key: context.props.varName, val: e.target.value});
+                    }
                 },
 
             },

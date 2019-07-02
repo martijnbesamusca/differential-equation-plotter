@@ -1,5 +1,5 @@
 <template>
-    <div class="tabs">
+    <div class="tabs" ref="tabs">
         <ul class="menu">
             <li v-for="(tab, i) in tabs"
                 class="menuItem"
@@ -15,40 +15,54 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import AppTab from '@/components/AppTab.vue';
-    import MathLive from 'mathlive';
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import AppTab from '@/components/AppTab.vue';
+import MathLive from 'mathlive';
 
-    @Component({})
-    export default class AppTabs extends Vue {
-        tabs: AppTab[] = [];
+@Component({})
+export default class AppTabs extends Vue {
+    public tabs: AppTab[] = [];
 
-        created() {
-            this.tabs = this.$children as AppTab[];
-        }
+    public created() {
+        this.tabs = this.$children as AppTab[];
+    }
 
-        mounted() {
-            const activatedTab = this.tabs.find((tab)=> tab.activated) || this.tabs[0];
+    public mounted() {
 
-            this.activate(activatedTab);
-        }
+        window.addEventListener('resize', () => this.onResize());
+        this.onResize();
+    }
 
-        updated() {
-            console.log('updated', this.$refs);
+    public updated() {
+        console.log('updated', this.$refs);
 
-            const texts = this.$refs.text || [];
-            for(let text of texts) {
-                MathLive.renderMathInElement(text);
-            }
-        }
-
-        activate(tab: AppTab) {
-            for(let t of this.tabs) {
-                t.activated = false;
-            }
-            tab.activated = true;
+        const texts = this.$refs.text as HTMLSpanElement[] || [];
+        for (const text of texts) {
+            MathLive.renderMathInElement(text);
         }
     }
+
+    public onResize() {
+        const maxWidth = 0;
+        const activatedTab = this.tabs.find((tab) => tab.activated) || this.tabs[0];
+        // for(let tab of this.tabs) {
+        //     const prev = tab.$el.style.display;
+        //     tab.$el.style.display = 'block';
+        //     maxWidth = Math.max(maxWidth, tab.$el.clientWidth);
+        //     tab.$el.style.display = prev;
+        // }
+        // this.$refs.tabs.style.width = maxWidth + 'px';
+
+        this.activate(activatedTab);
+    }
+
+    public activate(tab: AppTab) {
+        for (const t of this.tabs) {
+            t.activated = false;
+        }
+        tab.activated = true;
+    }
+}
 </script>
 
 <style>
@@ -58,6 +72,10 @@
 </style>
 
 <style scoped lang="scss">
+.tabs{
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
 .tabs .menu {
     list-style: none;
     padding: 0;

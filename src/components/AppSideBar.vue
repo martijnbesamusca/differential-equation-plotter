@@ -40,7 +40,7 @@
         background-color: #333;
         color: #fff;
         grid-area: side;
-        height: 100vh;
+        /*height: 100vh;*/
         overflow-y: auto;
     }
 </style>

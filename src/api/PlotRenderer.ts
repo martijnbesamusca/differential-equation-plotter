@@ -49,17 +49,17 @@ export default class PlotRenderer {
             if (mutation.type === 'changeValue') {
                 const key = mutation.payload.key;
 
-                if (key.startsWith('viewbox')) {
+                if (key.startsWith('viewbox') || key === 'keepAspectRatio') {
                     this.updateViewBox();
                 } else if (key === 'arrowMaxAge') {
                     this.arrowCloud.initArrows();
-                } else if (key === 'arrowColor') {
+                } else if (key === 'arrowColor' || key === 'arrowRandomColor') {
                     this.arrowCloud.colorArrows();
                 } else if (key === 'arrowSize') {
                     this.arrowCloud.resizeArrows();
                 } else if (key === 'ODEType') {
-                    this.arrowCloud.initArrows();
                     this.arrowCloud.updateODE();
+                    this.arrowCloud.initArrows();
                 }
             }
 
@@ -85,6 +85,9 @@ export default class PlotRenderer {
     }
 
     public render() {
+        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
         this.arrowCloud.render();
 
         requestAnimationFrame(() => this.render());

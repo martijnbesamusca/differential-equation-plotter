@@ -13,7 +13,7 @@
             </defs>
             <!-- put some content in here -->
         </svg>
-        <canvas ref="plot"></canvas>
+        <canvas ref="plot" id="canvas"></canvas>
     </div>
 </template>
 
