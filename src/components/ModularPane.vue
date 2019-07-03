@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop} from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {
@@ -15,16 +15,19 @@
         @Prop(String) readonly paneName: string | undefined;
         @Prop(Number) readonly size: number | undefined;
         @Prop(String) readonly minSize: string | undefined;
+        @Prop(String) readonly maxSize: string | undefined;
 
         public paneType = null; // vertical - horizontal
+        public width = this.size;
 
         get style () {
-            const style =  {
-                flexGrow: this.size,
+            return {
+                '--pane-width': 100 * this.width + '%',
                 minWidth: this.minSize,
                 minHeight: this.minSize,
-            };
-            return style
+                maxWidth: this.maxSize,
+                maxHeight: this.maxSize,
+            }
         }
 
         public mounted() {
@@ -32,9 +35,17 @@
     }
 </script>
 
-<style scoped>
-.pane {
-    flex-basis: 0;
-    flex-shrink: 1;
-}
+<style scoped lang="scss">
+    .pane {
+        --pane-width: 0;
+        width: calc(var(--pane-width) - 2px);
+        will-change: width;
+        height: 100%;
+        display: inline-block;
+        background-color: #426b8a;
+        float: left;
+        &:first-child, &:last-child{
+            width: calc(var(--pane-width) - 1px);
+        }
+    }
 </style>

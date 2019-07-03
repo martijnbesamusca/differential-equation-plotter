@@ -1,23 +1,8 @@
 <template>
     <div id="app">
-        <modular-panes direction="row">
-            <modular-pane :size="10">
-                <app-plot/>
-            </modular-pane>
-
-            <modular-pane :size="5" min-size="20em">
-                <modular-panes direction="column">
-
-                    <modular-pane :size="1">
-                        <app-title-bar/>
-                    </modular-pane>
-
-                    <modular-pane :size=4>
-                        <app-side-bar/>
-                    </modular-pane>
-
-                </modular-panes>
-            </modular-pane>
+        <modular-panes direction="vertical">
+            <modular-pane :size=".8"><app-plot/></modular-pane>
+            <modular-pane :size=".2" minSize="20em"><div>hey</div></modular-pane>
         </modular-panes>
     </div>
 </template>
@@ -27,8 +12,9 @@ import {Component, Vue, Watch} from 'vue-property-decorator';
 import AppPlot from './components/AppPlot.vue';
 import AppSideBar from './components/AppSideBar.vue';
 import AppTitleBar from './components/AppTitleBar.vue';
-import ModularPanes from "@/components/ModularPanes.vue";
-import ModularPane from "@/components/ModularPane.vue";
+import ModularPanes from './components/ModularPanes'
+import ModularPane from './components/ModularPane'
+// import { Multipane, MultipaneResizer } from 'vue-multipane';
 
 @Component({
     components: {
@@ -72,4 +58,15 @@ export default class App extends Vue {
 <style>
     @import "style/mathlive.core.css";
     @import "style/mathlive.css";
+    .multipane.layout-v .multipane-resizer {
+        margin: 0; left: 0; /* reset default styling */
+        width: 15px;
+        background: blue;
+    }
+
+    .multipane.layout-h .multipane-resizer {
+        margin: 0; top: 0; /* reset default styling */
+        height: 15px;
+        background: blue;
+    }
 </style>

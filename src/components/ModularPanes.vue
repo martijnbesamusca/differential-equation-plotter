@@ -1,5 +1,5 @@
 <template>
-    <div class="modular-panes layout-default" :style="style">
+    <div class="modular-panes" :class="'modular-panes-' + direction" :style="style">
         <slot />
     </div>
 </template>
@@ -11,6 +11,8 @@
         },
     })
     export default class ModularPanes extends Vue {
+        public activeResizingElms: VNode[] = null;
+
         @Prop(String) readonly direction: string | undefined;
 
         get style () {
@@ -19,48 +21,72 @@
             }
         }
 
-        public mounted() {
-            for (const vnode of this.$slots.default) {
-                const elm:HTMLElement = <HTMLElement>vnode.elm;
-                console.log('min-width', elm.style.getPropertyValue('min-width'));
+        addHandlers () {
+            for (let i = 0; i < this.$slots.default.length - 1; i++) {
+                const vnodePrev = this.$slots.default[i];
+                const vnodeNext = this.$slots.default[i + 1];
 
-                if (this.direction === 'row') {
-                    elm.style.removeProperty('min-height')
-                } else if (this.direction === 'column') {
-                    elm.style.removeProperty('min-width')
-                }
+                const handler = document.createElement('div');
+                handler.classList.add('handler');
+
+                handler.addEventListener('mousedown', (e) => {
+                    this.activeResizingElms = [vnodePrev, vnodeNext];
+                    e.preventDefault()
+                });
+                addEventListener('mousemove', (e) => {
+                    if(!this.activeResizingElms) return;
+                    e.preventDefault();
+                    // let x = (e.pageX - this.$el.offsetLeft) / this.$el.clientWidth;
+                    let delta = e.movementX / this.$el.clientWidth;
+                    this.activeResizingElms[0].componentInstance.$data.width += delta;
+                    this.activeResizingElms[1].componentInstance.$data.width -= delta;
+                    console.log(delta)
+                });
+                addEventListener('mouseup', (e) => {
+                    this.activeResizingElms = null
+                });
+
+                this.$el.insertBefore(handler, vnodeNext.elm);
             }
+        }
+
+        public mounted() {
+            this.addHandlers();
         }
     }
 </script>
 
 <style scoped lang="scss">
     .modular-panes {
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: stretch;
-        align-content: stretch;
-
-        flex-basis: 0;
-        flex-shrink: 1;
+        height: 100%;
+        width: 100%;
+        position: relative;
     }
+</style>
 
-    .layout {
-        /*&-default {*/
-            /*grid-template-areas:*/
-                    /*'plot title'*/
-                    /*'plot settings';*/
-        /*}*/
-        /*&-default-mirrored {*/
-            /*grid-template-areas:*/
-                    /*'title plot'*/
-                    /*'settings plot';*/
-        /*}*/
-        /*&-mobile {*/
-            /*grid-template-areas:*/
-                    /*'title'*/
-                    /*'plot'*/
-                    /*'settings';*/
-        /*}*/
+<style lang="scss">
+    .modular-panes {
+        .handler {
+            display: block;
+            height: 100%;
+            width: 2px;
+            background-color: red;
+            float: left;
+            &:before {
+                content: '';
+                position: absolute;
+                margin-left: -3px;
+                width: 6px;
+                height: 100%;
+            }
+        }
+
+        &-horizontal .handler {
+            cursor: n-resize;
+        }
+
+        &-vertical .handler {
+            cursor: e-resize;
+        }
     }
 </style>
