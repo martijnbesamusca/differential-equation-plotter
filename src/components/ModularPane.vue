@@ -38,11 +38,10 @@
 <style scoped lang="scss">
     .pane {
         --pane-width: 0;
-        width: calc(var(--pane-width) - 2px);
+        width: var(--pane-width);
         will-change: width;
         height: 100%;
         display: inline-block;
-        background-color: #426b8a;
         float: left;
         &:first-child, &:last-child{
             width: calc(var(--pane-width) - 1px);

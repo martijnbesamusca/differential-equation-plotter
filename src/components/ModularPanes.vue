@@ -60,7 +60,7 @@
     .modular-panes {
         height: 100%;
         width: 100%;
-        position: relative;
+        display: flex;
     }
 </style>
 
@@ -68,9 +68,13 @@
     .modular-panes {
         .handler {
             display: block;
-            height: 100%;
-            width: 2px;
-            background-color: red;
+            height: 100vh;
+            width: 6px;
+            background-color: #ccc;
+            border-color: #000;
+            border-style: solid;
+            border-left-width: 1px;
+            border-right-width: 1px;
             float: left;
             &:before {
                 content: '';

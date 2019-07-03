@@ -2,7 +2,10 @@
     <div id="app">
         <modular-panes direction="vertical">
             <modular-pane :size=".8"><app-plot/></modular-pane>
-            <modular-pane :size=".2" minSize="20em"><div>hey</div></modular-pane>
+            <modular-pane :size=".2" minSize="20em">
+                <app-title-bar/>
+                <app-side-bar/>
+            </modular-pane>
         </modular-panes>
     </div>
 </template>
