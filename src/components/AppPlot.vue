@@ -88,6 +88,12 @@ export default class AppPlot extends Vue {
 </style>
 
 <style lang="scss">
+    .solution {
+        stroke: lime;
+        stroke-width: 4;
+        fill: transparent;
+    }
+
     .line_grid{
         stroke: #333;
         stroke-width: 1;

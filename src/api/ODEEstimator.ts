@@ -13,8 +13,8 @@ export interface ODEEstimatorObject {
 }
 
 export default class ODEEstimator {
-    private dxFunction!: (x: number, y: number) => number;
-    private dyFunction!: (x: number, y: number) => number;
+    public dxFunction!: (x: number, y: number) => number;
+    public dyFunction!: (x: number, y: number) => number;
 
     constructor () {
         this.updateODE();
@@ -32,15 +32,16 @@ export default class ODEEstimator {
     public stepFrom(
         estimator: ODEEstimatorObject,
         speed: number,
-        normalize: number,
+        normalize: boolean,
         estimatorMethod: ODEAprox,
     ) {
-        debugger
         switch (estimatorMethod) {
             case ODEAprox.RK2:
                 this.stepFromRK2(estimator, speed);
                 break;
             case ODEAprox.RK4:
+                this.stepFromRK4(estimator, speed);
+                break;
             case ODEAprox.EULER:
                 this.stepFromEuler(estimator, speed);
                 break

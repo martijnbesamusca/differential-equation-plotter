@@ -31,7 +31,10 @@
             AppEquationMenu,
         },
     })
-    export default class AppSideBar extends Vue{
+    export default class AppSideBar extends Vue {
+        get activeTab () {
+            return this.$store.state.settings.ODEType
+        }
     }
 </script>
 

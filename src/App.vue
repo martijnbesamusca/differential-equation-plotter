@@ -46,6 +46,7 @@ export default class App extends Vue {
         margin: 0;
         overflow: hidden;
         height: 100%;
+        font-family: 'Open Sans', sans-serif;
     }
 
     *{

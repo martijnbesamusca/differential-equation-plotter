@@ -6,6 +6,7 @@ import {m4} from 'twgl.js';
 import ArrowCloud from '@/api/ArrowCloud';
 import Grid from '@/api/Grid';
 import ODEEstimator from "@/api/ODEEstimator";
+import SolutionRenderer from "@/api/SolutionRenderer";
 
 export default class PlotRenderer {
     private canvas: HTMLCanvasElement;
@@ -18,12 +19,14 @@ export default class PlotRenderer {
     private uniforms!: {[key: string]: any};
 
     private ODEEstimator: ODEEstimator;
+    private solutions: SolutionRenderer;
 
     constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
         this.canvas = canvas;
         this.settings = settings;
         this.grid = new Grid(svg, this.settings);
         this.ODEEstimator = new ODEEstimator();
+        this.solutions = new SolutionRenderer(canvas, svg, this.settings, this.ODEEstimator);
 
         const gl = canvas.getContext('webgl');
         if (!gl) {

@@ -1,19 +1,19 @@
 <template>
     <div class="equationMenu">
         <h2 id="equation_title">Equations</h2>
-        <app-tabs>
-            <app-tab title="cartesian" text="$$ \dot{x}, \dot{y} $$">
+        <app-tabs ref="tabs">
+            <app-tab title="cartesian" text="$$ \dot{x}, \dot{y} $$" ref="tabCartesian">
                 <app-math-input label="$$\dot{x}=$$" class="mathInput" @input="dx = $event">{{ dx }}</app-math-input>
                 <app-math-input label="$$\dot{y}=$$" class="mathInput" @input="dy = $event">{{ dy }}</app-math-input>
                 <button class="applyButton" @click="enableCartesian">Apply</button>
             </app-tab>
 
-            <app-tab  title="matrix" text="$$ \dot{\vec{x}} = A\vec{x} $$">
+            <app-tab title="matrix" text="$$ \dot{\vec{x}} = A\vec{x} $$" ref="tabMatrix">
                 <app-input-matrix label="$$ A= $$" class="matrix" v-model="A"/>
                 <button class="applyButton" @click="enableMatrix">Apply</button>
             </app-tab>
 
-            <app-tab  title="polar" text="$$ \dot{r}, \dot{\theta} $$">
+            <app-tab  title="polar" text="$$ \dot{r}, \dot{\theta} $$" ref="tabPolar">
                 <span ref="polarNotice" id="polarNotice">
                     The variable $$ \theta $$ can be typed <br> both as $$ \theta $$ or as $$ t $$ for ease of typing.
                 </span>
@@ -52,6 +52,19 @@ export default class AppEquationMenu extends Vue {
 
     public mounted() {
         MathLive.renderMathInElement(this.$refs.polarNotice);
+
+        switch (this.$store.state.settings.ODEType) {
+            case ODETypes.Matrix:
+                this.$refs.tabs.activate(this.$refs.tabMatrix);
+                break;
+            case ODETypes.Cartesian:
+                this.$refs.tabs.activate(this.$refs.tabCartesian);
+                break;
+            case ODETypes.Polar:
+                this.$refs.tabs.activate(this.$refs.tabPolar);
+                break;
+        }
+
     }
 
     public enableMatrix() {
@@ -120,7 +133,7 @@ export default class AppEquationMenu extends Vue {
     #equation_title {
         padding: 0.5em 0;
         margin: 0;
-        font-size: 1.5em;
+        font-size: 2em;
         text-align: center;
         border-bottom: #666 3px solid;
         background-color: #222;
