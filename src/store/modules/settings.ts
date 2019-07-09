@@ -1,5 +1,6 @@
 // import {VuexModule, mutation, action, getter, Module} from 'vuex-class-component';
 import {get, set, cloneDeep} from 'lodash';
+import ODEEstimator from "@/api/ODEEstimator";
 
 export interface IViewbox {
     x: IViewboxRange;
@@ -141,9 +142,12 @@ const actions = {
     },
 };
 
+const getters = {
+};
+
 export default {
     state: loadState(),
     mutations,
     actions,
-    getters: {},
+    getters,
 };

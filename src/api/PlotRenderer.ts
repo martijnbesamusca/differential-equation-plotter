@@ -5,6 +5,7 @@ import {cloneDeep} from 'lodash';
 import {m4} from 'twgl.js';
 import ArrowCloud from '@/api/ArrowCloud';
 import Grid from '@/api/Grid';
+import ODEEstimator from "@/api/ODEEstimator";
 
 export default class PlotRenderer {
     private canvas: HTMLCanvasElement;
@@ -16,17 +17,13 @@ export default class PlotRenderer {
     private grid: Grid;
     private uniforms!: {[key: string]: any};
 
+    private ODEEstimator: ODEEstimator;
+
     constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
         this.canvas = canvas;
         this.settings = settings;
-        // this.cachedFunction = new CachedFunction(
-        //     this.settings.dxFunction,
-        //     this.settings.dyFunction,
-        //     this.settings.viewbox,
-        //     canvas.width,
-        //     canvas.height,
-        // );
         this.grid = new Grid(svg, this.settings);
+        this.ODEEstimator = new ODEEstimator();
 
         const gl = canvas.getContext('webgl');
         if (!gl) {
@@ -38,7 +35,7 @@ export default class PlotRenderer {
         this.updateScreenSize();
         this.updateViewBox();
 
-        this.arrowCloud = new ArrowCloud(this.gl, this.uniforms, this.settings);
+        this.arrowCloud = new ArrowCloud(this.gl, this.uniforms, this.settings, this.ODEEstimator);
 
         store.subscribe((mutation, state) => {
             // @ts-ignore

@@ -19,6 +19,7 @@ import arrowVert from './shaders/webgl1/arrow.vert';
 import {ODEAprox, ODETypes} from '@/store/modules/settings';
 import {MastonToJSFunction} from '@/api/MastonConvert';
 import mathlive from 'mathlive';
+import ODEEstimator from "@/api/ODEEstimator";
 
 export default class ArrowCloud {
     public static MAX_NUM_ARROWS = 10000;
@@ -40,12 +41,14 @@ export default class ArrowCloud {
     private arrowArray: {[key: string]: any};
     private arrow: number[];
 
+    private ODEEstimator: ODEEstimator;
     private dxFunction!: (x: number, y: number) => number;
     private dyFunction!: (x: number, y: number) => number;
 
-    constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: any) {
+    constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: any, ODEEstimator: ODEEstimator) {
         this.gl = gl;
         this.settings = settings;
+        this.ODEEstimator = ODEEstimator;
 
         addExtensionsToContext(this.gl);
         this.programInfo = createProgramInfo(this.gl, [arrowVert, arrowFrag]);
@@ -224,8 +227,14 @@ export default class ArrowCloud {
 
     public initArrows() {
         for (let i = 0; i < this.pos.length; i++) {
-            this.pos[i * 2] = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
-            this.pos[i * 2 + 1] = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
+            const x = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
+            const y = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
+
+            this.pos[i * 2] = x;
+            this.pos[i * 2 + 1] = y;
+            this.dx[i] = this.dxFunction(x, y);
+            this.dy[i] = this.dyFunction(x, y);
+
             this.age[i] = this.randomInt(0, this.settings.arrowMaxAge);
             this.alpha[i] = 0.0;
         }
@@ -235,60 +244,34 @@ export default class ArrowCloud {
 
     private move() {
         const speed = this.settings.speed / 100;
+        const normalize = this.settings.normalizeSpeed;
+        const method = this.settings.ODEAproxmethod;
+        const estimation = {posX: 0, posY: 0, stepX: 0, stepY: 0, dx: 0, dy: 0};
 
-        let stepX, stepY: number;
         for (let i = 0; i < this.settings.arrowAmount; i++) {
-            const x_k1 = this.dx[i];
-            const y_k1 = this.dy[i];
+            estimation.posX = this.pos[i * 2];
+            estimation.posY = this.pos[i * 2 + 1];
 
-            if (this.settings.ODEAproxmethod === ODEAprox.EULER) {
-                stepX = x_k1;
-                stepY = y_k1;
-            } else {
-                const x_k2 = this.dxFunction(this.pos[i * 2] + 0.5 * speed * x_k1, this.pos[i * 2 + 1] + 0.5 * speed * y_k1);
-                const y_k2 = this.dyFunction(this.pos[i * 2] + 0.5 * speed * x_k1, this.pos[i * 2 + 1] + 0.5 * speed * y_k1);
-                if (this.settings.ODEAproxmethod === ODEAprox.RK2) {
-                    stepX = (x_k1 + x_k2) / 2;
-                    stepY = (y_k1 + y_k2) / 2;
-                } else {
-                    const x_k3 = this.dxFunction(this.pos[i * 2] + 0.5 * speed * x_k2, this.pos[i * 2 + 1] + 0.5 * speed * y_k2);
-                    const y_k3 = this.dyFunction(this.pos[i * 2] + 0.5 * speed * x_k2, this.pos[i * 2 + 1] + 0.5 * speed * y_k2);
-                    const x_k4 = this.dxFunction(this.pos[i * 2] + speed * x_k3, this.pos[i * 2 + 1] + speed * y_k3);
-                    const y_k4 = this.dyFunction(this.pos[i * 2] + speed * x_k3, this.pos[i * 2 + 1] + speed * y_k3);
+            estimation.dx = this.dx[i];
+            estimation.dy = this.dy[i];
 
-                    stepX = (x_k1 + 2 * x_k2  + 2 * x_k3 + x_k4) / 6;
-                    stepY = (y_k1 + 2 * y_k2  + 2 * y_k3 + y_k4) / 6;
+            this.ODEEstimator.stepFrom(estimation, speed, normalize, method);
 
-                }
-            }
+            this.pos[i * 2] = estimation.posX;
+            this.pos[i * 2 + 1] = estimation.posY;
 
-            if (this.settings.normalizeSpeed) {
-                const mag = Math.sqrt(stepX ** 2 + stepY ** 2);
-                stepX /= mag;
-                stepY /= mag;
-            }
-
-            this.pos[i * 2] += speed * stepX;
-            this.pos[i * 2 + 1] += speed * stepY;
-
-            const x = this.pos[i * 2];
-            const y = this.pos[i * 2 + 1];
-
-            const dx = this.dxFunction(x, y);
-            const dy = this.dyFunction(x, y);
-
-            this.dx[i] = dx;
-            this.dy[i] = dy;
+            this.dx[i] = estimation.dx;
+            this.dy[i] = estimation.dy;
 
             this.alpha[i] = 1.0;
 
-            if (isNaN(dx) || isNaN(dy)) {
+            if (isNaN(estimation.dx) || isNaN(estimation.dy)) {
                 this.alpha[i] = 0.0;
                 this.age[i] = this.settings.arrowMaxAge;
             }
 
             this.age[i] += 1;
-            if (this.age[i] >= this.settings.arrowMaxAge || !this.isInBounds(x, y)) {
+            if (this.age[i] >= this.settings.arrowMaxAge || !this.isInBounds(estimation.posX, estimation.posY)) {
                 const x = this.randomFloat(this.settings.viewbox.x.min, this.settings.viewbox.x.max);
                 const y = this.randomFloat(this.settings.viewbox.y.min, this.settings.viewbox.y.max);
                 this.pos[i * 2] = x;
@@ -296,9 +279,8 @@ export default class ArrowCloud {
 
                 const dx = this.dxFunction(x, y);
                 const dy = this.dyFunction(x, y);
-                const mag = this.settings.normalizeSpeed ? Math.sqrt(dx ** 2 + dy ** 2) : 1;
-                this.dx[i] = dx / mag;
-                this.dy[i] = dy / mag;
+                this.dx[i] = dx;
+                this.dy[i] = dy;
 
                 if (this.settings.arrowRandomizeMaxAge) {
                     this.age[i] = Math.round((Math.random()) * this.settings.arrowMaxAge * 0.1);
