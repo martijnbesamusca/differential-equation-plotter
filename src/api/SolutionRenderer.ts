@@ -10,11 +10,16 @@ export interface Solution {
 export default class SolutionRenderer {
     private solutions: Solution[] = [];
     private preview = [];
-    private paths = [];
+    private paths: SVGPathElement[] = [];
     private settings: Settings;
     private svg: SVGElement;
     private canvas: HTMLCanvasElement;
     private ODEEstimator: ODEEstimator;
+
+    public stepSize: number;
+    public length: number;
+    public method: ODEAprox;
+    private subSteps: number;
 
     constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: Settings, ODEEstimator: ODEEstimator) {
         this.settings = settings;
@@ -22,17 +27,34 @@ export default class SolutionRenderer {
         this.canvas = canvas;
         this.ODEEstimator = ODEEstimator;
 
+        this.stepSize = settings.solutionStepSize;
+        this.subSteps = settings.solutionSubSteps;
+        this.length = settings.solutionLength;
+        this.method = settings.solutionODEApproxMethod;
+
+        this.setColor();
+        this.setWidth();
+
         canvas.addEventListener('click',  (e: MouseEvent) => {
-            const x = this.settings.viewbox.x.min + e.offsetX / canvas.width * (this.settings.viewbox.x.max - this.settings.viewbox.x.min);
-            const y = this.settings.viewbox.y.max - e.offsetY / canvas.height * (this.settings.viewbox.y.max - this.settings.viewbox.y.min);
+            const {width, height} = canvas.getBoundingClientRect();
+            const x = this.settings.viewbox.x.min + e.offsetX / width * (this.settings.viewbox.x.max - this.settings.viewbox.x.min);
+            const y = this.settings.viewbox.y.max - e.offsetY / height * (this.settings.viewbox.y.max - this.settings.viewbox.y.min);
             this.addSolution(x, y);
         })
     }
 
+    setColor() {
+        this.svg.style.setProperty('--solution-color', this.settings.solutionColor);
+    }
+
+    setWidth() {
+        this.svg.style.setProperty('--solution-width', this.settings.solutionWidth.toString());
+    }
+
     addSolution(x: number, y: number) {
-        const stepSize = .01;
-        const length = 10 / stepSize;
-        const method = ODEAprox.RK4;
+        const stepSize = this.stepSize;
+        const length = this.length / this.stepSize;
+
         const solution: Solution = {
             start: [x, y],
             dForwards: [],
@@ -48,7 +70,10 @@ export default class SolutionRenderer {
         };
 
         for (let i = 0; i < length; i++) {
-            this.ODEEstimator.stepFrom(estimation, stepSize, false, method);
+            for (let j = 0; j <= this.subSteps; j++) {
+                this.ODEEstimator.stepFrom(estimation, stepSize / (this.subSteps + 1), false, this.method);
+                if (!this.isInBounds(estimation.posX, estimation.posY)) break;
+            }
             solution.dForwards.push([estimation.posX, estimation.posY]);
             if (!this.isInBounds(estimation.posX, estimation.posY)) break;
         }
@@ -60,11 +85,10 @@ export default class SolutionRenderer {
         estimation.dy = this.ODEEstimator.dyFunction(x, y);
 
         for (let i = 0; i < length; i++) {
-            this.ODEEstimator.stepFrom(estimation, stepSize, false, method);
-            estimation.posX -= estimation.stepX * 2;
-            estimation.posY -= estimation.stepY * 2;
-            estimation.dx = this.ODEEstimator.dxFunction(estimation.posX, estimation.posY);
-            estimation.dy = this.ODEEstimator.dyFunction(estimation.posX, estimation.posY);
+            for (let j = 0; j <= this.subSteps; j++) {
+                this.ODEEstimator.stepFrom(estimation, -stepSize / (this.subSteps + 1), false, this.method);
+                if (!this.isInBounds(estimation.posX, estimation.posY)) break;
+            }
             solution.dBackwards.push([estimation.posX, estimation.posY]);
             if (!this.isInBounds(estimation.posX, estimation.posY)) break;
         }
@@ -88,6 +112,7 @@ export default class SolutionRenderer {
         path.setAttribute('d', pathString);
         path.classList.add('solution');
         this.svg.appendChild(path);
+        this.paths.push(path)
     }
 
     private  formatCoordinates([x, y]: [number, number]) {
@@ -98,13 +123,25 @@ export default class SolutionRenderer {
         return `${xWindow} ${yWindow}`
     }
 
-    render() {
-        while (this.paths) {
-            this.svg.removeChild(this.paths.pop()!)
+    clear() {
+        while (this.paths.length > 0) {
+            const path = this.paths.pop()!;
+            this.svg.removeChild(path)
         }
+        this.solutions = []
+    }
 
+    render() {
+        while (this.paths.length > 0) {
+            const path = this.paths.pop()!;
+            this.svg.removeChild(path)
+        }
         for (const solution of this.solutions) {
             this.renderSolution(solution)
         }
+    }
+
+    public updateSettings(settings: Settings) {
+        this.settings = settings;
     }
 }

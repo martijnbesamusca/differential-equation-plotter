@@ -45,6 +45,7 @@ export default class PlotRenderer {
             this.settings = cloneDeep(state.settings);
             this.arrowCloud.updateSettings(this.settings);
             this.grid.updateSettings(this.settings);
+            this.solutions.updateSettings(this.settings);
 
             if (mutation.type === 'changeValue') {
                 const key = mutation.payload.key;
@@ -60,6 +61,17 @@ export default class PlotRenderer {
                 } else if (key === 'ODEType') {
                     this.arrowCloud.updateODE();
                     this.arrowCloud.initArrows();
+                    this.solutions.clear();
+                } else if (key === 'solutionStepSize') {
+                    this.solutions.stepSize = this.settings.solutionStepSize;
+                } else if (key === 'solutionLength') {
+                    this.solutions.length = this.settings.solutionLength;
+                } else if (key === 'solutionODEApproxMethod') {
+                    this.solutions.method = this.settings.solutionODEApproxMethod;
+                } else if (key === 'solutionColor') {
+                    this.solutions.setColor()
+                } else if (key === 'solutionWidth') {
+                    this.solutions.setWidth()
                 }
             }
 
@@ -74,6 +86,7 @@ export default class PlotRenderer {
                 -1, 1,
         );
         this.grid.render();
+        this.solutions.render();
     }
 
     public updateViewBox() {
@@ -82,6 +95,7 @@ export default class PlotRenderer {
             this.settings.viewbox.y.min, this.settings.viewbox.y.max,
             -1, 1);
         this.grid.render();
+        this.solutions.render();
     }
 
     public render() {

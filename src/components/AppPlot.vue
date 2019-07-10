@@ -89,8 +89,8 @@ export default class AppPlot extends Vue {
 
 <style lang="scss">
     .solution {
-        stroke: lime;
-        stroke-width: 4;
+        stroke: var(--solution-color, black);
+        stroke-width: var(--solution-width);
         fill: transparent;
     }
 

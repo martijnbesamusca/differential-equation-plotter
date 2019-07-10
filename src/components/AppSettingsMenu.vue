@@ -20,7 +20,7 @@
             <app-input label="Color" varName="arrowColor" type="color" :store="this.$store"/>
             <app-input label="Randomize color" type="checkbox" varName="arrowRandomColor" :store="this.$store" :checked="this.$store.state.settings.arrowRandomColor"/>
             <label for="methodAprox">approximation method</label>
-            <select id="methodAprox" v-model.number="aproxModel">
+            <select id="methodAprox" v-model.number="approxModel">
                 <option value=0>Euler</option>
                 <optgroup label="Runge-Kutta">
                     <option value=1>Second order</option>
@@ -30,10 +30,19 @@
         </app-input-panel>
 
         <app-input-panel title="Solutions">
-            <app-input-number label="Length" varName="arrowSize" :store="this.$store"/>
-            <app-input-number label="Width" varName="arrowSize" :store="this.$store"/>
-            <app-input label="Color" varName="arrowColor" type="color" :store="this.$store"/>
-            <app-input-number label="Path length" varName="arrowSize" :store="this.$store"/>
+            <app-input-number label="Step size" varName="solutionStepSize" :store="this.$store" min="0"/>
+            <app-input-number label="Sub steps" varName="solutionSubSteps" :store="this.$store" min="0"/>
+            <app-input-number label="Length" varName="solutionLength" :store="this.$store" min="1" step="1"/>
+            <app-input-number label="Width" varName="solutionWidth" :store="this.$store" min="0"/>
+            <app-input label="Color" varName="solutionColor" type="color" :store="this.$store"/>
+            <label for="solutionMethodAprox">approximation method</label>
+            <select id="solutionMethodAprox" v-model.number="solutionMethodApprox">
+                <option value=0>Euler</option>
+                <optgroup label="Runge-Kutta">
+                    <option value=1>Second order</option>
+                    <option value=2>Fourth order</option>
+                </optgroup>
+            </select>
         </app-input-panel>
 
         <app-input-panel title="Nullclines">
@@ -75,11 +84,18 @@ export default class AppSettingsMenu extends Vue {
     private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
     private delta = 0.001;
 
-    get aproxModel() {
+    get approxModel() {
         return this.$store.state.settings.ODEAproxmethod;
     }
-    set aproxModel(value: number) {
+    set approxModel(value: number) {
         return this.$store.commit('changeValue', {key: 'ODEAproxmethod', val: value});
+    }
+
+    get solutionMethodApprox() {
+        return this.$store.state.settings.solutionODEApproxMethod;
+    }
+    set solutionMethodApprox(value: number) {
+        return this.$store.commit('changeValue', {key: 'solutionODEApproxMethod', val: value});
     }
 }
 </script>
