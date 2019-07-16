@@ -21,15 +21,4 @@
         height: 100%;
         overflow-y: auto;
     }
-    /*.tab {*/
-        /*height: 0;*/
-        /*width: 100%;*/
-        /*overflow-y: hidden;*/
-
-        /*&.activated{*/
-            /*height: 100%;*/
-            /*overflow-y: auto;*/
-        /*}*/
-
-    /*}*/
 </style>

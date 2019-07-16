@@ -71,11 +71,9 @@
             height: 100vh;
             width: 6px;
             background-color: #ccc;
-            border-color: #000;
-            border-style: solid;
-            border-left-width: 1px;
-            border-right-width: 1px;
-            float: left;
+            border: 1px solid #000;
+            border-top-width: 0;
+            border-bottom-width: 0;
             &:before {
                 content: '';
                 position: absolute;

@@ -30,8 +30,8 @@
         </app-input-panel>
 
         <app-input-panel title="Solutions">
-            <app-input-number label="Step size" varName="solutionStepSize" :store="this.$store" min="0"/>
-            <app-input-number label="Sub steps" varName="solutionSubSteps" :store="this.$store" min="0"/>
+            <app-input-number label="Step size" varName="solutionStepSize" :store="this.$store" min="0.001" step="any"/>
+            <app-input-number label="Sub steps" varName="solutionSubSteps" :store="this.$store" min="0" step="1"/>
             <app-input-number label="Length" varName="solutionLength" :store="this.$store" min="1" step="1"/>
             <app-input-number label="Width" varName="solutionWidth" :store="this.$store" min="0"/>
             <app-input label="Color" varName="solutionColor" type="color" :store="this.$store"/>

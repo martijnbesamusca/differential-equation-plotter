@@ -2,9 +2,9 @@
     <div id="app">
         <modular-panes direction="vertical">
             <modular-pane :size=".8"><app-plot/></modular-pane>
-            <modular-pane :size=".2" minSize="20em">
-                <app-title-bar/>
-                <app-side-bar/>
+            <modular-pane :size=".2" minSize="20em" id="sidebarpane">
+                <app-title-bar id="titlebar"/>
+                <app-side-bar id="sidebar"/>
             </modular-pane>
         </modular-panes>
     </div>
@@ -57,6 +57,21 @@ export default class App extends Vue {
         width: 100vw;
         height: 100vh;
     }
+
+    #sidebarpane {
+        display: flex;
+        flex-direction: column;
+        background-color: #333333;
+        color: #fff
+    }
+    #titlebar {
+        flex-grow: 0;
+    }
+    #sidebar {
+        flex-basis: 0;
+        flex-grow: 1;
+    }
+
 </style>
 
 <style>

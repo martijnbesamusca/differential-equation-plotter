@@ -56,7 +56,7 @@ const defaults: Settings = {
     solutionLength: 10,
     solutionWidth: 4,
     solutionSubSteps: 10,
-    solutionColor: '#D0FF14',
+    solutionColor: '#9EFD38',
     solutionODEApproxMethod: ODEAprox.RK4,
 
     drawFunctionBackground: false,

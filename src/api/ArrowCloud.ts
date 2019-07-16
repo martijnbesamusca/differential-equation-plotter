@@ -42,8 +42,6 @@ export default class ArrowCloud {
     private arrow: number[];
 
     private ODEEstimator: ODEEstimator;
-    private dxFunction!: (x: number, y: number) => number;
-    private dyFunction!: (x: number, y: number) => number;
 
     constructor(gl: WebGLRenderingContext, globUniforms: {[key: string]: any}, settings: any, ODEEstimator: ODEEstimator) {
         this.gl = gl;
@@ -62,7 +60,6 @@ export default class ArrowCloud {
         this.alpha = new Float32Array(ArrowCloud.MAX_NUM_ARROWS);
         this.dx = new Float32Array(ArrowCloud.MAX_NUM_ARROWS);
         this.dy = new Float32Array(ArrowCloud.MAX_NUM_ARROWS);
-        this.updateODE();
         this.initArrows();
 
 
@@ -130,62 +127,6 @@ export default class ArrowCloud {
         this.settings = settings;
     }
 
-    public updateODE() {
-        const ODEType = this.settings.ODEType;
-
-        if (ODEType === ODETypes.Cartesian) {
-            const dx = this.dxFunction ? this.dxFunction : (x: number, y: number) => 0;
-            const dy = this.dyFunction ? this.dyFunction : (x: number, y: number) => 0;
-            try {
-                this.dxFunction = MastonToJSFunction(mathlive.latexToAST(this.settings.dxString));
-                this.dyFunction = MastonToJSFunction(mathlive.latexToAST(this.settings.dyString));
-                // Test validity
-                this.dxFunction(0, 0);
-                this.dyFunction(0, 0);
-            } catch (e) {
-                this.dxFunction = dx;
-                this.dyFunction = dy;
-                console.log(e);
-            }
-
-        } else if (ODEType === ODETypes.Matrix) {
-            const mat = this.settings.AMatrix;
-            this.dxFunction = (x, y) => mat[0] * x + mat[1] * y;
-            this.dyFunction = (x, y) => mat[2] * x + mat[3] * y;
-
-        } else if (ODEType === ODETypes.Polar) {
-            // debugger;
-            const dx = this.dxFunction ? this.dxFunction : (r: number, t: number) => 0;
-            const dy = this.dyFunction ? this.dyFunction : (r: number, t: number) => 0;
-
-            try {
-                const dr = MastonToJSFunction(mathlive.latexToAST(this.settings.drString), ['r', 't']);
-                const dt = MastonToJSFunction(mathlive.latexToAST(this.settings.dtString), ['r', 't']);
-
-                // x' = r' cos(t) - r sin(t) t'
-                this.dxFunction = (x, y) => {
-                    const r = Math.sqrt(x ** 2 + y ** 2);
-                    const t = Math.atan2(y, x);
-                    return dr(r, t) * Math.cos(t) - dt(r, t) * r * Math.sin(t);
-                };
-
-                // y' = r' sin(t) + r cos(t) t'
-                this.dyFunction = (x, y) => {
-                    const r = Math.sqrt(x ** 2 + y ** 2);
-                    const t = Math.atan2(y, x);
-                    return dr(r, t) * Math.sin(t) + dt(r, t) * r * Math.cos(t);
-                };
-
-
-                this.dxFunction(0, 0);
-            } catch (e) {
-                this.dxFunction = dx;
-                this.dyFunction = dy;
-                console.log(e);
-            }
-        }
-    }
-
     public resizeArrows(update = true) {
         const newArrow = this.makeArrow(1, 0.3, 1.5, this.settings.arrowSize);
         if (update) {
@@ -232,8 +173,8 @@ export default class ArrowCloud {
 
             this.pos[i * 2] = x;
             this.pos[i * 2 + 1] = y;
-            this.dx[i] = this.dxFunction(x, y);
-            this.dy[i] = this.dyFunction(x, y);
+            this.dx[i] = this.ODEEstimator.dxFunction(x, y);
+            this.dy[i] = this.ODEEstimator.dyFunction(x, y);
 
             this.age[i] = this.randomInt(0, this.settings.arrowMaxAge);
             this.alpha[i] = 0.0;
@@ -277,8 +218,8 @@ export default class ArrowCloud {
                 this.pos[i * 2] = x;
                 this.pos[i * 2 + 1] = y;
 
-                const dx = this.dxFunction(x, y);
-                const dy = this.dyFunction(x, y);
+                const dx = this.ODEEstimator.dxFunction(x, y);
+                const dy = this.ODEEstimator.dyFunction(x, y);
                 this.dx[i] = dx;
                 this.dy[i] = dy;
 

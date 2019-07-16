@@ -1,5 +1,5 @@
 import Settings from '@/store/modules/settings';
-import CachedFunction from '@/api/CachedFunction';
+import NullclineRenderer from '@/api/NullclineRenderer';
 import store from '../store/';
 import {cloneDeep} from 'lodash';
 import {m4} from 'twgl.js';
@@ -20,6 +20,7 @@ export default class PlotRenderer {
 
     private ODEEstimator: ODEEstimator;
     private solutions: SolutionRenderer;
+    private nullclines: NullclineRenderer;
 
     constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
         this.canvas = canvas;
@@ -34,6 +35,8 @@ export default class PlotRenderer {
         }
         this.gl = gl!;
 
+        this.nullclines = new NullclineRenderer(this.gl, canvas.width, canvas.height, settings, this.ODEEstimator);
+
         this.uniforms = {};
         this.updateScreenSize();
         this.updateViewBox();
@@ -46,12 +49,14 @@ export default class PlotRenderer {
             this.arrowCloud.updateSettings(this.settings);
             this.grid.updateSettings(this.settings);
             this.solutions.updateSettings(this.settings);
+            this.nullclines.updateSettings(this.settings);
 
             if (mutation.type === 'changeValue') {
                 const key = mutation.payload.key;
 
                 if (key.startsWith('viewbox') || key === 'keepAspectRatio') {
                     this.updateViewBox();
+                    this.nullclines.renderFunction()
                 } else if (key === 'arrowMaxAge') {
                     this.arrowCloud.initArrows();
                 } else if (key === 'arrowColor' || key === 'arrowRandomColor') {
@@ -59,9 +64,9 @@ export default class PlotRenderer {
                 } else if (key === 'arrowSize') {
                     this.arrowCloud.resizeArrows();
                 } else if (key === 'ODEType') {
-                    this.arrowCloud.updateODE();
                     this.arrowCloud.initArrows();
                     this.solutions.clear();
+                    this.nullclines.renderFunction()
                 } else if (key === 'solutionStepSize') {
                     this.solutions.stepSize = this.settings.solutionStepSize;
                 } else if (key === 'solutionLength') {
@@ -87,6 +92,10 @@ export default class PlotRenderer {
         );
         this.grid.render();
         this.solutions.render();
+
+        this.nullclines.setRenderSize(this.gl.canvas.width, this.gl.canvas.height);
+        this.nullclines.renderFunction();
+        this.nullclines.render();
     }
 
     public updateViewBox() {
@@ -96,12 +105,17 @@ export default class PlotRenderer {
             -1, 1);
         this.grid.render();
         this.solutions.render();
+
+        this.nullclines.setRenderSize(this.gl.canvas.width, this.gl.canvas.height);
+        this.nullclines.renderFunction();
+        this.nullclines.render();
     }
 
     public render() {
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
+        this.nullclines.render();
         this.arrowCloud.render();
 
         requestAnimationFrame(() => this.render());

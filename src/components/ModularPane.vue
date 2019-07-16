@@ -42,7 +42,6 @@
         will-change: width;
         height: 100%;
         display: inline-block;
-        float: left;
         &:first-child, &:last-child{
             width: calc(var(--pane-width) - 1px);
         }
