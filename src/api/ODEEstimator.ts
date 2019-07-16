@@ -160,8 +160,8 @@ export default class ODEEstimator {
 
     private loadMatrix() {
         // @ts-ignore
-        const mat = store.state.settings.AMatrix;
-        this.dxFunction = (x, y) => mat[0] * x + mat[1] * y;
-        this.dyFunction = (x, y) => mat[2] * x + mat[3] * y;
+        const [mat11, mat12, mat21, mat22] = store.state.settings.AMatrix;
+        this.dxFunction = (x, y) => mat11 * x + mat12 * y;
+        this.dyFunction = (x, y) => mat21 * x + mat22 * y;
     }
 }
