@@ -16,9 +16,6 @@ import chroma from 'chroma-js';
 import arrowFrag from './shaders/webgl1/arrow.frag';
 // @ts-ignore
 import arrowVert from './shaders/webgl1/arrow.vert';
-import {ODEAprox, ODETypes} from '@/store/modules/settings';
-import {MastonToJSFunction} from '@/api/MastonConvert';
-import mathlive from 'mathlive';
 import ODEEstimator from "@/api/ODEEstimator";
 
 export default class ArrowCloud {

@@ -43,8 +43,6 @@ export default class AppPlot extends Vue {
 
         this.onResizeThrottled = throttle(this.onResize, 100, {leading: false}) as (event?: Event) => null;
         addEventListener('resize', this.onResizeThrottled);
-
-        setTimeout(() => this.onResize(), 1000);
     }
 
     public onResize() {

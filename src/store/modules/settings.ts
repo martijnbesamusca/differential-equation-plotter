@@ -59,6 +59,13 @@ const defaults: Settings = {
     solutionColor: '#9EFD38',
     solutionODEApproxMethod: ODEAprox.RK4,
 
+    nullclineXEnable: true,
+    nullclineXColor: '#c711ff',
+    nullclineYEnable: true,
+    nullclineYColor: '#ffbc03',
+    nullclineThreshold: 0.04,
+
+
     drawFunctionBackground: false,
     useCached: false,
 
@@ -69,8 +76,6 @@ const defaults: Settings = {
     AMatrix: [2, 1, -1, 2],
 
     ODEType: ODETypes.Polar,
-    // dxFunction: (x: number, y: number): number => -Math.sin(2 * Math.PI * x),
-    // dyFunction: (x: number, y: number): number => y,
 };
 
 function loadState() {

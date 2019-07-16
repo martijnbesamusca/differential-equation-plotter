@@ -8,35 +8,39 @@ import {
     setUniforms,
     m4,
     BufferInfo,
-    primitives,
+    primitives, createTexture, setTextureFromArray,
 } from "twgl.js";
 import {Settings} from "@/store/modules/settings";
 // @ts-ignore
-import arrowFrag from './shaders/webgl1/nullcline.frag';
+import nullclineFrag from './shaders/webgl1/nullcline.frag';
 // @ts-ignore
-import arrowVert from './shaders/webgl1/nullcline.vert';
+import nullclineVert from './shaders/webgl1/nullcline.vert';
+import chroma from 'chroma-js';
 
 export default class NullclineRenderer {
     private gl: WebGLRenderingContext;
     private programInfo: ProgramInfo;
     private uniforms!: {[key: string]: any};
+    private functionArray!: Float32Array;
     private functionImage!: WebGLTexture;
-    private resWidth: number = 0;
-    private resHeight: number = 0;
+    // private resWidth: number = 0;
+    // private resHeight: number = 0;
     private ODEEstimator: ODEEstimator;
     private settings: Settings;
     private bufferInfo!: BufferInfo;
 
+
     constructor(gl: WebGLRenderingContext, width: number, height: number, settings: Settings, ODEEstimator: ODEEstimator) {
         this.gl = gl;
-        this.programInfo = createProgramInfo(this.gl, [arrowVert, arrowFrag]);
+        this.programInfo = createProgramInfo(this.gl, [nullclineVert, nullclineFrag]);
         this.ODEEstimator = ODEEstimator;
         this.settings = settings;
+        this.functionArray = new Float32Array(width * height * 3);
 
-        gl.getExtension('OES_texture_float');
-        gl.getExtension('OES_texture_float_linear');
+        const ext_tex_fl = gl.getExtension('OES_texture_float');
+        const ext_tex_fl_lin = gl.getExtension('OES_texture_float_linear');
+        console.log(ext_tex_fl, ext_tex_fl_lin);
 
-        this.setRenderSize(width, height);
         this.renderFunction();
         this.initUniformsAndBuffers();
     }
@@ -45,46 +49,69 @@ export default class NullclineRenderer {
         this.settings = settings;
     }
 
-    setRenderSize(width: number, height: number) {
-        this.resWidth = width;
-        this.resHeight = height;
+    updateSize() {
+        const resWidth = this.gl.canvas.width;
+        const resHeight = this.gl.canvas.height;
+        this.functionArray = new Float32Array(resWidth * resHeight * 3);
+        this.updateFunction()
+    }
+
+    updateFunction() {
+        const resWidth = this.gl.canvas.width;
+        const resHeight = this.gl.canvas.height;
+        this.renderFunction();
+        setTextureFromArray(this.gl, this.functionImage, this.functionArray, {
+            target: this.gl.TEXTURE_2D,
+            width: this.gl.canvas.width,
+            height: this.gl.canvas.height,
+            minMag: this.gl.LINEAR,
+            internalFormat: this.gl.RGB,
+            format: this.gl.RGB,
+            type: this.gl.FLOAT,
+        });
+
+        this.uniforms.u_texture_dim = [resWidth, resHeight]
     }
 
     renderFunction() {
+        const resWidth = this.gl.canvas.width;
+        const resHeight = this.gl.canvas.height;
         const width = this.settings.viewbox.x.max - this.settings.viewbox.x.min;
         const height = this.settings.viewbox.y.max - this.settings.viewbox.y.min;
-        const image = Float32Array.from({length: this.resWidth * this.resHeight * 2}, (_, i) => {
-                const dir = i % 2;
-                i = (i / 2) >> 0;
-                const x = this.settings.viewbox.x.min + i / this.resWidth % 1 * width;
-                const y = this.settings.viewbox.y.min + ((i / this.resWidth) >> 0) / this.resHeight * height;
-                return dir ? this.ODEEstimator.dxFunction(x, y) : this.ODEEstimator.dyFunction(x, y);
-            }
-        );
+        for (let i = 0; i < this.functionArray.length; i++) {
+            const dir = i % 3;
+            const index = (i / 3) >> 0;
 
-        const texture = this.gl.createTexture();
-        this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-        // @ts-ignore
-        this.gl.texImage2D(
-            this.gl.TEXTURE_2D,
-            0,
-            this.gl.LUMINANCE_ALPHA,
-            this.resWidth,
-            this.resHeight,
-            0,
-            this.gl.LUMINANCE_ALPHA,
-            this.gl.FLOAT,
-            image
-        );
-        this.functionImage = texture!;
+            if(dir === 2) {
+                this.functionArray[i] = 0;
+                continue;
+            }
+
+            const x = this.settings.viewbox.x.min + index / resWidth % 1 * width;
+            const y = this.settings.viewbox.y.min + ((index / resWidth) >> 0) / resHeight * height;
+            this.functionArray[i] = dir ? this.ODEEstimator.dxFunction(x, y) : this.ODEEstimator.dyFunction(x, y);
+        }
+        // debugger
     }
 
     initUniformsAndBuffers() {
+        this.functionImage = createTexture(this.gl, {
+            target: this.gl.TEXTURE_2D,
+            width: this.gl.canvas.width,
+            height: this.gl.canvas.height,
+            minMag: this.gl.LINEAR,
+            internalFormat: this.gl.RGB,
+            format: this.gl.RGB,
+            type: this.gl.FLOAT,
+            src: this.functionArray,
+        });
+
         this.uniforms = {
             u_texture: this.functionImage,
+            u_texture_dim: [this.gl.canvas.width, this.gl.canvas.height],
+            u_color_x: chroma(this.settings.nullclineXColor).gl(),
+            u_color_y: chroma(this.settings.nullclineYColor).gl(),
+            u_threshold: this.settings.nullclineThreshold,
         };
 
         const arrays = {
@@ -106,10 +133,9 @@ export default class NullclineRenderer {
 
     render() {
         this.gl.useProgram(this.programInfo.program);
-        this.gl.viewport(0,0, this.resWidth, this.resHeight);
+        // this.gl.viewport(0,0, this.resWidth, this.resHeight);
         setBuffersAndAttributes(this.gl, this.programInfo, this.bufferInfo);
         setUniforms(this.programInfo, this.uniforms);
-        debugger
         drawBufferInfo(this.gl, this.bufferInfo);
     }
 }

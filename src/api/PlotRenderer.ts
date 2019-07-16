@@ -66,7 +66,7 @@ export default class PlotRenderer {
                 } else if (key === 'ODEType') {
                     this.arrowCloud.initArrows();
                     this.solutions.clear();
-                    this.nullclines.renderFunction()
+                    this.nullclines.updateFunction()
                 } else if (key === 'solutionStepSize') {
                     this.solutions.stepSize = this.settings.solutionStepSize;
                 } else if (key === 'solutionLength') {
@@ -93,8 +93,7 @@ export default class PlotRenderer {
         this.grid.render();
         this.solutions.render();
 
-        this.nullclines.setRenderSize(this.gl.canvas.width, this.gl.canvas.height);
-        this.nullclines.renderFunction();
+        this.nullclines.updateSize();
         this.nullclines.render();
     }
 
@@ -106,14 +105,13 @@ export default class PlotRenderer {
         this.grid.render();
         this.solutions.render();
 
-        this.nullclines.setRenderSize(this.gl.canvas.width, this.gl.canvas.height);
-        this.nullclines.renderFunction();
         this.nullclines.render();
     }
 
     public render() {
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        this.gl.disable(this.gl.DEPTH_TEST);
 
         this.nullclines.render();
         this.arrowCloud.render();

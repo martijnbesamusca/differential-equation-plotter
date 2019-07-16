@@ -46,14 +46,15 @@
         </app-input-panel>
 
         <app-input-panel title="Nullclines">
+            <app-input-number label="Threshold" min="0" varName="nullclineThreshold" :store="this.$store"/>
             <app-input-group title="x nullcline">
-                <app-input label="enable" type="checkbox" varName="keepAspectRatio" :store="this.$store" :checked="this.$store.state.settings.keepAspectRatio"/>
-                <app-input label="color" varName="arrowColor" type="color" :store="this.$store"/>
+                <app-input label="enable" type="checkbox" varName="keepAspectRatio" :store="this.$store" :checked="this.$store.state.settings.nullclineXEnable"/>
+                <app-input label="color" varName="nullclineXColor" type="color" :store="this.$store"/>
             </app-input-group>
 
             <app-input-group title="y nullcline">
-                <app-input label="enable" type="checkbox" varName="keepAspectRatio" :store="this.$store" :checked="this.$store.state.settings.keepAspectRatio"/>
-                <app-input label="color" varName="arrowColor" type="color" :store="this.$store"/>
+                <app-input label="enable" type="checkbox" varName="nullclineYEnable" :store="this.$store" :checked="this.$store.state.settings.nullclineYEnable"/>
+                <app-input label="color" varName="nullclineYColor" type="color" :store="this.$store"/>
             </app-input-group>
         </app-input-panel>
 
