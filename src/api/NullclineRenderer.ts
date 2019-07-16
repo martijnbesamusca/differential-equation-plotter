@@ -49,6 +49,20 @@ export default class NullclineRenderer {
         this.settings = settings;
     }
 
+    updateColor() {
+        this.uniforms.u_color_x = chroma(this.settings.nullclineXColor).gl();
+        this.uniforms.u_color_y = chroma(this.settings.nullclineYColor).gl();
+    }
+
+    updateThreshold() {
+        this.uniforms.u_threshold = this.settings.nullclineThreshold;
+    }
+
+    updateEnabled() {
+        this.uniforms.u_enable_x = this.settings.nullclineXEnable;
+        this.uniforms.u_enable_y = this.settings.nullclineYEnable;
+    }
+
     updateSize() {
         const resWidth = this.gl.canvas.width;
         const resHeight = this.gl.canvas.height;
@@ -111,6 +125,8 @@ export default class NullclineRenderer {
             u_texture_dim: [this.gl.canvas.width, this.gl.canvas.height],
             u_color_x: chroma(this.settings.nullclineXColor).gl(),
             u_color_y: chroma(this.settings.nullclineYColor).gl(),
+            u_enable_x: this.settings.nullclineXEnable,
+            u_enable_y: this.settings.nullclineYEnable,
             u_threshold: this.settings.nullclineThreshold,
         };
 

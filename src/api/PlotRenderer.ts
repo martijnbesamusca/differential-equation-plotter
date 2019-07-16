@@ -74,9 +74,15 @@ export default class PlotRenderer {
                 } else if (key === 'solutionODEApproxMethod') {
                     this.solutions.method = this.settings.solutionODEApproxMethod;
                 } else if (key === 'solutionColor') {
-                    this.solutions.setColor()
+                    this.solutions.setColor();
                 } else if (key === 'solutionWidth') {
-                    this.solutions.setWidth()
+                    this.solutions.setWidth();
+                } else if (key === 'nullclineXColor' || key === 'nullclineYColor') {
+                    this.nullclines.updateColor();
+                } else if (key === 'nullclineThreshold') {
+                    this.nullclines.updateThreshold();
+                } else if (key === 'nullclineXEnable' || key === 'nullclineYEnable') {
+                    this.nullclines.updateEnabled();
                 }
             }
 
