@@ -128,7 +128,7 @@ export default class AppPlot extends Vue {
             text-anchor: middle;
 
             &.text_zero {
-                display: none;
+                visibility: hidden;
             }
         }
         &.text_border {

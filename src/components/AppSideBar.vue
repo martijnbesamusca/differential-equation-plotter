@@ -9,7 +9,7 @@
         </app-tab>
 
         <app-tab title="export/import" icon="save_alt">
-            <div> 3 </div>
+            <AppExportMenu />
         </app-tab>
     </app-tabs>
 </template>
@@ -17,6 +17,7 @@
 <script>
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import AppSettingsMenu from '@/components/AppSettingsMenu.vue';
+    import AppExportMenu from '@/components/AppExportMenu.vue';
     import AppTabs from '@/components/AppTabs.vue';
     import AppTab from '@/components/AppTab.vue';
     import AppEquationMenu from './AppEquationMenu.vue';
@@ -25,6 +26,7 @@
     @Component({
         components: {
             AppSettingsMenu,
+            AppExportMenu,
             SettingsIcon,
             AppTabs,
             AppTab,

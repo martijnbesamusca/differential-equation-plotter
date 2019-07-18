@@ -1,7 +1,10 @@
 <template>
     <div id="app">
         <modular-panes direction="vertical">
-            <modular-pane :size=".8"><app-plot/></modular-pane>
+            <modular-pane :size=".8" id="mainpane">
+                <app-plot/>
+                <app-control-bar />
+            </modular-pane>
             <modular-pane :size=".2" minSize="20em" id="sidebarpane">
                 <app-title-bar id="titlebar"/>
                 <app-side-bar id="sidebar"/>
@@ -17,10 +20,12 @@ import AppSideBar from './components/AppSideBar.vue';
 import AppTitleBar from './components/AppTitleBar.vue';
 import ModularPanes from './components/ModularPanes'
 import ModularPane from './components/ModularPane'
+import AppControlBar from "@/components/AppControlBar.vue";
 // import { Multipane, MultipaneResizer } from 'vue-multipane';
 
 @Component({
     components: {
+        AppControlBar,
         ModularPanes,
         ModularPane,
         AppPlot,
@@ -64,12 +69,19 @@ export default class App extends Vue {
         background-color: #333333;
         color: #fff
     }
+
+    #mainpane {
+        display: flex;
+        flex-direction: column;
+    }
+
     #titlebar {
         flex-grow: 0;
     }
     #sidebar {
         flex-basis: 0;
         flex-grow: 1;
+        min-height: 0
     }
 
 </style>
