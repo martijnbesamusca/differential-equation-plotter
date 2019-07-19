@@ -1,4 +1,11 @@
 @import "variables.scss";
+
+@mixin mobile() {
+  @media (max-width: $mobile-breakpoint) {
+    @content;
+  }
+}
+
 %input {
   width: calc(100% - 2em);
   padding: 0.3em 0.5em;

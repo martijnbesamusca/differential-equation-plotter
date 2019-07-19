@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <modular-panes direction="vertical">
+        <modular-panes direction="vertical" id="mainwrapper">
             <modular-pane :size=".8" id="mainpane">
                 <app-plot/>
                 <app-control-bar />
@@ -45,6 +45,7 @@ export default class App extends Vue {
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Open+Sans');
     @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+    @import "style/_mixins.scss";
 
     body, html {
         padding: 0;
@@ -82,6 +83,34 @@ export default class App extends Vue {
         flex-basis: 0;
         flex-grow: 1;
         min-height: 0
+    }
+
+    @include mobile {
+        html, body {
+            overflow: initial;
+        }
+
+        #app {
+            height: auto;
+            width: auto;
+            /*overflow: auto;*/
+        }
+
+        .tab {
+            overflow-y: unset !important;
+        }
+
+        #mainwrapper {
+            flex-direction: column;
+        }
+
+        .pane {
+            width: 100% !important;
+        }
+
+        .handler {
+            display: none !important;
+        }
     }
 
 </style>

@@ -1,4 +1,4 @@
-import Settings from '@/store/modules/settings';
+import Settings, {IValKey} from '@/store/modules/settings';
 import NullclineRenderer from '@/api/NullclineRenderer';
 import store from '../store/';
 import {cloneDeep} from 'lodash';
@@ -9,7 +9,7 @@ import ODEEstimator from "@/api/ODEEstimator";
 import SolutionRenderer from "@/api/SolutionRenderer";
 
 export default class PlotRenderer {
-    private canvas: HTMLCanvasElement;
+    canvas: HTMLCanvasElement;
     private gl: WebGLRenderingContext;
     // private cachedFunction: CachedFunction;
 
@@ -23,6 +23,7 @@ export default class PlotRenderer {
     private nullclines: NullclineRenderer;
 
     constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
+        store.dispatch('initPlot', this);
         this.canvas = canvas;
         this.settings = settings;
         this.grid = new Grid(svg, this.settings);
@@ -43,7 +44,8 @@ export default class PlotRenderer {
 
         this.arrowCloud = new ArrowCloud(this.gl, this.uniforms, this.settings, this.ODEEstimator);
 
-        store.subscribe((mutation, state) => {
+        store.subscribe((mutation: {type: string, payload: IValKey}, state: object) => {
+            if (mutation.type !== 'changeValue') return;
             // @ts-ignore
             this.settings = cloneDeep(state.settings);
             this.arrowCloud.updateSettings(this.settings);
@@ -51,41 +53,38 @@ export default class PlotRenderer {
             this.solutions.updateSettings(this.settings);
             this.nullclines.updateSettings(this.settings);
 
-            if (mutation.type === 'changeValue') {
-                const key = mutation.payload.key;
+            const key = mutation.payload.key;
 
-                if (key.startsWith('viewbox') || key === 'keepAspectRatio') {
-                    this.updateViewBox();
-                    this.nullclines.renderFunction()
-                } else if (key === 'arrowMaxAge') {
-                    this.arrowCloud.initArrows();
-                } else if (key === 'arrowColor' || key === 'arrowRandomColor') {
-                    this.arrowCloud.colorArrows();
-                } else if (key === 'arrowSize') {
-                    this.arrowCloud.resizeArrows();
-                } else if (key === 'ODEType') {
-                    this.arrowCloud.initArrows();
-                    this.solutions.clear();
-                    this.nullclines.updateFunction()
-                } else if (key === 'solutionStepSize') {
-                    this.solutions.stepSize = this.settings.solutionStepSize;
-                } else if (key === 'solutionLength') {
-                    this.solutions.length = this.settings.solutionLength;
-                } else if (key === 'solutionODEApproxMethod') {
-                    this.solutions.method = this.settings.solutionODEApproxMethod;
-                } else if (key === 'solutionColor') {
-                    this.solutions.setColor();
-                } else if (key === 'solutionWidth') {
-                    this.solutions.setWidth();
-                } else if (key === 'nullclineXColor' || key === 'nullclineYColor') {
-                    this.nullclines.updateColor();
-                } else if (key === 'nullclineThreshold') {
-                    this.nullclines.updateThreshold();
-                } else if (key === 'nullclineXEnable' || key === 'nullclineYEnable') {
-                    this.nullclines.updateEnabled();
-                }
+            if (key.startsWith('viewbox') || key === 'keepAspectRatio') {
+                this.updateViewBox();
+                this.nullclines.renderFunction()
+            } else if (key === 'arrowMaxAge') {
+                this.arrowCloud.initArrows();
+            } else if (key === 'arrowColor' || key === 'arrowRandomColor') {
+                this.arrowCloud.colorArrows();
+            } else if (key === 'arrowSize') {
+                this.arrowCloud.resizeArrows();
+            } else if (key === 'ODEType') {
+                this.arrowCloud.initArrows();
+                this.solutions.clear();
+                this.nullclines.updateFunction()
+            } else if (key === 'solutionStepSize') {
+                this.solutions.stepSize = this.settings.solutionStepSize;
+            } else if (key === 'solutionLength') {
+                this.solutions.length = this.settings.solutionLength;
+            } else if (key === 'solutionODEApproxMethod') {
+                this.solutions.method = this.settings.solutionODEApproxMethod;
+            } else if (key === 'solutionColor') {
+                this.solutions.setColor();
+            } else if (key === 'solutionWidth') {
+                this.solutions.setWidth();
+            } else if (key === 'nullclineXColor' || key === 'nullclineYColor') {
+                this.nullclines.updateColor();
+            } else if (key === 'nullclineThreshold') {
+                this.nullclines.updateThreshold();
+            } else if (key === 'nullclineXEnable' || key === 'nullclineYEnable') {
+                this.nullclines.updateEnabled();
             }
-
         });
     }
 
@@ -101,6 +100,7 @@ export default class PlotRenderer {
 
         this.nullclines.updateSize();
         this.nullclines.render();
+        if(this.arrowCloud) this.arrowCloud.render();
     }
 
     public updateViewBox() {
@@ -108,19 +108,23 @@ export default class PlotRenderer {
             this.settings.viewbox.x.min, this.settings.viewbox.x.max,
             this.settings.viewbox.y.min, this.settings.viewbox.y.max,
             -1, 1);
+
         this.grid.render();
         this.solutions.render();
 
         this.nullclines.render();
+        if(this.arrowCloud) this.arrowCloud.render();
     }
 
     public render() {
-        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-        this.gl.disable(this.gl.DEPTH_TEST);
+        if (store.state.plot.playing) {
+            this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+            this.gl.disable(this.gl.DEPTH_TEST);
 
-        this.nullclines.render();
-        this.arrowCloud.render();
+            this.nullclines.render();
+            this.arrowCloud.render();
+        }
 
         requestAnimationFrame(() => this.render());
     }

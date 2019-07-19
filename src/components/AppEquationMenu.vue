@@ -125,6 +125,10 @@ export default class AppEquationMenu extends Vue {
     @import "../style/mixins.scss";
     @import "../style/variables.scss";
 
+    .equationMenu {
+        background-color: #333;
+    }
+
     .mathInput {
         padding: 0 1em;
         margin-top: 1em;

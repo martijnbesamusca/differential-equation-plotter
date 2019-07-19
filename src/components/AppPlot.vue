@@ -43,6 +43,9 @@ export default class AppPlot extends Vue {
 
         this.onResizeThrottled = throttle(this.onResize, 500, {leading: false}) as (event?: Event) => null;
         addEventListener('resize', this.onResizeThrottled);
+        document.addEventListener('fullscreenchange', (event) => {
+            this.$store.commit('setFullscreen', document.fullscreenElement != null);
+        })
     }
 
     public onResize() {
@@ -68,6 +71,7 @@ export default class AppPlot extends Vue {
         width: 100%;
         overflow: hidden;
         position: relative;;
+        background-color: #fff;
     }
 
     #plot canvas{

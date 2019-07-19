@@ -12,7 +12,7 @@ interface IViewboxRange {
     max: number;
 }
 
-interface IValKey {
+export interface IValKey {
     key: string;
     val: any;
 }
@@ -52,7 +52,7 @@ const defaults: Settings = {
     arrowColor: '#3f95eb',
     arrowRandomColor: true,
 
-    solutionStepSize: .1,
+    solutionStepSize: .01,
     solutionLength: 10,
     solutionWidth: 4,
     solutionSubSteps: 10,
@@ -63,7 +63,7 @@ const defaults: Settings = {
     nullclineXColor: '#c711ff',
     nullclineYEnable: true,
     nullclineYColor: '#ffbc03',
-    nullclineThreshold: 0.04,
+    nullclineThreshold: 0.01,
 
 
     drawFunctionBackground: false,
