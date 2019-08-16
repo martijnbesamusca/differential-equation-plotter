@@ -132,6 +132,11 @@ export default class AppSettingsMenu extends Vue {
         }
     }
 
+    #settings select {
+        @extend %input;
+        width: 100%;
+    }
+
     #settings .inputWrapper {
         display : flex;
         input {

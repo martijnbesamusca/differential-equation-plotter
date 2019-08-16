@@ -50,8 +50,9 @@ export default class App extends Vue {
     body, html {
         padding: 0;
         margin: 0;
-        overflow: hidden;
+        /*overflow: hidden;*/
         height: 100%;
+        width: 100%;
         font-family: 'Open Sans', sans-serif;
     }
 
@@ -60,8 +61,8 @@ export default class App extends Vue {
     }
 
     #app {
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
     }
 
     #sidebarpane {
@@ -111,6 +112,9 @@ export default class App extends Vue {
         .handler {
             display: none !important;
         }
+    }
+    #mathlive-keystroke-caption-panel {
+        padding: 0;
     }
 
 </style>

@@ -45,7 +45,7 @@ export default class AppPlot extends Vue {
         addEventListener('resize', this.onResizeThrottled);
         document.addEventListener('fullscreenchange', (event) => {
             this.$store.commit('setFullscreen', document.fullscreenElement != null);
-        })
+        });
     }
 
     public onResize() {

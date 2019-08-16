@@ -68,10 +68,16 @@
 
 <style scoped lang="scss">
     @import "../style/variables.scss";
+    @import "../style/mixins.scss";
+
     #export_menu {
         background-color: #333;
     }
 
+    #export_menu select {
+        @extend %input;
+        width: 100%;
+    }
     #export_menu button {
          -webkit-appearance: none;
          width: 100%;

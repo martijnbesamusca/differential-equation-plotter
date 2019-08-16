@@ -4,7 +4,7 @@
 
         <span class="spacer"></span>
 
-        <i class="material-icons">refresh</i>
+        <i class="material-icons" id="refresh">refresh</i>
 
         <i class="material-icons" @click="playOrPause" v-if="playing">pause</i>
         <i class="material-icons" @click="playOrPause" v-else>play_arrow</i>
@@ -60,6 +60,7 @@
          line-height: 2em;
          display: flex;
          padding: 0 0.5em;
+         overflow-y: hidden;
 
          &.collapse {
              position: fixed;
@@ -82,5 +83,14 @@
 
     #app_control_bar .spacer {
         flex-grow: 1;
+    }
+
+    #refresh {
+        transform: rotate(0deg);
+        transition: transform 1s;
+        &:active {
+            transition: transform 0s;
+            transform: rotate(-360deg);
+        }
     }
 </style>

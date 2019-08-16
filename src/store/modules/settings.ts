@@ -78,6 +78,9 @@ const defaults: Settings = {
     ODEType: ODETypes.Polar,
 };
 
+const dbPromise = createStore();
+
+
 function loadState() {
     const state = cloneDeep(defaults);
     for (let i = 0; i < localStorage.length; i++) {
@@ -89,6 +92,30 @@ function loadState() {
     }
 
     return state;
+}
+
+function createStore() {
+    const request = indexedDB.open('settings', 1);
+    request.onerror = event => {
+        console.log("Error opening indexedDB: ", event.target.errorCode);
+    };
+    request.onsuccess = event => {
+
+    };
+    request.onupgradeneeded = event => {
+        const db: IDBDatabase = event.target.result;
+        const objectStore = db.createObjectStore('settings');
+
+        // for (const key of Object.keys(defaults)) {
+        //     objectStore.createIndex(key, key, {unique: false})
+        // }
+
+        objectStore.transaction.oncomplete = function(event) {
+            // Store values in the newly created objectStore.
+            const defaultStore = db.transaction("settings", "readwrite").objectStore("settings");
+            defaultStore.put(defaults, 'default')
+        };
+    };
 }
 
 const mutations = {

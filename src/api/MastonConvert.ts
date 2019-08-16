@@ -1,3 +1,5 @@
+import {Maston} from "mathlive";
+
 const constants: { [key: string]: number; } = {
     e: Math.E,
     ℯ: Math.E,
@@ -84,7 +86,7 @@ function JSFunctionGen(maston: Maston, variables: string[]): string {
             f = args[0] + '/' + args[1];
             f = '(' + f + ')';
         } else if (maston.fn === 'negate') {
-            f = args[0] + '-' + args[1];
+            f ='-' + args[0];
             f = '(' + f + ')';
         } else if (maston.fn === 'root') {
             f = `Math.pow(${args[0]}', 1/${args[1]})`;

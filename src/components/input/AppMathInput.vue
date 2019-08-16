@@ -8,6 +8,7 @@
 <script lang="ts">
 import {Component, Vue, Prop} from 'vue-property-decorator';
 import MathLive from 'mathlive';
+import * as mathlive from "mathlive";
 
 @Component
 export default class AppMathInput extends Vue {
@@ -25,6 +26,7 @@ export default class AppMathInput extends Vue {
         MathLive.makeMathField(
             this.$refs.mathfield,
             {
+                virtualKeyboardMode: 'off',
                 onFocus: (mathfield: mathlive.IMathField) => {
                     this.$refs.mathfield.classList.add('focus');
                     this.$emit('focus', mathfield);
