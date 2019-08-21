@@ -18,49 +18,55 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import {State} from 'vuex-class-component';
-import PlotRenderer from '@/api/PlotRenderer';
-import {cloneDeep, throttle} from 'lodash';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { State } from "vuex-class-component";
+import PlotRenderer from "@/api/PlotRenderer";
+import { cloneDeep, throttle } from "lodash";
 
 @Component({})
 export default class AppPlot extends Vue {
-    public $refs!: {
-        plot: HTMLCanvasElement
-        grid: SVGElement,
-    };
+  public $refs!: {
+    plot: HTMLCanvasElement;
+    grid: SVGElement;
+  };
 
-    private particleRenderer: PlotRenderer;
+  private particleRenderer: PlotRenderer;
 
-    private onResizeThrottled: (event?: Event) => null;
+  private onResizeThrottled: (event?: Event) => null;
 
-    public mounted() {
-        this.particleRenderer = new PlotRenderer(this.$refs.plot, this.$refs.grid, cloneDeep(this.$store.state.settings));
-        window.particleRenderer = this.particleRenderer;
+  public mounted() {
+    this.particleRenderer = new PlotRenderer(
+      this.$refs.plot,
+      this.$refs.grid,
+      cloneDeep(this.$store.state.settings)
+    );
+    window.particleRenderer = this.particleRenderer;
 
-        this.onResize();
-        this.particleRenderer.render();
+    this.onResize();
+    this.particleRenderer.render();
 
-        this.onResizeThrottled = throttle(this.onResize, 500, {leading: false}) as (event?: Event) => null;
-        addEventListener('resize', this.onResizeThrottled);
-        document.addEventListener('fullscreenchange', (event) => {
-            this.$store.commit('setFullscreen', document.fullscreenElement != null);
-        });
+    this.onResizeThrottled = throttle(this.onResize, 500, {
+      leading: false
+    }) as (event?: Event) => null;
+    addEventListener("resize", this.onResizeThrottled);
+    document.addEventListener("fullscreenchange", event => {
+      this.$store.commit("setFullscreen", document.fullscreenElement != null);
+    });
+  }
+
+  public onResize() {
+    if (!this.$el || !this.$refs.plot) {
+      return;
     }
 
-    public onResize() {
-        if (!this.$el || !this.$refs.plot) {
-            return;
-        }
-
-        const width = this.$el.clientWidth;
-        const height = this.$el.clientHeight;
-        this.$refs.plot.setAttribute('width', `${width}`);
-        this.$refs.plot.setAttribute('height',  `${height}`);
-        this.$refs.grid.setAttribute('width', `${width}`);
-        this.$refs.grid.setAttribute('height',  `${height}`);
-        this.particleRenderer.updateScreenSize();
-    }
+    const width = this.$el.clientWidth;
+    const height = this.$el.clientHeight;
+    this.$refs.plot.setAttribute("width", `${width}`);
+    this.$refs.plot.setAttribute("height", `${height}`);
+    this.$refs.grid.setAttribute("width", `${width}`);
+    this.$refs.grid.setAttribute("height", `${height}`);
+    this.particleRenderer.updateScreenSize();
+  }
 }
 </script>
 

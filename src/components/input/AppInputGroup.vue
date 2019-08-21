@@ -6,11 +6,11 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component()
 export default class AppInputGroup extends Vue {
-    @Prop(String) public title: string;
+  @Prop(String) public title: string;
 }
 </script>
 

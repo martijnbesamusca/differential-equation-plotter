@@ -40,30 +40,30 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import AppInputGroup from "./input/AppInputGroup.vue";
-    import AppInputPanel from "@/components/input/AppInputPanel.vue";
-    import AppInput from "@/components/input/AppInput.vue";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import AppInputGroup from "./input/AppInputGroup.vue";
+import AppInputPanel from "@/components/input/AppInputPanel.vue";
+import AppInput from "@/components/input/AppInput.vue";
 
-    @Component({
-        components: {
-            AppInputGroup,
-            AppInputPanel,
-            AppInput,
-        },
-    })
-    export default class AppExportMenu extends Vue {
-        private imgType = 'png';
-        private videoType = 'gif';
+@Component({
+  components: {
+    AppInputGroup,
+    AppInputPanel,
+    AppInput
+  }
+})
+export default class AppExportMenu extends Vue {
+  private imgType = "png";
+  private videoType = "gif";
 
-        private downloadImage() {
-            console.log('Downloading image as ' + this.imgType);
-        }
+  private downloadImage() {
+    console.log("Downloading image as " + this.imgType);
+  }
 
-        private downloadVideo() {
-            console.log('Downloading video as ' + this.videoType);
-        }
-    }
+  private downloadVideo() {
+    console.log("Downloading video as " + this.videoType);
+  }
+}
 </script>
 
 <style scoped lang="scss">

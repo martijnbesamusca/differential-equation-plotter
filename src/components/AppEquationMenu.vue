@@ -26,98 +26,112 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator';
-import AppMathInput from '@/components/input/AppMathInput.vue';
-import AppInputMatrix from '@/components/input/AppInputMatrix.vue';
-import AppTabs from '@/components/AppTabs.vue';
-import AppTab from '@/components/AppTab.vue';
-import {ODETypes} from '@/store/modules/settings';
-import MathLive from 'mathlive';
-import {JSFunctionGen} from '@/api/MastonConvert';
+import { Component, Vue, Prop } from "vue-property-decorator";
+import AppMathInput from "@/components/input/AppMathInput.vue";
+import AppInputMatrix from "@/components/input/AppInputMatrix.vue";
+import AppTabs from "@/components/AppTabs.vue";
+import AppTab from "@/components/AppTab.vue";
+import { ODETypes } from "@/store/modules/settings";
+import MathLive from "mathlive";
+import { JSFunctionGen } from "@/api/MastonConvert";
 
 @Component({
-    components: {
-        AppMathInput,
-        AppInputMatrix,
-        AppTabs,
-        AppTab,
-    },
+  components: {
+    AppMathInput,
+    AppInputMatrix,
+    AppTabs,
+    AppTab
+  }
 })
 export default class AppEquationMenu extends Vue {
-    public formula: string = '';
+  public formula: string = "";
 
-    public $refs: {
-        polarNotice,
-    };
+  public $refs: {
+    polarNotice;
+  };
 
-    public mounted() {
-        MathLive.renderMathInElement(this.$refs.polarNotice);
+  public mounted() {
+    MathLive.renderMathInElement(this.$refs.polarNotice);
 
-        switch (this.$store.state.settings.ODEType) {
-            case ODETypes.Matrix:
-                this.$refs.tabs.activate(this.$refs.tabMatrix);
-                break;
-            case ODETypes.Cartesian:
-                this.$refs.tabs.activate(this.$refs.tabCartesian);
-                break;
-            case ODETypes.Polar:
-                this.$refs.tabs.activate(this.$refs.tabPolar);
-                break;
-        }
-
+    switch (this.$store.state.settings.ODEType) {
+      case ODETypes.Matrix:
+        this.$refs.tabs.activate(this.$refs.tabMatrix);
+        break;
+      case ODETypes.Cartesian:
+        this.$refs.tabs.activate(this.$refs.tabCartesian);
+        break;
+      case ODETypes.Polar:
+        this.$refs.tabs.activate(this.$refs.tabPolar);
+        break;
     }
+  }
 
-    public enableMatrix() {
-        this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Matrix});
-    }
+  public enableMatrix() {
+    this.$store.commit("changeValue", { key: "ODEType", val: ODETypes.Matrix });
+  }
 
-    public enableCartesian() {
-        this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Cartesian});
-    }
+  public enableCartesian() {
+    this.$store.commit("changeValue", {
+      key: "ODEType",
+      val: ODETypes.Cartesian
+    });
+  }
 
-    public enablePolar() {
-        this.$store.commit('changeValue', {key: 'ODEType', val: ODETypes.Polar});
-    }
+  public enablePolar() {
+    this.$store.commit("changeValue", { key: "ODEType", val: ODETypes.Polar });
+  }
 
-    get dx() {
-        return this.$store.state.settings.dxString;
-    }
+  get dx() {
+    return this.$store.state.settings.dxString;
+  }
 
-    set dx(mathfield) {
-        this.$store.commit('changeValue', {key: 'dxString', val: mathfield.text('latex')});
-    }
+  set dx(mathfield) {
+    this.$store.commit("changeValue", {
+      key: "dxString",
+      val: mathfield.text("latex")
+    });
+  }
 
-    get dy() {
-        return this.$store.state.settings.dyString;
-    }
+  get dy() {
+    return this.$store.state.settings.dyString;
+  }
 
-    set dy(mathfield) {
-        this.$store.commit('changeValue', {key: 'dyString', val: mathfield.text('latex')});
-    }
+  set dy(mathfield) {
+    this.$store.commit("changeValue", {
+      key: "dyString",
+      val: mathfield.text("latex")
+    });
+  }
 
-    get dr() {
-        return this.$store.state.settings.drString;
-    }
+  get dr() {
+    return this.$store.state.settings.drString;
+  }
 
-    set dr(mathfield) {
-        this.$store.commit('changeValue', {key: 'drString', val: mathfield.text('latex')});
-    }
+  set dr(mathfield) {
+    this.$store.commit("changeValue", {
+      key: "drString",
+      val: mathfield.text("latex")
+    });
+  }
 
-    get dt() {
-        return this.$store.state.settings.dtString;
-    }
+  get dt() {
+    return this.$store.state.settings.dtString;
+  }
 
-    set dt(mathfield) {
-        this.$store.commit('changeValue', {key: 'dtString', val: mathfield.text('latex')});
-    }
+  set dt(mathfield) {
+    this.$store.commit("changeValue", {
+      key: "dtString",
+      val: mathfield.text("latex")
+    });
+  }
 
-    get A() {
-        return this.$store.state.settings.AMatrix;
-    }
+  get A() {
+    return this.$store.state.settings.AMatrix;
+  }
 
-    set A(value) {
-        this.$store.commit('changeValue', {key: 'AMatrix', val: value});
-    }
+  set A(value) {
+    this.$store.commit("changeValue", { key: "AMatrix", val: value });
+  }
 }
 </script>
 

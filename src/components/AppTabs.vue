@@ -15,53 +15,52 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import AppTab from '@/components/AppTab.vue';
-import MathLive from 'mathlive';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import AppTab from "@/components/AppTab.vue";
+import MathLive from "mathlive";
 
 @Component({})
 export default class AppTabs extends Vue {
-    public tabs: AppTab[] = [];
+  public tabs: AppTab[] = [];
 
-    public created() {
-        this.tabs = this.$children as AppTab[];
+  public created() {
+    this.tabs = this.$children as AppTab[];
+  }
+
+  public mounted() {
+    window.addEventListener("resize", () => this.onResize());
+    this.onResize();
+  }
+
+  public updated() {
+    console.log("updated", this.$refs);
+
+    const texts = (this.$refs.text as HTMLSpanElement[]) || [];
+    for (const text of texts) {
+      MathLive.renderMathInElement(text);
     }
+  }
 
-    public mounted() {
+  public onResize() {
+    const maxWidth = 0;
+    const activatedTab = this.tabs.find(tab => tab.activated) || this.tabs[0];
+    // for(let tab of this.tabs) {
+    //     const prev = tab.$el.style.display;
+    //     tab.$el.style.display = 'block';
+    //     maxWidth = Math.max(maxWidth, tab.$el.clientWidth);
+    //     tab.$el.style.display = prev;
+    // }
+    // this.$refs.tabs.style.width = maxWidth + 'px';
 
-        window.addEventListener('resize', () => this.onResize());
-        this.onResize();
+    this.activate(activatedTab);
+  }
+
+  public activate(tab: AppTab) {
+    for (const t of this.tabs) {
+      t.activated = false;
     }
-
-    public updated() {
-        console.log('updated', this.$refs);
-
-        const texts = this.$refs.text as HTMLSpanElement[] || [];
-        for (const text of texts) {
-            MathLive.renderMathInElement(text);
-        }
-    }
-
-    public onResize() {
-        const maxWidth = 0;
-        const activatedTab = this.tabs.find((tab) => tab.activated) || this.tabs[0];
-        // for(let tab of this.tabs) {
-        //     const prev = tab.$el.style.display;
-        //     tab.$el.style.display = 'block';
-        //     maxWidth = Math.max(maxWidth, tab.$el.clientWidth);
-        //     tab.$el.style.display = prev;
-        // }
-        // this.$refs.tabs.style.width = maxWidth + 'px';
-
-        this.activate(activatedTab);
-    }
-
-    public activate(tab: AppTab) {
-        for (const t of this.tabs) {
-            t.activated = false;
-        }
-        tab.activated = true;
-    }
+    tab.activated = true;
+  }
 }
 </script>
 

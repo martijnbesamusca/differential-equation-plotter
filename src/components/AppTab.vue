@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
-    @Component({})
-    export default class AppTab extends Vue {
-        public activated = false;
-        @Prop(String) public icon: string;
-        @Prop(String) public text: string;
-        @Prop(String) public title: string;
-    }
+@Component({})
+export default class AppTab extends Vue {
+  public activated = false;
+  @Prop(String) public icon: string;
+  @Prop(String) public text: string;
+  @Prop(String) public title: string;
+}
 </script>
 
 <style scoped lang="scss">

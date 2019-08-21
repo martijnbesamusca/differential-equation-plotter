@@ -63,41 +63,47 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import AppInputGroup from '@/components/input/AppInputGroup.vue';
-import AppInputPanel from '@/components/input/AppInputPanel.vue';
-import AppInput from '@/components/input/AppInput.vue';
-import ArrowCloud from '@/api/ArrowCloud';
-import AppInputNumber from '@/components/input/AppInputNumber.vue';
-import AppInputSwitch from '@/components/input/AppInputSwitch.vue';
-import {ODEAprox} from '@/store/modules/settings';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import AppInputGroup from "@/components/input/AppInputGroup.vue";
+import AppInputPanel from "@/components/input/AppInputPanel.vue";
+import AppInput from "@/components/input/AppInput.vue";
+import ArrowCloud from "@/api/ArrowCloud";
+import AppInputNumber from "@/components/input/AppInputNumber.vue";
+import AppInputSwitch from "@/components/input/AppInputSwitch.vue";
+import { ODEAprox } from "@/store/modules/settings";
 
 @Component({
-    components: {
-        AppInput,
-        AppInputNumber,
-        AppInputSwitch,
-        AppInputGroup,
-        AppInputPanel,
-    },
+  components: {
+    AppInput,
+    AppInputNumber,
+    AppInputSwitch,
+    AppInputGroup,
+    AppInputPanel
+  }
 })
 export default class AppSettingsMenu extends Vue {
-    private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
-    private delta = 0.001;
+  private maxNumArrow = ArrowCloud.MAX_NUM_ARROWS;
+  private delta = 0.001;
 
-    get approxModel() {
-        return this.$store.state.settings.ODEAproxmethod;
-    }
-    set approxModel(value: number) {
-        return this.$store.commit('changeValue', {key: 'ODEAproxmethod', val: value});
-    }
+  get approxModel() {
+    return this.$store.state.settings.ODEAproxmethod;
+  }
+  set approxModel(value: number) {
+    return this.$store.commit("changeValue", {
+      key: "ODEAproxmethod",
+      val: value
+    });
+  }
 
-    get solutionMethodApprox() {
-        return this.$store.state.settings.solutionODEApproxMethod;
-    }
-    set solutionMethodApprox(value: number) {
-        return this.$store.commit('changeValue', {key: 'solutionODEApproxMethod', val: value});
-    }
+  get solutionMethodApprox() {
+    return this.$store.state.settings.solutionODEApproxMethod;
+  }
+  set solutionMethodApprox(value: number) {
+    return this.$store.commit("changeValue", {
+      key: "solutionODEApproxMethod",
+      val: value
+    });
+  }
 }
 </script>
 

@@ -5,34 +5,32 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-    @Component({
-        components: {
-        },
-    })
-    export default class ModularPane extends Vue {
-        @Prop(String) readonly paneName: string | undefined;
-        @Prop(Number) readonly size: number | undefined;
-        @Prop(String) readonly minSize: string | undefined;
-        @Prop(String) readonly maxSize: string | undefined;
+@Component({
+  components: {}
+})
+export default class ModularPane extends Vue {
+  @Prop(String) readonly paneName: string | undefined;
+  @Prop(Number) readonly size: number | undefined;
+  @Prop(String) readonly minSize: string | undefined;
+  @Prop(String) readonly maxSize: string | undefined;
 
-        public paneType = null; // vertical - horizontal
-        public width = this.size;
+  public paneType = null; // vertical - horizontal
+  public width = this.size;
 
-        get style () {
-            return {
-                '--pane-width': 100 * this.width + '%',
-                minWidth: this.minSize,
-                minHeight: this.minSize,
-                maxWidth: this.maxSize,
-                maxHeight: this.maxSize,
-            }
-        }
+  get style() {
+    return {
+      "--pane-width": 100 * this.width + "%",
+      minWidth: this.minSize,
+      minHeight: this.minSize,
+      maxWidth: this.maxSize,
+      maxHeight: this.maxSize
+    };
+  }
 
-        public mounted() {
-        }
-    }
+  public mounted() {}
+}
 </script>
 
 <style scoped lang="scss">

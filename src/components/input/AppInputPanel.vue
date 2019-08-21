@@ -8,21 +8,21 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 @Component({
-    filters: {
-        capitalize(value: string) {
-            if (!value) { return ''; }
-            value = value.toString();
-            return value.charAt(0).toUpperCase() + value.slice(1);
-        },
-    },
+  filters: {
+    capitalize(value: string) {
+      if (!value) {
+        return "";
+      }
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+  }
 })
 export default class AppInputPanel extends Vue {
-    @Prop(String) public title: string;
-    public isActive = true;
-
-
+  @Prop(String) public title: string;
+  public isActive = true;
 }
 </script>
 

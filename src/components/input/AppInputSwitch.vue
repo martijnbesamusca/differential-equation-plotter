@@ -1,21 +1,25 @@
 <script lang="ts">
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-import settings, {IViewbox} from '@/store/modules/settings';
-import {VNode} from 'vue';
-import {Store} from 'vuex';
-import {get, omit} from 'lodash';
-import AppInput, {FunctionalRenderingContext} from '@/components/input/AppInput.vue';
-import AppInputMatrix from '@/components/input/AppInputMatrix.vue';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import settings, { IViewbox } from "@/store/modules/settings";
+import { VNode } from "vue";
+import { Store } from "vuex";
+import { get, omit } from "lodash";
+import AppInput, {
+  FunctionalRenderingContext
+} from "@/components/input/AppInput.vue";
+import AppInputMatrix from "@/components/input/AppInputMatrix.vue";
 
-const prefix = 'input_';
+const prefix = "input_";
 
 @Component({
-    functional: true,
+  functional: true
 })
 export default class AppInputSwitch extends AppInput {
-
-    public static createInput(createElement: typeof Vue.prototype.$createElement, context): VNode {
-        return createElement(AppInputMatrix);
+  public static createInput(
+    createElement: typeof Vue.prototype.$createElement,
+    context
+  ): VNode {
+    return createElement(AppInputMatrix);
     //     return createElement('div', {
     //         on: {
     //             click(e: Event) {
@@ -42,17 +46,22 @@ export default class AppInputSwitch extends AppInput {
     //
     //         attrs: omit(context.data.attrs, ['label', 'varName', 'type', 'store']),
     //     });
-    }
+  }
 
-    public render(createElement: typeof Vue.prototype.$createElement, context: FunctionalRenderingContext): VNode[] {
-        const label = AppInput.createLabel(createElement, context);
-        const input = AppInputSwitch.createInput(createElement, context);
-        const resetButton = AppInput.createResetButton(createElement, context);
-        const inputWrapper = createElement('div', {class: 'inputWrapper' }, [input, resetButton]);
+  public render(
+    createElement: typeof Vue.prototype.$createElement,
+    context: FunctionalRenderingContext
+  ): VNode[] {
+    const label = AppInput.createLabel(createElement, context);
+    const input = AppInputSwitch.createInput(createElement, context);
+    const resetButton = AppInput.createResetButton(createElement, context);
+    const inputWrapper = createElement("div", { class: "inputWrapper" }, [
+      input,
+      resetButton
+    ]);
 
-        return [label, inputWrapper];
-    }
-
+    return [label, inputWrapper];
+  }
 }
 </script>
 

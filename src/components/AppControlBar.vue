@@ -15,40 +15,42 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import NumberFormat from "@/api/NumberFormat";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import NumberFormat from "@/api/NumberFormat";
 
-    @Component({})
-    export default class AppControlBar extends Vue {
-        private cursorX = 0.0;
-        private cursorY = 0.0;
+@Component({})
+export default class AppControlBar extends Vue {
+  private cursorX = 0.0;
+  private cursorY = 0.0;
 
-        get playing () {
-            return this.$store.state.plot.playing;
-        }
+  get playing() {
+    return this.$store.state.plot.playing;
+  }
 
-        get fullscreen () {
-            return this.$store.state.plot.fullscreen;
-        }
+  get fullscreen() {
+    return this.$store.state.plot.fullscreen;
+  }
 
-        private openFullscreen() {
-            this.$store.dispatch('requestFullscreen');
-            // document.getElementById('plot').requestFullscreen();
-        }
-        private playOrPause() {
-            this.$store.dispatch('playOrPause');
-        }
+  private openFullscreen() {
+    this.$store.dispatch("requestFullscreen");
+    // document.getElementById('plot').requestFullscreen();
+  }
+  private playOrPause() {
+    this.$store.dispatch("playOrPause");
+  }
 
-        public mounted() {
-            const viewbox = this.$store.state.settings.viewbox;
-            const canvas = <HTMLCanvasElement> document.getElementById('canvas');
-            canvas.addEventListener('mousemove', e => {
-                const {width, height} = canvas.getBoundingClientRect();
-                this.cursorX =  viewbox.x.min + e.offsetX / width * (viewbox.x.max - viewbox.x.min);
-                this.cursorY =  viewbox.y.max - e.offsetY / height * (viewbox.y.max - viewbox.y.min);
-            });
-        }
-    }
+  public mounted() {
+    const viewbox = this.$store.state.settings.viewbox;
+    const canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    canvas.addEventListener("mousemove", e => {
+      const { width, height } = canvas.getBoundingClientRect();
+      this.cursorX =
+        viewbox.x.min + (e.offsetX / width) * (viewbox.x.max - viewbox.x.min);
+      this.cursorY =
+        viewbox.y.max - (e.offsetY / height) * (viewbox.y.max - viewbox.y.min);
+    });
+  }
+}
 </script>
 
 <style scoped lang="scss">

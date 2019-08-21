@@ -1,11 +1,17 @@
 {
   "defaultSeverity": "warning",
   "extends": [
-    "tslint-config-airbnb"
+    "tslint-config-airbnb",
+    "tslint-plugin-prettier",
+    "tslint-config-prettier"
   ],
   "linterOptions": {
     "exclude": [
       "node_modules/**"
     ]
+  },
+  "rules": {
+    "import-name": false,
+    "prettier": true
   }
 }

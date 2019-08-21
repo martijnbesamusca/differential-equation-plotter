@@ -14,31 +14,30 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from 'vue-property-decorator';
-import AppPlot from './components/AppPlot.vue';
-import AppSideBar from './components/AppSideBar.vue';
-import AppTitleBar from './components/AppTitleBar.vue';
-import ModularPanes from './components/ModularPanes'
-import ModularPane from './components/ModularPane'
+import { Component, Vue, Watch } from "vue-property-decorator";
+import AppPlot from "./components/AppPlot.vue";
+import AppSideBar from "./components/AppSideBar.vue";
+import AppTitleBar from "./components/AppTitleBar.vue";
+import ModularPanes from "./components/ModularPanes";
+import ModularPane from "./components/ModularPane";
 import AppControlBar from "@/components/AppControlBar.vue";
 // import { Multipane, MultipaneResizer } from 'vue-multipane';
 
 @Component({
-    components: {
-        AppControlBar,
-        ModularPanes,
-        ModularPane,
-        AppPlot,
-        AppSideBar,
-        AppTitleBar,
-    },
+  components: {
+    AppControlBar,
+    ModularPanes,
+    ModularPane,
+    AppPlot,
+    AppSideBar,
+    AppTitleBar
+  }
 })
 export default class App extends Vue {
-    private canvasHeight: number;
-    private canvasWidth: number;
+  private canvasHeight: number;
+  private canvasWidth: number;
 
-    public mounted() {
-    }
+  public mounted() {}
 }
 </script>
 
