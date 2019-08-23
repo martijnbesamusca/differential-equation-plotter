@@ -20,8 +20,8 @@ import nullclineVert from "./shaders/webgl1/nullcline.vert";
 import chroma from "chroma-js";
 
 export default class NullclineRenderer {
-  private gl: WebGLRenderingContext;
-  private programInfo: ProgramInfo;
+  private readonly gl: WebGLRenderingContext;
+  private readonly programInfo: ProgramInfo;
   private uniforms!: { [key: string]: any };
   private functionArray!: Float32Array;
   private functionImage!: WebGLTexture;

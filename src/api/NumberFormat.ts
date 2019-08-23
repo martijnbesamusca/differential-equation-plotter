@@ -1,5 +1,5 @@
 export default class NumberFormat {
-  private maxLength: number;
+  private readonly maxLength: number;
   private decimalFormat: Intl.NumberFormat;
 
   constructor(maxLength: number) {

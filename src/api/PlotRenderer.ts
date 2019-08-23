@@ -10,15 +10,15 @@ import SolutionRenderer from "@/api/SolutionRenderer";
 
 export default class PlotRenderer {
   canvas: HTMLCanvasElement;
-  private gl: WebGLRenderingContext;
+  private readonly gl: WebGLRenderingContext;
   // private cachedFunction: CachedFunction;
 
   private settings!: any;
-  private arrowCloud: ArrowCloud;
+  private readonly arrowCloud: ArrowCloud;
   private grid: Grid;
-  private uniforms!: { [key: string]: any };
+  private readonly uniforms!: { [key: string]: any };
 
-  private ODEEstimator: ODEEstimator;
+  private readonly ODEEstimator: ODEEstimator;
   private solutions: SolutionRenderer;
   private nullclines: NullclineRenderer;
 

@@ -3,15 +3,15 @@ import NumberFormat from "@/api/NumberFormat";
 
 export default class Grid {
   private svg: SVGElement;
-  private numbersHorizantal: SVGTextElement[];
-  private numbersVertical: SVGTextElement[];
-  private linesHorizontal: SVGLineElement[];
-  private linesVertical: SVGLineElement[];
+  private readonly numbersHorizantal: SVGTextElement[];
+  private readonly numbersVertical: SVGTextElement[];
+  private readonly linesHorizontal: SVGLineElement[];
+  private readonly linesVertical: SVGLineElement[];
   private settings: Settings;
 
   private minGap = 10;
-  private gridNumX: number;
-  private gridNumY: number;
+  private readonly gridNumX: number;
+  private readonly gridNumY: number;
   private format: NumberFormat;
 
   constructor(svg: SVGElement, settings: Settings) {

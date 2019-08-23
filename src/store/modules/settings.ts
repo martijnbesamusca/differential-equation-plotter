@@ -35,7 +35,7 @@ export interface Settings {
 
 const prefixPersist = "settings:";
 
-const defaults: Settings = {
+export const defaults: Settings = {
   viewbox: {
     x: { min: -6, max: 6 },
     y: { min: -3, max: 3 }
@@ -104,11 +104,7 @@ function createStore() {
     const db: IDBDatabase = event.target.result;
     const objectStore = db.createObjectStore("settings");
 
-    // for (const key of Object.keys(defaults)) {
-    //     objectStore.createIndex(key, key, {unique: false})
-    // }
-
-    objectStore.transaction.oncomplete = function(event) {
+    objectStore.transaction.oncomplete = event => {
       // Store values in the newly created objectStore.
       const defaultStore = db
         .transaction("settings", "readwrite")

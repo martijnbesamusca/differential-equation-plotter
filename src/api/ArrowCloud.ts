@@ -21,21 +21,21 @@ import ODEEstimator from "@/api/ODEEstimator";
 export default class ArrowCloud {
   public static MAX_NUM_ARROWS = 10000;
 
-  private gl: WebGLRenderingContext;
-  private arrowVertexArray: VertexArrayInfo;
-  private programInfo: ProgramInfo;
+  private readonly gl: WebGLRenderingContext;
+  private readonly arrowVertexArray: VertexArrayInfo;
+  private readonly programInfo: ProgramInfo;
 
-  private pos!: Float32Array;
-  private age!: Uint16Array;
-  private color!: Float32Array;
-  private alpha!: Float32Array;
-  private dx: Float32Array;
-  private dy: Float32Array;
+  private readonly pos!: Float32Array;
+  private readonly age!: Uint16Array;
+  private readonly color!: Float32Array;
+  private readonly alpha!: Float32Array;
+  private readonly dx: Float32Array;
+  private readonly dy: Float32Array;
 
   private settings: any;
-  private uniforms: { [key: string]: any };
-  private arrowInfoBuffer: BufferInfo;
-  private arrowArray: { [key: string]: any };
+  private readonly uniforms: { [key: string]: any };
+  private readonly arrowInfoBuffer: BufferInfo;
+  private readonly arrowArray: { [key: string]: any };
   private arrow: number[];
 
   private ODEEstimator: ODEEstimator;

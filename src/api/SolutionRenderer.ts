@@ -19,7 +19,7 @@ export default class SolutionRenderer {
   public stepSize: number;
   public length: number;
   public method: ODEAprox;
-  private subSteps: number;
+  private readonly subSteps: number;
 
   constructor(
     canvas: HTMLCanvasElement,

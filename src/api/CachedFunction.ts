@@ -1,14 +1,14 @@
 import { IViewbox } from "@/store/modules/settings";
 
 export default class CachedFunction {
-  private dx: (x: number, y: number) => number;
-  private dy: (x: number, y: number) => number;
+  private readonly dx: (x: number, y: number) => number;
+  private readonly dy: (x: number, y: number) => number;
 
   private view: IViewbox;
-  private width: number;
-  private height: number;
+  private readonly width: number;
+  private readonly height: number;
 
-  private cache: Float64Array; // Vec4(dx,dy,dz?,exist)
+  private readonly cache: Float64Array; // Vec4(dx,dy,dz?,exist)
 
   private dxMin = Number.POSITIVE_INFINITY;
   private dxMax = Number.NEGATIVE_INFINITY;
@@ -68,11 +68,11 @@ export default class CachedFunction {
         return Math.floor(
           ((value - this.dyMin) / (this.dyMax - this.dyMin)) * 255
         );
-      } else if (id === 2) {
-        return 0;
-      } else {
-        return value * 255;
       }
+      if (id === 2) {
+        return 0;
+      }
+      return value * 255;
     });
   }
 

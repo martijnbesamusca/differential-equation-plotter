@@ -6,6 +6,37 @@
   }
 }
 
+%button {
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 0.5em 1em;
+  border: 0.15em solid #555;
+  outline: none;
+  border-radius: $input-radius;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  text-transform: none;
+  transition: border-color 200ms;
+
+  &.positive {
+    background-color: $accent-color;
+    color: #444;
+    font-weight: 600;
+    &:hover {
+      border-color: #fff;
+    }
+  }
+
+  &:hover {
+    border-color: $accent-color;
+  }
+
+  &.width2 {
+    grid-column: 1 / span 2;
+  }
+}
+
 %input {
   width: calc(100% - 2em);
   padding: 0 0.5em;
@@ -14,7 +45,7 @@
   border-radius: $input-radius;
   height: 2em;
   border-right-width: 0;
-  
+
   &:focus {
     border-color: $accent-color;
   }
@@ -49,7 +80,7 @@
       transform: translate(calc(50% - #{$distance} - .7em), -2em);
       transition: transform 500ms;
     }
-    &[checked] {
+    &:checked {
       background-color: $accent-color;
       &:before {
         content: 'on';

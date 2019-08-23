@@ -39,7 +39,7 @@ const functions: { [key: string]: string } = {
 
 function MastonToJSFunction(maston: Maston, variables: string[] = ["x", "y"]) {
   try {
-    return Function(
+    return new Function(
       ...variables,
       "return " + JSFunctionGen(maston, variables)
     ) as (x: number, y: number) => number;

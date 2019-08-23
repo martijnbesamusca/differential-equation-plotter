@@ -89,7 +89,7 @@ export default class AppSettingsMenu extends Vue {
     return this.$store.state.settings.ODEAproxmethod;
   }
   set approxModel(value: number) {
-    return this.$store.commit("changeValue", {
+    this.$store.commit("changeValue", {
       key: "ODEAproxmethod",
       val: value
     });
@@ -99,7 +99,7 @@ export default class AppSettingsMenu extends Vue {
     return this.$store.state.settings.solutionODEApproxMethod;
   }
   set solutionMethodApprox(value: number) {
-    return this.$store.commit("changeValue", {
+    this.$store.commit("changeValue", {
       key: "solutionODEApproxMethod",
       val: value
     });
