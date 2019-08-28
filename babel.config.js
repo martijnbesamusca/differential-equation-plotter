@@ -1,17 +1,14 @@
-module.exports = function (api) {
+module.exports = function(api) {
   api.cache(true);
 
-  const presets = [
-    '@vue/app'
-  ];
+  const presets = ["@vue/app"];
   const plugins = [
-    ['babel-plugin-inline-import',
-    {
-      extensions: [
-        '.frag',
-        '.vert'
-      ]
-    }]
+    [
+      "babel-plugin-inline-import",
+      {
+        extensions: [".frag", ".vert"]
+      }
+    ]
   ];
 
   return {

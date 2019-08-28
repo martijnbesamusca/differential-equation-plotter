@@ -3,6 +3,7 @@ import { defaults } from "@/store/modules/settings";
 let storePromise: Promise<IDBDatabase>;
 
 function init() {
+  requestPersistent();
   const request = indexedDB.open("settings", 1);
   storePromise = new Promise((resolve, reject) => {
     request.onerror = event => {
@@ -24,9 +25,23 @@ function init() {
   });
 }
 
+function requestPersistent() {
+  navigator.storage.persisted().then((isPersisting)=> {
+    if(!isPersisting) navigator.storage.persist().then((success) => {
+      if(success) {
+        console.log('Successfully got persistent storage');
+      } else {
+        console.log('Did not get got persistent storage');
+      }
+    })
+  })
+}
+
 init();
 
-async function getTransaction(mode: IDBTransactionMode): Promise<IDBObjectStore> {
+async function getTransaction(
+  mode: IDBTransactionMode
+): Promise<IDBObjectStore> {
   const db = await storePromise;
   return db.transaction("settings", mode).objectStore("settings");
 }
@@ -39,7 +54,7 @@ export async function addSave(name: string, settings: object) {
 export async function getSavesList() {
   const store = await getTransaction("readwrite");
   const request = store.getAllKeys();
-  return new Promise<object>((resolve, reject) => {
+  return new Promise<IDBValidKey[]>((resolve, reject) => {
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
@@ -48,6 +63,15 @@ export async function getSavesList() {
 export async function loadSave(name: string) {
   const store = await getTransaction("readwrite");
   const request = store.get(name);
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+export async function removeSave(name: string) {
+  const store = await getTransaction("readwrite");
+  const request = store.delete(name);
   return new Promise((resolve, reject) => {
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);

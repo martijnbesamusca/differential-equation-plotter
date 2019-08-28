@@ -62,6 +62,8 @@ export default class NullclineRenderer {
   updateColor() {
     this.uniforms.u_color_x = chroma(this.settings.nullclineXColor).gl();
     this.uniforms.u_color_y = chroma(this.settings.nullclineYColor).gl();
+    this.uniforms.u_color_x.pop();
+    this.uniforms.u_color_y.pop();
   }
 
   updateThreshold() {
@@ -137,12 +139,12 @@ export default class NullclineRenderer {
     this.uniforms = {
       u_texture: this.functionImage,
       u_texture_dim: [this.gl.canvas.width, this.gl.canvas.height],
-      u_color_x: chroma(this.settings.nullclineXColor).gl(),
-      u_color_y: chroma(this.settings.nullclineYColor).gl(),
       u_enable_x: this.settings.nullclineXEnable,
       u_enable_y: this.settings.nullclineYEnable,
       u_threshold: this.settings.nullclineThreshold
     };
+
+    this.updateColor();
 
     const arrays = {
       position: {

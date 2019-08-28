@@ -66,11 +66,11 @@ export default class AppInputSwitch extends AppInput {
 </script>
 
 <style scoped lang="scss">
-    .switch {
-        width: 2em;
-        background-color: #ccc;
-        &.checked {
-            background-color: #33f;
-        }
-    }
+.switch {
+  width: 2em;
+  background-color: #ccc;
+  &.checked {
+    background-color: #33f;
+  }
+}
 </style>

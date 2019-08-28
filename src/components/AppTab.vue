@@ -1,7 +1,7 @@
 <template>
-    <div class="tab" v-show="activated" :class="{activated: activated}">
-        <slot/>
-    </div>
+  <div class="tab" v-show="activated" :class="{ activated: activated }">
+    <slot />
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,8 +17,8 @@ export default class AppTab extends Vue {
 </script>
 
 <style scoped lang="scss">
-    .tab {
-        height: 100%;
-        overflow-y: auto;
-    }
+.tab {
+  height: 100%;
+  overflow-y: auto;
+}
 </style>

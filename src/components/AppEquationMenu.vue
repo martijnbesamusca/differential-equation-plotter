@@ -1,28 +1,57 @@
 <template>
-    <div class="equationMenu">
-        <h2 id="equation_title">Equations</h2>
-        <app-tabs ref="tabs">
-            <app-tab title="cartesian" text="$$ \dot{x}, \dot{y} $$" ref="tabCartesian">
-                <app-math-input label="$$\dot{x}=$$" class="mathInput" @input="dx = $event">{{ dx }}</app-math-input>
-                <app-math-input label="$$\dot{y}=$$" class="mathInput" @input="dy = $event">{{ dy }}</app-math-input>
-                <button class="applyButton" @click="enableCartesian">Apply</button>
-            </app-tab>
+  <div class="equationMenu">
+    <h2 id="equation_title">Equations</h2>
+    <app-tabs ref="tabs">
+      <app-tab
+        title="cartesian"
+        text="$$ \dot{x}, \dot{y} $$"
+        ref="tabCartesian"
+      >
+        <app-math-input
+          label="$$\dot{x}=$$"
+          class="mathInput"
+          @input="dx = $event"
+          >{{ dx }}</app-math-input
+        >
+        <app-math-input
+          label="$$\dot{y}=$$"
+          class="mathInput"
+          @input="dy = $event"
+          >{{ dy }}</app-math-input
+        >
+        <button class="applyButton" @click="enableCartesian">Apply</button>
+      </app-tab>
 
-            <app-tab title="matrix" text="$$ \dot{\vec{x}} = A\vec{x} $$" ref="tabMatrix">
-                <app-input-matrix label="$$ A= $$" class="matrix" v-model="A"/>
-                <button class="applyButton" @click="enableMatrix">Apply</button>
-            </app-tab>
+      <app-tab
+        title="matrix"
+        text="$$ \dot{\vec{x}} = A\vec{x} $$"
+        ref="tabMatrix"
+      >
+        <app-input-matrix label="$$ A= $$" class="matrix" v-model="A" />
+        <button class="applyButton" @click="enableMatrix">Apply</button>
+      </app-tab>
 
-            <app-tab  title="polar" text="$$ \dot{r}, \dot{\theta} $$" ref="tabPolar">
-                <span ref="polarNotice" id="polarNotice">
-                    The variable $$ \theta $$ can be typed <br> both as $$ \theta $$ or as $$ t $$ for ease of typing.
-                </span>
-                <app-math-input label="$$\dot{r}=$$" class="mathInput" @input="dr = $event">{{ dr }}</app-math-input>
-                <app-math-input label="$$\dot{\theta}=$$" class="mathInput" @input="dt = $event">{{ dt }}</app-math-input>
-                <button class="applyButton" @click="enablePolar">Apply</button>
-            </app-tab>
-        </app-tabs>
-    </div>
+      <app-tab title="polar" text="$$ \dot{r}, \dot{\theta} $$" ref="tabPolar">
+        <span ref="polarNotice" id="polarNotice">
+          The variable $$ \theta $$ can be typed <br />
+          both as $$ \theta $$ or as $$ t $$ for ease of typing.
+        </span>
+        <app-math-input
+          label="$$\dot{r}=$$"
+          class="mathInput"
+          @input="dr = $event"
+          >{{ dr }}</app-math-input
+        >
+        <app-math-input
+          label="$$\dot{\theta}=$$"
+          class="mathInput"
+          @input="dt = $event"
+          >{{ dt }}</app-math-input
+        >
+        <button class="applyButton" @click="enablePolar">Apply</button>
+      </app-tab>
+    </app-tabs>
+  </div>
 </template>
 
 <script lang="ts">
@@ -136,54 +165,54 @@ export default class AppEquationMenu extends Vue {
 </script>
 
 <style scoped lang="scss">
-    @import "../style/mixins.scss";
-    @import "../style/variables.scss";
+@import "../style/mixins.scss";
+@import "../style/variables.scss";
 
-    .equationMenu {
-        background-color: #333;
-    }
+.equationMenu {
+  background-color: #333;
+}
 
-    .mathInput {
-        padding: 0 1em;
-        margin-top: 1em;
-    }
+.mathInput {
+  padding: 0 1em;
+  margin-top: 1em;
+}
 
-    #equation_title {
-        padding: 0.5em 0;
-        margin: 0;
-        font-size: 2em;
-        text-align: center;
-        border-bottom: #666 3px solid;
-        background-color: #222;
-    }
+#equation_title {
+  padding: 0.5em 0;
+  margin: 0;
+  font-size: 2em;
+  text-align: center;
+  border-bottom: #666 3px solid;
+  background-color: #222;
+}
 
-    .applyButton {
-        display: block;
-        appearance: none;
-        border: none;
-        background-color: $accent-color;
-        color: #fff;
-        margin: 1em;
-        padding: 1em;
-        width: calc(100% - 2em);
-        border-radius: .25em;
-        cursor: pointer;
-        font-size: 1em;
+.applyButton {
+  display: block;
+  appearance: none;
+  border: none;
+  background-color: $accent-color;
+  color: #fff;
+  margin: 1em;
+  padding: 1em;
+  width: calc(100% - 2em);
+  border-radius: 0.25em;
+  cursor: pointer;
+  font-size: 1em;
 
-        &:active {
-            background-color: darken($accent-color, 10%);
-        }
-     }
+  &:active {
+    background-color: darken($accent-color, 10%);
+  }
+}
 
-    .matrix {
-        margin-top: 1em;
-    }
+.matrix {
+  margin-top: 1em;
+}
 
-    #polarNotice {
-        display: inline-block;
-        padding: 0 2em;
-        margin-top: 1em;
-        width: 100%;
-        text-align: center;
-    }
+#polarNotice {
+  display: inline-block;
+  padding: 0 2em;
+  margin-top: 1em;
+  width: 100%;
+  text-align: center;
+}
 </style>

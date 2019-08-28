@@ -73,6 +73,4 @@ export default class AppInputNumber extends AppInput {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

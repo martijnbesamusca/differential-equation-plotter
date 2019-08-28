@@ -1,8 +1,8 @@
 <template>
-    <div class="mathinput">
-        <div class="mathfieldLabel" ref="label">{{ label }}</div>
-        <div class="mathfield" :id="id" ref="mathfield"><slot></slot></div>
-    </div>
+  <div class="mathinput">
+    <div class="mathfieldLabel" ref="label">{{ label }}</div>
+    <div class="mathfield" :id="id" ref="mathfield"><slot></slot></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,29 +55,29 @@ export default class AppMathInput extends Vue {
 </script>
 
 <style scoped lang="scss">
-    @import "../../style/mixins.scss";
-    @import "../../style/variables.scss";
+@import "../../style/mixins.scss";
+@import "../../style/variables.scss";
 
-    .mathfieldLabel {
-        display: inline-block;
-        margin-right: 0.5em;
-    }
+.mathfieldLabel {
+  display: inline-block;
+  margin-right: 0.5em;
+}
 
-    .mathfield {
-        @extend %input;
-        width: calc(100% - 2.5em);
-        display: inline-block;
-        background-color: white;
-        color: #000;
-        height: auto;
-        cursor: text;
+.mathfield {
+  @extend %input;
+  width: calc(100% - 2.5em);
+  display: inline-block;
+  background-color: white;
+  color: #000;
+  height: auto;
+  cursor: text;
 
-        &.focus {
-            border-color: $accent-color;
-        }
-    }
+  &.focus {
+    border-color: $accent-color;
+  }
+}
 </style>
 <style>
-    @import "/src/style/mathlive.core.css";
-    @import "/src/style/mathlive.css";
+@import "/src/style/mathlive.core.css";
+@import "/src/style/mathlive.css";
 </style>

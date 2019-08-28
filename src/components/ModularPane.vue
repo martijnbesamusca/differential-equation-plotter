@@ -1,7 +1,7 @@
 <template>
-    <div :style="style" class="pane">
-        <slot></slot>
-    </div>
+  <div :style="style" class="pane">
+    <slot></slot>
+  </div>
 </template>
 
 <script lang="ts">
@@ -34,14 +34,15 @@ export default class ModularPane extends Vue {
 </script>
 
 <style scoped lang="scss">
-    .pane {
-        --pane-width: 0;
-        width: var(--pane-width);
-        will-change: width;
-        height: 100%;
-        display: inline-block;
-        &:first-child, &:last-child{
-            width: calc(var(--pane-width) - 1px);
-        }
-    }
+.pane {
+  --pane-width: 0;
+  width: var(--pane-width);
+  will-change: width;
+  height: 100%;
+  display: inline-block;
+  &:first-child,
+  &:last-child {
+    width: calc(var(--pane-width) - 1px);
+  }
+}
 </style>

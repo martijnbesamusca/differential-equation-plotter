@@ -1,7 +1,11 @@
 <template>
-    <div class="modular-panes" :class="'modular-panes-' + direction" :style="style">
-        <slot />
-    </div>
+  <div
+    class="modular-panes"
+    :class="'modular-panes-' + direction"
+    :style="style"
+  >
+    <slot />
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,38 +60,38 @@ export default class ModularPanes extends Vue {
 </script>
 
 <style scoped lang="scss">
-    .modular-panes {
-        height: 100%;
-        width: 100%;
-        display: flex;
-    }
+.modular-panes {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
 </style>
 
 <style lang="scss">
-    .modular-panes {
-        .handler {
-            display: block;
-            height: 100vh;
-            width: 6px;
-            background-color: #ccc;
-            border: 1px solid #000;
-            border-top-width: 0;
-            border-bottom-width: 0;
-            &:before {
-                content: '';
-                position: absolute;
-                margin-left: -3px;
-                width: 6px;
-                height: 100%;
-            }
-        }
-
-        &-horizontal .handler {
-            cursor: n-resize;
-        }
-
-        &-vertical .handler {
-            cursor: e-resize;
-        }
+.modular-panes {
+  .handler {
+    display: block;
+    height: 100vh;
+    width: 6px;
+    background-color: #ccc;
+    border: 1px solid #000;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    &:before {
+      content: "";
+      position: absolute;
+      margin-left: -3px;
+      width: 6px;
+      height: 100%;
     }
+  }
+
+  &-horizontal .handler {
+    cursor: n-resize;
+  }
+
+  &-vertical .handler {
+    cursor: e-resize;
+  }
+}
 </style>

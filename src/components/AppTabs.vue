@@ -1,17 +1,23 @@
 <template>
-    <div class="tabs" ref="tabs">
-        <ul class="menu">
-            <li v-for="(tab, i) in tabs"
-                class="menuItem"
-                :class="{active: tab.activated}"
-                @click="activate(tab)"
-                :title="tab.$props.title">
-                <i ref="icon" v-if="tab.$props.icon" class="material-icons">{{ tab.$props.icon }}</i>
-                <span ref="text" v-if="tab.$props.text" class="">{{ tab.$props.text }}</span>
-            </li>
-        </ul>
-        <slot />
-    </div>
+  <div class="tabs" ref="tabs">
+    <ul class="menu">
+      <li
+        v-for="(tab, i) in tabs"
+        class="menuItem"
+        :class="{ active: tab.activated }"
+        @click="activate(tab)"
+        :title="tab.$props.title"
+      >
+        <i ref="icon" v-if="tab.$props.icon" class="material-icons">{{
+          tab.$props.icon
+        }}</i>
+        <span ref="text" v-if="tab.$props.text" class="">{{
+          tab.$props.text
+        }}</span>
+      </li>
+    </ul>
+    <slot />
+  </div>
 </template>
 
 <script lang="ts">
@@ -65,34 +71,34 @@ export default class AppTabs extends Vue {
 </script>
 
 <style>
-    .menuItem .ML__base {
-        cursor: inherit;
-    }
+.menuItem .ML__base {
+  cursor: inherit;
+}
 </style>
 
 <style scoped lang="scss">
-.tabs{
-    display: grid;
-    grid-template-rows: auto 1fr;
+.tabs {
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 .tabs .menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-evenly;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .tabs .menuItem {
-    display: inline-block;
-    cursor: pointer;
-    flex: 1;
-    padding: 0.5em 0;
-    text-align: center;
-    border-bottom: 2px solid #151515;
+  display: inline-block;
+  cursor: pointer;
+  flex: 1;
+  padding: 0.5em 0;
+  text-align: center;
+  border-bottom: 2px solid #151515;
 
-    &.active {
-        border-bottom: 2px solid white;
-    }
+  &.active {
+    border-bottom: 2px solid white;
+  }
 }
 </style>
