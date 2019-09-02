@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --modern",
     "build": "vue-cli-service build --modern",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "nightwatch"
   },
   "dependencies": {
     "@types/chroma-js": "^1.4.1",
@@ -28,19 +29,22 @@
   },
   "devDependencies": {
     "@types/underscore": "^1.8.14",
-    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
-    "@vue/cli-plugin-pwa": "^3.5.0",
-    "@vue/cli-plugin-typescript": "^3.5.0",
-    "@vue/cli-service": "^3.7.0",
+    "@vue/cli-plugin-pwa": "^3.11.0",
+    "@vue/cli-plugin-typescript": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
     "@vue/eslint-config-prettier": "^5.0.0",
     "@vue/eslint-config-typescript": "^4.0.0",
     "babel-eslint": "^10.0.2",
     "babel-plugin-inline-import": "^3.0.0",
+    "chromedriver": "^76.0.1",
     "eslint": "^6.2.2",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.2.3",
     "fibers": "^3.1.1",
+    "geckodriver": "^1.16.2",
+    "nightwatch": "^1.2.1",
     "prettier": "^1.18.2",
     "sass": "^1.17.2",
     "sass-loader": "^7.1.0",

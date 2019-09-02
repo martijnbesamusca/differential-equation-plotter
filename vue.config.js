@@ -4,5 +4,5 @@ const pkg = require("./package.json");
 module.exports = {
   /* ... other config ... */
   transpileDependencies: ["vuex-persist"],
-  lintOnSave: true,
+  lintOnSave: true
 };

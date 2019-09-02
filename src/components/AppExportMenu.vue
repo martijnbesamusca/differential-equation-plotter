@@ -44,7 +44,9 @@
             <template v-for="name in savesList">
               <div class="grid-start">{{ name }}</div>
               <button @click="load(name)" class="positive">load</button>
-              <button @click="removeSave(name)" v-if="name !== 'default'">remove</button>
+              <button @click="removeSave(name)" v-if="name !== 'default'">
+                remove
+              </button>
             </template>
           </div>
         </template>
@@ -57,16 +59,16 @@
     <app-input-panel title="Download & Upload">
       <label for="download_settings">Download settings</label>
       <input
-              type="checkbox"
-              id="download_settings"
-              v-model="downloadSettings"
+        type="checkbox"
+        id="download_settings"
+        v-model="downloadSettings"
       />
 
       <label for="download_equations">Download equations</label>
       <input
-              type="checkbox"
-              id="download_equations"
-              v-model="downloadEquations"
+        type="checkbox"
+        id="download_equations"
+        v-model="downloadEquations"
       />
       <button @click="downloadSave">Download</button>
       <button @click="uploadSave">Upload</button>
@@ -101,7 +103,12 @@ import AppInputGroup from "./input/AppInputGroup.vue";
 import AppInputPanel from "@/components/input/AppInputPanel.vue";
 import AppInput from "@/components/input/AppInput.vue";
 import Modal from "@/components/Modal.vue";
-import {addSave, getSavesList, loadSave, removeSave} from "@/api/SaveDatabase";
+import {
+  addSave,
+  getSavesList,
+  loadSave,
+  removeSave
+} from "@/api/SaveDatabase";
 
 interface File {
   text: Promise<string>;
@@ -156,23 +163,37 @@ export default class AppExportMenu extends Vue {
   }
 
   private downloadSave() {
-    const settings = this.getSettingsAndEquations(this.saveModalSettings, this.saveModalEquations);
+    const settings = this.getSettingsAndEquations(
+      this.saveModalSettings,
+      this.saveModalEquations
+    );
     const blob = new Blob([JSON.stringify(settings, null, 2)]);
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     const date = new Date();
-    const dateString = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + '_' + date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
-    a.style.display = 'none';
+    const dateString =
+      date.getDate() +
+      "-" +
+      (date.getMonth() + 1) +
+      "-" +
+      date.getFullYear() +
+      "_" +
+      date.getHours() +
+      "-" +
+      date.getMinutes() +
+      "-" +
+      date.getSeconds();
+    a.style.display = "none";
     a.href = url;
-    a.download =  'ODE-graph-' + dateString + '.json';
+    a.download = "ODE-graph-" + dateString + ".json";
     a.click();
     URL.revokeObjectURL(url);
     a.remove();
   }
 
   private uploadSave() {
-    const input = document.createElement('input');
-    input.addEventListener('change', ev => {
+    const input = document.createElement("input");
+    input.addEventListener("change", ev => {
       const files = input.files;
       if (!files || files.length !== 1) return;
       const file = files[0];
@@ -184,8 +205,8 @@ export default class AppExportMenu extends Vue {
         }
       });
     });
-    input.type = 'file';
-    input.accept = '.json';
+    input.type = "file";
+    input.accept = ".json";
     input.click();
     input.remove();
   }
@@ -199,7 +220,7 @@ export default class AppExportMenu extends Vue {
     this.closeLoadModal();
   }
   private removeSave(name: string) {
-    removeSave(name).then(()=> {
+    removeSave(name).then(() => {
       this.updateSavesList();
     });
   }
@@ -211,7 +232,10 @@ export default class AppExportMenu extends Vue {
       this.saveModalEquations
     );
 
-    const settings = this.getSettingsAndEquations(this.downloadSettings, this.downloadEquations);
+    const settings = this.getSettingsAndEquations(
+      this.downloadSettings,
+      this.downloadEquations
+    );
 
     addSave(this.saveModalName, settings)
       .then(() => {
@@ -223,7 +247,10 @@ export default class AppExportMenu extends Vue {
     this.closeSaveModal();
   }
 
-  private getSettingsAndEquations(enableSettings: boolean, enableEquations: boolean) {
+  private getSettingsAndEquations(
+    enableSettings: boolean,
+    enableEquations: boolean
+  ) {
     let settings = this.$store.state.settings;
 
     if (!enableSettings && !enableEquations) {

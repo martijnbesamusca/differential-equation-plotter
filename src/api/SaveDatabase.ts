@@ -26,15 +26,16 @@ function init() {
 }
 
 function requestPersistent() {
-  navigator.storage.persisted().then((isPersisting)=> {
-    if(!isPersisting) navigator.storage.persist().then((success) => {
-      if(success) {
-        console.log('Successfully got persistent storage');
-      } else {
-        console.log('Did not get got persistent storage');
-      }
-    })
-  })
+  navigator.storage.persisted().then(isPersisting => {
+    if (!isPersisting)
+      navigator.storage.persist().then(success => {
+        if (success) {
+          console.log("Successfully got persistent storage");
+        } else {
+          console.log("Did not get got persistent storage");
+        }
+      });
+  });
 }
 
 init();
