@@ -1,34 +1,52 @@
+const tests = require('./comparisonCollection.js');
 const spawn = require("child_process").spawn;
 const fs = require('fs');
 
+function runPython(funcName, settings) {
+  const pythonProcess = spawn('python',
+      ['tests/python/reference.py',
+        `tests/comparison/img/${funcName}_matplotlib.png`,
+        settings.dx.replace(/\\/g, ''),
+        settings.dy.replace(/\\/g, ''),
+        settings.minX,
+        settings.maxX,
+        settings.minY,
+        settings.maxY,
+      ]);
+  pythonProcess.on('exit', ret => {
+    console.log(`Ran python with return value ${ret}`);
+  });
+  pythonProcess.stdout.on('data', data => {
+    console.log(data.toString());
+  });
+  pythonProcess.stderr.on('data', data => {
+    console.error(data.toString());
+  });
+}
+
 module.exports = {
   "Generate comparison cartesian graphs": function(browser) {
-    const funcName = 'bla';
     let resultHTML = '';
 
-    const pythonProcess = spawn('python', ['tests/python/reference.py', funcName]);
-    pythonProcess.on('exit', ret => {
-      console.log(`Ran python with return value ${ret}`);
-    });
-    pythonProcess.stdout.on('data', data => {
-      console.log(data.toString());
-    });
+    for(const [funcName, settings] of Object.entries(tests)) {
+      runPython(funcName, settings);
 
-    browser.resizeWindow(1280, 800);
-    const main = browser.page.main();
-    const tabMenu = main.section.tabMenu;
-    const equations = main.section.equations;
+      browser.resizeWindow(1280, 800);
+      const main = browser.page.main();
+      const tabMenu = main.section.tabMenu;
+      const equations = main.section.equations;
 
-    main.navigate();
-    // tabMenu.click("@functions");
-    equations.setCartesian(String.raw`x^2`, String.raw`\sin (y)`);
-    browser.waitForElementVisible('body');
-    browser.pause(1000);
-    browser.saveScreenshot(`tests/comparison/img/${funcName}_dodep.png`);
+      main.navigate();
+      console.log(settings)
+      equations.setCartesian(settings.dx, settings.dy, settings);
+      browser.waitForElementVisible('body');
+      browser.pause(500);
+      browser.saveScreenshot(`tests/comparison/img/${funcName}_dodep.png`);
 
-    resultHTML += `
+      resultHTML += `
     <img src="img/${funcName}_dodep.png">
     <img src="img/${funcName}_matplotlib.png">`;
+    }
 
     fs.readFile('tests/comparison/index.html', 'utf8', (err, data) => {
       if (err) return console.log(err);
