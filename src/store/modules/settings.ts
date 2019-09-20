@@ -175,9 +175,10 @@ const actions = {
 
 const getters = {};
 
-export default {
+const Settings = {
   state: loadState(),
   mutations,
   actions,
   getters
 };
+export default Settings;

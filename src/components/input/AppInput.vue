@@ -3,6 +3,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { VNode } from "vue";
 import { Store } from "vuex";
 import { get, omit } from "lodash";
+// eslint-disable-next-line import/extensions, import/no-unresolved
 import { NormalizedScopedSlot } from "vue/types/vnode";
 
 export interface FunctionalRenderingContext {

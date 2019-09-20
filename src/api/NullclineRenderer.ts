@@ -1,4 +1,3 @@
-import ODEEstimator from "@/api/ODEEstimator";
 import {
   ProgramInfo,
   createProgramInfo,
@@ -12,12 +11,13 @@ import {
   createTexture,
   setTextureFromArray
 } from "twgl.js";
+import chroma from "chroma-js";
+import ODEEstimator from "@/api/ODEEstimator";
 import { Settings } from "@/store/modules/settings";
 // @ts-ignore
 import nullclineFrag from "./shaders/webgl1/nullcline.frag";
 // @ts-ignore
 import nullclineVert from "./shaders/webgl1/nullcline.vert";
-import chroma from "chroma-js";
 
 export default class NullclineRenderer {
   private readonly gl: WebGLRenderingContext;

@@ -8,16 +8,15 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import MathLive from "mathlive";
-import * as mathlive from "mathlive";
 
 @Component
 export default class AppMathInput extends Vue {
-  @Prop({ default: "" }) public id: string;
-  @Prop({ default: "" }) public label: string;
-  @Prop({ default: "" }) public value: string;
-  @Prop({ default: () => {} }) public config: object;
+  @Prop({ default: "" }) public id!: string;
+  @Prop({ default: "" }) public label!: string;
+  @Prop({ default: "" }) public value!: string;
+  @Prop({ default: () => {} }) public config!: object;
 
-  public $refs: {
+  public $refs!: {
     mathfield: HTMLDivElement;
     label: HTMLDivElement;
   };
@@ -25,18 +24,18 @@ export default class AppMathInput extends Vue {
   public mounted() {
     MathLive.makeMathField(this.$refs.mathfield, {
       virtualKeyboardMode: "off",
-      onFocus: (mathfield: mathlive.IMathField) => {
+      onFocus: (mathfield: MathLive.IMathField) => {
         this.$refs.mathfield.classList.add("focus");
         this.$emit("focus", mathfield);
       },
 
-      onBlur: (mathfield: mathlive.IMathField) => {
+      onBlur: (mathfield: MathLive.IMathField) => {
         this.$refs.mathfield.classList.remove("focus");
         this.$emit("focus", mathfield);
       },
 
       onKeystroke: (
-        mathfield: mathlive.IMathField,
+        mathfield: MathLive.IMathField,
         keystroke: string,
         ev: Event
       ) => {
@@ -44,7 +43,7 @@ export default class AppMathInput extends Vue {
         return true;
       },
 
-      onContentDidChange: (mathfield: mathlive.IMathField) => {
+      onContentDidChange: (mathfield: MathLive.IMathField) => {
         this.$emit("input", mathfield);
         return true;
       }

@@ -42,9 +42,15 @@
         <template v-slot:body>
           <div class="input-grid column3">
             <template v-for="name in savesList">
-              <div class="grid-start">{{ name }}</div>
-              <button @click="load(name)" class="positive">load</button>
-              <button @click="removeSave(name)" v-if="name !== 'default'">
+              <div class="grid-start" :key="name + 'name'">{{ name }}</div>
+              <button @click="load(name)" class="positive" :key="name + 'load'">
+                load
+              </button>
+              <button
+                @click="removeSave(name)"
+                v-if="name !== 'default'"
+                :key="name + 'del'"
+              >
                 remove
               </button>
             </template>
@@ -80,7 +86,7 @@
         <option>png</option>
         <option>jpg</option>
         <option>pdf</option>
-        <option>svg</option>
+        <!--        <option>svg</option>-->
       </select>
       <button class="width2" @click="downloadImage">Download</button>
     </app-input-panel>
@@ -109,6 +115,12 @@ import {
   loadSave,
   removeSave
 } from "@/api/SaveDatabase";
+import {
+  downloadAsGIF,
+  downloadAsJPG,
+  downloadAsPNG
+} from "@/api/DownloadHandler";
+import plot from "@/store/modules/plot";
 
 interface File {
   text: Promise<string>;
@@ -141,10 +153,18 @@ export default class AppExportMenu extends Vue {
   };
 
   private downloadImage() {
+    const plot = document.querySelector("canvas")!;
+    const grid = document.querySelector("svg")!;
+    if (this.imgType === "png") {
+      downloadAsPNG(plot, grid);
+    } else if (this.imgType === "jpg") {
+      downloadAsJPG(plot, grid);
+    }
     console.log("Downloading image as " + this.imgType);
   }
 
   private downloadVideo() {
+    downloadAsGIF();
     console.log("Downloading video as " + this.videoType);
   }
   private openSaveModal() {

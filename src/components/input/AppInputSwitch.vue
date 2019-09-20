@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import settings, { IViewbox } from "@/store/modules/settings";
 import { VNode } from "vue";
 import { Store } from "vuex";
 import { get, omit } from "lodash";
+import settings, { IViewbox } from "@/store/modules/settings";
 import AppInput, {
   FunctionalRenderingContext
 } from "@/components/input/AppInput.vue";

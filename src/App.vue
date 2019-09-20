@@ -18,8 +18,8 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import AppPlot from "./components/AppPlot.vue";
 import AppSideBar from "./components/AppSideBar.vue";
 import AppTitleBar from "./components/AppTitleBar.vue";
-import ModularPanes from "./components/ModularPanes";
-import ModularPane from "./components/ModularPane";
+import ModularPanes from "./components/ModularPanes.vue";
+import ModularPane from "./components/ModularPane.vue";
 import AppControlBar from "@/components/AppControlBar.vue";
 // import { Multipane, MultipaneResizer } from 'vue-multipane';
 

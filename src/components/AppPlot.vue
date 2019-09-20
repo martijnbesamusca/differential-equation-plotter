@@ -36,8 +36,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { State } from "vuex-class-component";
-import PlotRenderer from "@/api/PlotRenderer";
 import { cloneDeep, throttle } from "lodash";
+import PlotRenderer from "@/api/PlotRenderer";
 
 @Component({})
 export default class AppPlot extends Vue {
