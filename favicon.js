@@ -1,7 +1,8 @@
+const fs = require('fs');
 const favicons = require('favicons'),
     source = 'src/assets/original.png',                     // Source image(s). `string`, `buffer` or array of `string`
     configuration = {
-        path: "public/img/icons",                                // Path for overriding default icons path. `string`
+        path: "public/img/icons/",                                // Path for overriding default icons path. `string`
         appName: 'dODEp',                            // Your application's name. `string`
         appShortName: null,                       // Your application's short_name. `string`. Optional. If not set, appName will be used
         appDescription: 'A dynamic ordinary differential equation plotter',                     // Your application's description. `string`
@@ -49,6 +50,10 @@ const favicons = require('favicons'),
         console.log(response.images);   // Array of { name: string, contents: <buffer> }
         console.log(response.files);    // Array of { name: string, contents: <string> }
         console.log(response.html);     // Array of strings (html elements)
+        for(const image of response.images) {
+            console.log('writing: ' + image.name)
+            fs.writeFile('public/img/icons/' + image.name, image.contents);
+        }
     };
 
 favicons(source, configuration, callback);
