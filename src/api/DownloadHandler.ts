@@ -107,7 +107,7 @@ function executeDownloadAsJPG(source: HTMLCanvasElement) {
   a.remove();
 }
 
-async function drawToCanvas(plot: HTMLCanvasElement, grid: SVGElement) {
+function drawToCanvas(plot: HTMLCanvasElement, grid: SVGElement) {
   const gridCopy = grid.cloneNode(true) as SVGElement;
   inlineStyle(gridCopy, grid);
 
@@ -120,7 +120,7 @@ async function drawToCanvas(plot: HTMLCanvasElement, grid: SVGElement) {
   const drawCTX = drawCanvas.getContext("2d")!;
   drawCTX.drawImage(plot, 0, 0);
 
-  await drawSVGToCanvas(drawCanvas, gridCopy);
+  drawSVGToCanvas(drawCanvas, gridCopy);
   return drawCanvas;
 }
 
@@ -137,56 +137,63 @@ export async function downloadAsJPG(plot: HTMLCanvasElement, grid: SVGElement) {
   drawCanvas.remove();
 }
 
-export async function downloadAsGIF() {
-  let frameI = 0;
-  let frameMod = 0;
-  const frameSkip = 2;
-  const length = 5;
-  const fps = 20;
-  const plot = store.state.plot.plot;
-  const gif = new GIF({
-    workers: 1,
-    quality: 10,
-    workerScript: "lib/gif.js/gif.worker.js"
-  });
-  gif.on("finished", finishGIF);
-  function finishGIF(blob: Blob) {
-    const a = document.createElement("a");
+function createVideoStream(plot: HTMLCanvasElement, grid: SVGElement, duration: number) {
+  const gridCopy = grid.cloneNode(true) as SVGElement;
+  inlineStyle(gridCopy, grid);
+
+  const gridCanvas = document.createElement("canvas");
+  const drawCanvas = document.createElement("canvas");
+
+  const bbox = grid.getBoundingClientRect();
+  gridCanvas.width = bbox.width;
+  gridCanvas.height = bbox.height;
+  drawCanvas.width = bbox.width;
+  drawCanvas.height = bbox.height;
+
+  const drawCTX = drawCanvas.getContext("2d")!;
+  drawSVGToCanvas(gridCanvas, gridCopy);
+  drawCTX.fillStyle = 'white';
+  let stop = false;
+  function draw() {
+    if(stop) return;
+    drawCTX.fillRect(0,0, bbox.width, bbox.height);
+    drawCTX.drawImage(plot, 0, 0);
+    drawCTX.drawImage(gridCanvas, 0, 0);
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+  setTimeout(() => stop = true, duration);
+
+  return drawCanvas;
+}
+
+export async function downloadAsWebM(mimeType:string, duration: number, plot: HTMLCanvasElement, grid: SVGElement) {
+  // const duration = 5000;
+  const merge = createVideoStream(plot, grid, duration);
+  const stream = merge.captureStream(24);
+  const recorder = new MediaRecorder(stream, { 'mimeType' : mimeType });
+  let ext = '';
+  if(mimeType.startsWith('video/webm')) {
+    ext = 'webm';
+  } else if (mimeType.startsWith('video/x-matroska')) {
+    ext = 'mkv';
+  } else if (mimeType.startsWith('video/mp4')) {
+    ext = 'mp4';
+  }
+  const chunks: BlobPart[] = [];
+  setTimeout(() => recorder.stop(), duration);
+  recorder.onstop = (e) => {
+    const blob = new Blob(chunks, { 'type' : 'video/webm' });
     const url = URL.createObjectURL(blob);
-    a.download = "plot.gif";
+    const a = document.createElement("a");
     a.href = url;
+    a.download = 'plot_view.' + ext;
     a.click();
-    a.remove();
-  }
-
-  async function renderGIF(event: Event) {
-    frameMod++;
-    if (frameMod == frameSkip) {
-      frameMod = 0;
-    } else {
-      return;
-    }
-
-    store.commit("setPlaying", false);
-    if (frameI >= length * fps) {
-      plot.removeEventListener("render", renderGIF);
-      store.commit("setPlaying", true);
-      return;
-    }
-    frameI++;
-    const drawCanvas = await drawToCanvas(plot.canvas, plot.svg);
-    drawBackground(drawCanvas);
-    gif.addFrame(drawCanvas, {
-      delay: 1.0 / fps
-    });
-    drawCanvas.remove();
-
-    store.commit("setPlaying", true);
-    console.log("Render: " + frameI);
-    if (frameI == length * fps - 1) {
-      gif.render();
-    }
-  }
-  store.commit("setPlaying", true);
-  plot.addEventListener("render", renderGIF);
+  };
+  recorder.ondataavailable = function(e) {
+    console.log('data');
+    chunks.push(e.data);
+  };
+  recorder.start();
 }

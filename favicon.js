@@ -1,8 +1,9 @@
 const fs = require('fs');
 const favicons = require('favicons'),
-    source = 'src/assets/original.png',                     // Source image(s). `string`, `buffer` or array of `string`
+    source = 'src/assets/icon.svg',                     // Source image(s). `string`, `buffer` or array of `string`
     configuration = {
-        path: "public/img/icons/",                                // Path for overriding default icons path. `string`
+        path: "img/icons/",                                // Path for overriding default icons path. `string`
+        manifestRelativePaths: false,
         appName: 'dODEp',                            // Your application's name. `string`
         appShortName: null,                       // Your application's short_name. `string`. Optional. If not set, appName will be used
         appDescription: 'A dynamic ordinary differential equation plotter',                     // Your application's description. `string`
@@ -51,9 +52,40 @@ const favicons = require('favicons'),
         console.log(response.files);    // Array of { name: string, contents: <string> }
         console.log(response.html);     // Array of strings (html elements)
         for(const image of response.images) {
-            console.log('writing: ' + image.name)
-            fs.writeFile('public/img/icons/' + image.name, image.contents);
+            console.log('writing: ' + image.name);
+            fs.writeFile('public/img/icons/' + image.name, image.contents, (err)=>{
+                if (err) throw err;
+                console.log('Saved ' + image.name)
+            });
         }
+        for(const file of response.files) {
+            console.log('writing: ' + file.name);
+            fs.writeFile('public/' + file.name, file.contents, (err)=>{
+                if (err) throw err;
+                console.log('Saved ' + file.name)
+            });
+        }
+
+        fs.readFile('public/index.html', 'utf8', function (err,data) {
+            if (err) {
+                return console.log(err);
+            }
+
+            const html = [...response.html];
+            html.unshift('<!-- FAVICON PART -->');
+            html.push('<!-- END FAVICON PART -->');
+
+            let result = '    ' + data
+                .replace(/<!-- FAVICON PART -->((.|\n|\r)*)<!-- END FAVICON PART -->/, html.join('\n    '))
+                .replace('img/icons/manifest.json', 'manifest.json')
+                .replace('img/icons/browserconfig.xml', 'browserconfig.xml')
+                .replace('img/icons/yandex-browser-manifest.json', 'yandex-browser-manifest.json');
+
+            fs.writeFile('public/index.html', result, 'utf8', function (err) {
+                if (err) return console.log(err);
+            });
+        });
+
     };
 
 favicons(source, configuration, callback);

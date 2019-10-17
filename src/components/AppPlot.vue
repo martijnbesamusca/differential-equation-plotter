@@ -35,9 +35,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { State } from "vuex-class-component";
 import { cloneDeep, throttle } from "lodash";
 import PlotRenderer from "@/api/PlotRenderer";
+declare global {
+    interface Window { particleRenderer: PlotRenderer; }
+}
+
 
 @Component({})
 export default class AppPlot extends Vue {
@@ -46,9 +49,9 @@ export default class AppPlot extends Vue {
     grid: SVGElement;
   };
 
-  private particleRenderer: PlotRenderer;
+  private particleRenderer!: PlotRenderer;
 
-  private onResizeThrottled: (event?: Event) => null;
+  private onResizeThrottled!: (event?: Event) => void;
 
   public mounted() {
     this.particleRenderer = new PlotRenderer(
@@ -63,7 +66,7 @@ export default class AppPlot extends Vue {
 
     this.onResizeThrottled = throttle(this.onResize, 500, {
       leading: false
-    }) as (event?: Event) => null;
+    }) as (event?: Event) => void;
     addEventListener("resize", this.onResizeThrottled);
     document.addEventListener("fullscreenchange", event => {
       this.$store.commit("setFullscreen", document.fullscreenElement != null);

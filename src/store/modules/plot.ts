@@ -28,15 +28,15 @@ const mutations = {
 };
 
 const actions = {
-  playOrPause(context: object) {
+  playOrPause(context: any) {
     context.commit("setPlaying", !context.state.playing);
   },
 
-  initPlot(context: object, plot: PlotRenderer) {
+  initPlot(context: any, plot: PlotRenderer) {
     context.commit("setPlot", plot);
   },
 
-  requestFullscreen(context: object) {
+  requestFullscreen(context: any) {
     if (!context.state.plot) return;
     const isFullscreen = context.state.fullscreen;
     if (isFullscreen) return document.exitFullscreen();
