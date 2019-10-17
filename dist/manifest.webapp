@@ -1,0 +1,14 @@
+{
+  "version": "2.0",
+  "name": "dODEp",
+  "description": "A dynamic ordinary differential equation plotter",
+  "icons": {
+    "60": "img/icons/firefox_app_60x60.png",
+    "128": "img/icons/firefox_app_128x128.png",
+    "512": "img/icons/firefox_app_512x512.png"
+  },
+  "developer": {
+    "name": "Martijn Besamusca",
+    "url": null
+  }
+}
