@@ -5,6 +5,7 @@ module.exports = {
   /* ... other config ... */
   transpileDependencies: ["vuex-persist"],
   lintOnSave: true,
+  publicPath: '/differential-equation-plotter/',
   configureWebpack: {
     plugins: [
       new CopyWebpackPlugin([{
