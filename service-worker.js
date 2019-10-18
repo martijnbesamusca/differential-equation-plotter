@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.3341ba29a4ddf0a5a066ca59b2e91813.js"
+  "/differential-equation-plotter/precache-manifest.3b03f1e42f8877041385ea2dc16dc2d2.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "ode-plot"});
