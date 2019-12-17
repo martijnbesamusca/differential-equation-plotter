@@ -1,8 +1,13 @@
 const spawn = require("child_process").spawn;
 const fs = require('fs');
+const comparisons = require('./comparison.json');
 
 module.exports = {
   "Generate comparison cartesian graphs": function(browser) {
+    for (const [funcName, settings] of Object.entries(comparisons)) {
+      console.log(funcName);
+      console.log(settings);
+    }
     const funcName = 'bla';
     let resultHTML = '';
 
@@ -23,7 +28,7 @@ module.exports = {
     // tabMenu.click("@functions");
     equations.setCartesian(String.raw`x^2`, String.raw`\sin (y)`);
     browser.waitForElementVisible('body');
-    browser.pause(1000);
+    browser.pause(100);
     browser.saveScreenshot(`tests/comparison/img/${funcName}_dodep.png`);
 
     resultHTML += `

@@ -5,9 +5,9 @@
 
   <testsuite name="comparison"
     errors="0" failures="0" hostname="" id="" package="comparison" skipped="0"
-    tests="1" time="8.256" timestamp="">
+    tests="1" time="7.398" timestamp="">
   
-    <testcase name="Generate comparison cartesian graphs" classname="comparison" time="8.256" assertions="1">
+    <testcase name="Generate comparison cartesian graphs" classname="comparison" time="7.398" assertions="1">
 
     
     </testcase>

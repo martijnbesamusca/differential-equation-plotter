@@ -1,0 +1,18 @@
+{
+  "test": {
+    "dx": "sin(x) * cos(y)",
+    "dy": "x^2 + y^2",
+    "minX": -5,
+    "maxX": 5,
+    "minY": 3,
+    "maxY": 3
+  },
+  "test2": {
+    "dx": "sin(x + y)",
+    "dy": "x - y^2",
+    "minX": -5,
+    "maxX": 5,
+    "minY": 3,
+    "maxY": 3
+  }
+}
