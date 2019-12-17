@@ -16,12 +16,12 @@
 
 <script>
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import SettingsIcon from "vue-material-design-icons/Settings.vue";
 import AppSettingsMenu from "@/components/AppSettingsMenu.vue";
 import AppExportMenu from "@/components/AppExportMenu.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import AppTab from "@/components/AppTab.vue";
 import AppEquationMenu from "./AppEquationMenu.vue";
-import SettingsIcon from "vue-material-design-icons/Settings.vue";
 
 @Component({
   components: {

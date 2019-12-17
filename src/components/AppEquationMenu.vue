@@ -56,12 +56,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import MathLive from "mathlive";
 import AppMathInput from "@/components/input/AppMathInput.vue";
 import AppInputMatrix from "@/components/input/AppInputMatrix.vue";
 import AppTabs from "@/components/AppTabs.vue";
 import AppTab from "@/components/AppTab.vue";
 import { ODETypes } from "@/store/modules/settings";
-import MathLive from "mathlive";
 import { JSFunctionGen } from "@/api/MastonConvert";
 
 @Component({

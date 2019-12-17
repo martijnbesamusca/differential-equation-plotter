@@ -63,7 +63,7 @@ export const defaults: Settings = {
   nullclineXColor: "#c711ff",
   nullclineYEnable: true,
   nullclineYColor: "#ffbc03",
-  nullclineThreshold: 0.01,
+  nullclineThreshold: 0.001,
 
   drawFunctionBackground: false,
   useCached: false,
@@ -175,9 +175,10 @@ const actions = {
 
 const getters = {};
 
-export default {
+const Settings = {
   state: loadState(),
   mutations,
   actions,
   getters
 };
+export default Settings;

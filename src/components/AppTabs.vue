@@ -2,11 +2,12 @@
   <div class="tabs" ref="tabs">
     <ul class="menu">
       <li
-        v-for="(tab, i) in tabs"
+        v-for="tab in tabs"
         class="menuItem"
         :class="{ active: tab.activated }"
         @click="activate(tab)"
         :title="tab.$props.title"
+        :key="tab.$props.title"
       >
         <i ref="icon" v-if="tab.$props.icon" class="material-icons">{{
           tab.$props.icon
@@ -22,8 +23,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import AppTab from "@/components/AppTab.vue";
 import MathLive from "mathlive";
+import AppTab from "@/components/AppTab.vue";
 
 @Component({})
 export default class AppTabs extends Vue {

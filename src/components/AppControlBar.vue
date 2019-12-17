@@ -1,17 +1,21 @@
 <template>
-    <div id="app_control_bar" :class="{collapse: fullscreen}">
-        <span>x: {{ cursorX.toPrecision(3) }}, y: {{ cursorY.toPrecision(3) }}</span>
+  <div id="app_control_bar" :class="{ collapse: fullscreen }">
+    <span
+      >x: {{ cursorX.toPrecision(3) }}, y: {{ cursorY.toPrecision(3) }}</span
+    >
 
-        <span class="spacer"></span>
+    <span class="spacer"></span>
 
-        <i class="material-icons" id="refresh">refresh</i>
+    <i class="material-icons" id="refresh" @refresh="refresh">refresh</i>
 
-        <i class="material-icons" @click="playOrPause" v-if="playing">pause</i>
-        <i class="material-icons" @click="playOrPause" v-else>play_arrow</i>
+    <i class="material-icons" @click="playOrPause" v-if="playing">pause</i>
+    <i class="material-icons" @click="playOrPause" v-else>play_arrow</i>
 
-        <i class="material-icons" @click="openFullscreen" v-if="fullscreen">fullscreen_exit</i>
-        <i class="material-icons" @click="openFullscreen" v-else>fullscreen</i>
-    </div>
+    <i class="material-icons" @click="openFullscreen" v-if="fullscreen"
+      >fullscreen_exit</i
+    >
+    <i class="material-icons" @click="openFullscreen" v-else>fullscreen</i>
+  </div>
 </template>
 
 <script lang="ts">
@@ -39,9 +43,13 @@ export default class AppControlBar extends Vue {
     this.$store.dispatch("playOrPause");
   }
 
+  private refresh() {
+    location.reload(false); // TODO: Better refresh code (this is lazy)
+  }
+
   public mounted() {
     const viewbox = this.$store.state.settings.viewbox;
-    const canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     canvas.addEventListener("mousemove", e => {
       const { width, height } = canvas.getBoundingClientRect();
       this.cursorX =
@@ -54,45 +62,44 @@ export default class AppControlBar extends Vue {
 </script>
 
 <style scoped lang="scss">
+#app_control_bar {
+  background-color: #333;
+  color: #fff;
+  height: 2em;
+  line-height: 2em;
+  display: flex;
+  padding: 0 0.5em;
+  overflow-y: hidden;
 
-     #app_control_bar {
-         background-color: #333;
-         color: #fff;
-         height: 2em;
-         line-height: 2em;
-         display: flex;
-         padding: 0 0.5em;
-         overflow-y: hidden;
+  &.collapse {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+    background-color: transparent;
+    color: black;
+    font-weight: 700;
+    text-shadow: rgba(black, 0.8) 0 0 0.5em;
+  }
+}
 
-         &.collapse {
-             position: fixed;
-             bottom: 0;
-             width: 100%;
-             z-index: 10;
-             background-color: transparent;
-             color: black;
-             font-weight: 700;
-             text-shadow: rgba(black, 0.8) 0 0 .5em;
-         }
-     }
+#app_control_bar .material-icons {
+  line-height: unset;
+  font-size: 1.5em;
+  align-self: flex-end;
+  cursor: pointer;
+}
 
-     #app_control_bar .material-icons {
-         line-height: unset;
-         font-size: 1.5em;
-         align-self: flex-end;
-         cursor: pointer;
-     }
+#app_control_bar .spacer {
+  flex-grow: 1;
+}
 
-    #app_control_bar .spacer {
-        flex-grow: 1;
-    }
-
-    #refresh {
-        transform: rotate(0deg);
-        transition: transform 1s;
-        &:active {
-            transition: transform 0s;
-            transform: rotate(-360deg);
-        }
-    }
+#refresh {
+  transform: rotate(0deg);
+  transition: transform 1s;
+  &:active {
+    transition: transform 0s;
+    transform: rotate(-360deg);
+  }
+}
 </style>

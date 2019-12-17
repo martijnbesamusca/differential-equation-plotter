@@ -1,15 +1,16 @@
-import Settings, { IValKey } from "@/store/modules/settings";
-import NullclineRenderer from "@/api/NullclineRenderer";
-import store from "../store/";
 import { cloneDeep } from "lodash";
 import { m4 } from "twgl.js";
+import { IValKey } from "@/store/modules/settings";
+import NullclineRenderer from "@/api/NullclineRenderer";
+import store from "../store";
 import ArrowCloud from "@/api/ArrowCloud";
 import Grid from "@/api/Grid";
 import ODEEstimator from "@/api/ODEEstimator";
 import SolutionRenderer from "@/api/SolutionRenderer";
 
-export default class PlotRenderer {
+export default class PlotRenderer implements EventTarget {
   canvas: HTMLCanvasElement;
+  svg: SVGElement;
   private readonly gl: WebGLRenderingContext;
   // private cachedFunction: CachedFunction;
 
@@ -22,9 +23,17 @@ export default class PlotRenderer {
   private solutions: SolutionRenderer;
   private nullclines: NullclineRenderer;
 
+  private listeners: {
+    [s: string]: (EventListener | EventListenerObject)[];
+  } = {
+    render: []
+  };
+  private renderEvent = new Event("render");
+
   constructor(canvas: HTMLCanvasElement, svg: SVGElement, settings: any) {
     store.dispatch("initPlot", this);
     this.canvas = canvas;
+    this.svg = svg;
     this.settings = settings;
     this.grid = new Grid(svg, this.settings);
     this.ODEEstimator = new ODEEstimator();
@@ -35,7 +44,7 @@ export default class PlotRenderer {
       this.ODEEstimator
     );
 
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
     if (!gl) {
       alert("Need WebGL support");
     }
@@ -141,6 +150,41 @@ export default class PlotRenderer {
     if (this.arrowCloud) this.arrowCloud.render();
   }
 
+  public addEventListener(
+    type: string,
+    callback: EventListener | EventListenerObject | null,
+    options?: boolean | AddEventListenerOptions
+  ): void {
+    if (callback === null) return;
+
+    if (!(type in this.listeners)) {
+      this.listeners[type] = [];
+    }
+    this.listeners[type].push(callback);
+  }
+
+  public removeEventListener(
+    type: string,
+    callback: EventListener | EventListenerObject | null,
+    options?: EventListenerOptions | boolean
+  ): void {
+    if (!callback || !(type in this.listeners)) return;
+
+    const listeners = this.listeners[type];
+    const i = listeners.indexOf(callback);
+    if (i < 0) return;
+    listeners.splice(i, 1);
+  }
+
+  public dispatchEvent(event: Event): boolean {
+    if (!(event.type in this.listeners)) return true;
+    for (const listener of this.listeners[event.type]) {
+      // @ts-ignore
+      listener(event);
+    }
+    return !event.defaultPrevented;
+  }
+
   public render() {
     if (store.state.plot.playing) {
       this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -149,6 +193,7 @@ export default class PlotRenderer {
 
       this.nullclines.render();
       this.arrowCloud.render();
+      this.dispatchEvent(this.renderEvent);
     }
 
     requestAnimationFrame(() => this.render());

@@ -42,9 +42,15 @@
         <template v-slot:body>
           <div class="input-grid column3">
             <template v-for="name in savesList">
-              <div class="grid-start">{{ name }}</div>
-              <button @click="load(name)" class="positive">load</button>
-              <button @click="removeSave(name)" v-if="name !== 'default'">
+              <div class="grid-start" :key="name + 'name'">{{ name }}</div>
+              <button @click="load(name)" class="positive" :key="name + 'load'">
+                load
+              </button>
+              <button
+                @click="removeSave(name)"
+                v-if="name !== 'default'"
+                :key="name + 'del'"
+              >
                 remove
               </button>
             </template>
@@ -79,8 +85,8 @@
       <select id="imgtype" v-model="imgType">
         <option>png</option>
         <option>jpg</option>
-        <option>pdf</option>
-        <option>svg</option>
+<!--        <option>pdf</option>-->
+<!--        <option>svg</option>-->
       </select>
       <button class="width2" @click="downloadImage">Download</button>
     </app-input-panel>
@@ -88,9 +94,9 @@
     <app-input-panel title="Download video">
       <label for="videotype">File type</label>
       <select id="videotype" v-model="videoType">
-        <option>gif</option>
-        <option>mp4</option>
-        <option>webm</option>
+        <template v-for="(name, codec) in codecs" v-if="isVideoTypeSupported(codec)">
+          <option :value="codec">{{name}}</option>
+        </template>
       </select>
       <button class="width2" @click="downloadVideo">Download</button>
     </app-input-panel>
@@ -109,6 +115,11 @@ import {
   loadSave,
   removeSave
 } from "@/api/SaveDatabase";
+import {
+    downloadAsJPG,
+    downloadAsPNG, downloadAsWebM
+} from "@/api/DownloadHandler";
+import plot from "@/store/modules/plot";
 
 interface File {
   text: Promise<string>;
@@ -124,7 +135,13 @@ interface File {
 })
 export default class AppExportMenu extends Vue {
   private imgType = "png";
-  private videoType = "gif";
+  private videoType = "video/webm;codecs=vp9";
+  private codecs = {
+      'video/webm;codecs=vp9': 'webm (vp9)',
+      'video/webm;codecs=vp8': 'webm (vp8)',
+      'video/x-matroska;codecs=avc1': 'mkv (avc1)',
+      'video/mp4; codecs=avc1': 'mp4 (avc1)',
+  };
 
   private saveModalName = "my beautiful plot";
   private saveModalSettings = true;
@@ -140,11 +157,26 @@ export default class AppExportMenu extends Vue {
     loadModal: any;
   };
 
+  private isVideoTypeSupported(mimeType:string) {
+      return MediaRecorder.isTypeSupported(mimeType);
+  }
+
   private downloadImage() {
+    const plot = document.querySelector("canvas")!;
+    const grid = document.querySelector("svg")!;
+    if (this.imgType === "png") {
+      downloadAsPNG(plot, grid);
+    } else if (this.imgType === "jpg") {
+      downloadAsJPG(plot, grid);
+    }
     console.log("Downloading image as " + this.imgType);
   }
 
   private downloadVideo() {
+      const plot = document.querySelector("canvas")!;
+      const grid = document.querySelector("svg")!;
+    downloadAsWebM(this.videoType, 5000, plot, grid);
+    // downloadAsGIF();
     console.log("Downloading video as " + this.videoType);
   }
   private openSaveModal() {

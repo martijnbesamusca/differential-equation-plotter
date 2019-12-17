@@ -1,7 +1,7 @@
-import store from "../store/";
+import mathlive from "mathlive";
+import store from "../store";
 import { ODEAprox, ODETypes } from "@/store/modules/settings";
 import { MastonToJSFunction } from "@/api/MastonConvert";
-import mathlive from "mathlive";
 
 export interface ODEEstimatorObject {
   posX: number;
