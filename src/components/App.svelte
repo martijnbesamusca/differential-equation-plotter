@@ -5,14 +5,10 @@
     import Settings from './Settings.svelte';
     import Splitter from './splitter/Splitter.svelte';
     import Panel from './splitter/Panel.svelte';
-
 </script>
 
 <style>
     .main {
-        width: 100%;
-        height: 100%;
-        grid-template-rows: 5fr 1fr;
     }
 </style>
 
@@ -21,11 +17,11 @@
         <Plot />
         <ControlBar />
     </Panel>
-    <Panel>
+    <Panel size=1>
         <Title />
         <Settings />
     </Panel>
-    <Panel>
+    <Panel size=1>
         <Title />
         <Settings />
     </Panel>
