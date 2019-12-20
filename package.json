@@ -1,0 +1,45 @@
+{
+  "name": "DoDeP",
+  "description": "A dynamic ODE plotter",
+  "version": "4.0.0",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c",
+    "autobuild": "rollup -c -w",
+    "dev": "run-p start:dev autobuild",
+    "start": "sirv public",
+    "start:dev": "sirv public --dev",
+    "test": "nightwatch"
+  },
+  "dependencies": {
+    "mathlive": "^0.33.2",
+    "normalize.css": "^8.0.1",
+    "postcss": "^7.0.21",
+    "twgl.js": "^4.14.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "chromedriver": "^79.0.0",
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "favicons": "^5.5.0",
+    "geckodriver": "^1.19.1",
+    "nightwatch": "^1.3.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.19.1",
+    "rollup": "^1.27.13",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-livereload": "^1.0.4",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-svelte": "^5.1.1",
+    "rollup-plugin-terser": "^5.1.3",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "sirv-cli": "^0.4.5",
+    "svelte": "^3.16.4",
+    "svelte-preprocess": "^3.2.6",
+    "typescript": "^3.7.3"
+  }
+}
