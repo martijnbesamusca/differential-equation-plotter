@@ -1,4 +1,5 @@
 <script lang="typescript">
+  import Tabs from "./Tabs.svelte";
 </script>
 
 <style>
@@ -6,3 +7,6 @@
         color: blue
     }
 </style>
+
+<Tabs>
+</Tabs>

@@ -9,20 +9,30 @@
 
 <style>
     .main {
+      height: 100vh;
+    }
+    .plotContainer {
+      width: 100%;
+      height: calc(100% - 1.2em);
+    }
+    .barContainer {
+      height: 1.2em;
     }
 </style>
 
-<Splitter class="main">
-    <Panel minWidth="20em" size=5>
-        <Plot />
-        <ControlBar />
+<div class="main">
+  <Splitter>
+    <Panel minWidth="20em" size=7>
+        <div class="plotContainer">
+            <Plot />
+        </div>
+        <div class="barContainer">
+            <ControlBar />
+        </div>
     </Panel>
-    <Panel size=1>
+    <Panel minWidth="15em" size=2>
         <Title />
         <Settings />
     </Panel>
-    <Panel size=1>
-        <Title />
-        <Settings />
-    </Panel>
-</Splitter>
+    </Splitter>
+</div>
