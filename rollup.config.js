@@ -1,36 +1,58 @@
-
-import svelte from 'rollup-plugin-svelte';
-import sveltePreprocessor from "svelte-preprocess"
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs'
-import livereload from 'rollup-plugin-livereload'
+import svelte from "rollup-plugin-svelte";
+import resolve from "rollup-plugin-node-resolve";
+import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
+import typescript from "rollup-plugin-typescript2";
+
+import {
+    preprocess,
+    createEnv,
+    readConfigFile
+} from "@pyoner/svelte-ts-preprocess";
+
+const production = !process.env.ROLLUP_WATCH;
+
+const env = createEnv();
+const compilerOptions = readConfigFile(env);
+const opts = {
+    env,
+    compilerOptions: {
+        ...compilerOptions,
+        allowNonTsExtensions: true
+    }
+};
 
 export default {
-    input: 'src/main.ts',
+    input: "src/main.ts",
     output: {
-        name: 'DoDeP',
         sourcemap: true,
-        format: 'iife',
-        file: 'public/bundle.js',
+        format: "iife",
+        name: "app",
+        file: "public/bundle.js"
     },
     plugins: [
-        // typescript({tsconfigFile: 'tsconfig.json'}),
+        typescript(),
         svelte({
-
-            dev: process.env.NODE_ENV === "development",
-            extensions: [".svelte"],
-            preprocess: sveltePreprocessor(),
-
+            // enable run-time checks when not in production
+            dev: !production,
+            // we'll extract any component CSS out into
+            // a separate file — better for performance
             css: css => {
-                css.write('public/bundle.css')
+                css.write("public/bundle.css");
             },
-
+            preprocess: preprocess(opts)
         }),
+
+        // If you have external dependencies installed from
+        // npm, you'll most likely need these plugins. In
+        // some cases you'll need additional configuration —
+        // consult the documentation for details:
+        // https://github.com/rollup/rollup-plugin-commonjs
         resolve(),
         commonjs(),
 
-        !production && livereload('public'),
-        production && terser(),
+        // If we're building for production (npm run build
+        // instead of npm run dev), minify
+        production && terser()
     ]
-}
+};

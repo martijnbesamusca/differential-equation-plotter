@@ -30,7 +30,7 @@
 
 <script lang="typescript">
     import { onMount } from 'svelte';
-    import {handle, IHandle, UpdateEvent} from '../../api/ui/handle'
+    import {handle, IHandle, UpdateEvent} from '/src/api/ui/handle'
 
     const RES = 1000;
     let splitter: HTMLDivElement;

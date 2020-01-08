@@ -1,5 +1,4 @@
 import NumberFormat = Intl.NumberFormat;
-
 export default class NumberFormatter {
     maxSize: number;
     maxNumber: number;

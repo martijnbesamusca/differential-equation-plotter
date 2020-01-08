@@ -11,19 +11,19 @@
     background-color: orange;
   }
 </style>
-<script lang="ts">
+<script lang="typescript">
   import { onMount } from 'svelte';
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
   let resizeObserver = new ResizeObserver(debounce(entries => {
     canvas.width = Math.floor(entries[0].contentRect.width);
     canvas.height = Math.floor(entries[0].contentRect.height);
-  }), 1000);
+  }, 100, false));
 
   onMount(async () => {
     resizeObserver.observe(container);
   });
-  function debounce(func, wait, immediate) {
+  function debounce(func: Function, wait: number, immediate: boolean) {
     var timeout;
     return function() {
       var context = this, args = arguments;

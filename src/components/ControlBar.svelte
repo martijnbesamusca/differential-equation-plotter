@@ -1,5 +1,5 @@
-<script>
-  import NumberFormatter from "../api/ui/numberFormatter";
+<script lang="typescript">
+  import NumberFormatter from "../../api/ui/numberFormatter";
 
   let x = 0;
   let y = 0;
