@@ -1,9 +1,3 @@
-import App from './components/App.svelte';
-
-const app = new App({
-    target: document.body,
-    props: {
-    }
-});
-
-export default app;
+// import * as component from './components'
+import './main.scss'
+import './components/index'

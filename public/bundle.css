@@ -1,10 +1,39 @@
-.main.svelte-1tpqk9o{height:100vh}.plotContainer.svelte-1tpqk9o{width:100%;height:calc(100% - 1.2em)}.barContainer.svelte-1tpqk9o{height:1.2em}
-.title.svelte-ntgioo{padding:1em}.title.svelte-ntgioo h1.svelte-ntgioo{margin:0}.title.svelte-ntgioo h2.svelte-ntgioo{margin:0;font-weight:normal;font-size:1.2em}.title.svelte-ntgioo h3.svelte-ntgioo{margin:0;font-size:.8em;font-weight:lighter}
-.bar.svelte-71d4f{background-color:#333333;height:1em;padding:0 .5em;display:grid;grid-template-columns:1fr auto}.left.svelte-71d4f{}
-.plot.svelte-170a5ye{width:100%;height:100%;overflow:hidden}canvas.svelte-170a5ye{position:absolute;background-color:orange}
-.panel.svelte-evvaga{height:100%;background-color:#333333}
-.splitter.svelte-7q1eh4{height:100%;width:100%;display:grid}.handle.svelte-7q1eh4{display:block;background-color:white;width:100%;height:100%;box-shadow:0 0 0.5em 0 black;grid-row-start:1}.handle.svelte-7q1eh4::before{content:'';box-sizing:border-box;position:absolute;background-color:white;height:3em;width:0.8em;margin-left:-0.4em;border-radius:.4em;top:50%;cursor:w-resize}
-.tabs.svelte-1y0oxou{}.nav.svelte-1y0oxou{display:grid;grid-template-columns:auto auto auto;background-color:#151515;padding:.5em 0}.navItem.svelte-1y0oxou{display:inline-block;text-align:center;cursor:pointer}.navItemIcon.svelte-1y0oxou{display:inline-block}.navItemText.svelte-1y0oxou{display:inline-block;transform:scaleX(0);transform-origin:left;width:0;overflow:hidden;transition:transform ease 0.5s,
-        width ease 0.5s}.navItem.svelte-1y0oxou:hover .navItemText.svelte-1y0oxou{transform:scaleX(1);width:auto}
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+html, body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+}
 
-/*# sourceMappingURL=bundle.css.map */
+body {
+  display: grid;
+  grid-template-columns: 5fr minmax(20em, 1fr);
+  background-color: #202020;
+  color: #fff;
+}
+
+.col {
+  display: grid;
+  height: 100vh;
+}
+.col.left {
+  grid-template-rows: 1fr 2em;
+}
+.col.right {
+  grid-template-rows: auto 1fr;
+}
+
+.title_container {
+  background-color: #303030;
+}
+
+.settings_container {
+  overflow: auto;
+  box-shadow: 0 0 0.5em 0 rgba(0, 0, 0, 0.5);
+}
+
+.plot_container {
+  height: 100%;
+  width: 100%;
+}
