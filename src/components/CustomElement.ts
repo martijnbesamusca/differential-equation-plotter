@@ -10,6 +10,11 @@ export abstract class CustomElement extends HTMLElement {
         this.defineRef();
     }
 
+    connectedCallback() {
+        this.dispatchEvent(connectedEvent);
+    }
+
+
     private defineRef() {
         const bound = this.shadowRoot!.querySelectorAll('[ref]');
         bound.forEach(elm => {
@@ -23,8 +28,10 @@ export abstract class CustomElement extends HTMLElement {
     abstract render(): DocumentFragment;
 }
 
+export const connectedEvent  = new Event('connected');
+
 export function html(strings: TemplateStringsArray, ...expr: string[]): DocumentFragment {
-    let string = strings.reduce((acc, val)=> acc + expr.pop() + (val || ''));
+    let string = strings.reduce((acc, val)=> acc + expr.shift() + (val || ''));
     const container = document.createElement('template');
     container.innerHTML = string;
     return container.content;

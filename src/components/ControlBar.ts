@@ -1,5 +1,7 @@
 import {html, CustomElement} from './CustomElement'
 import NumberFormatter from '../api/ui/numberFormatter';
+import state from "../api/store/state";
+import {screenToGrid, Axis} from "../api/grid";
 
 export default class ControlBar extends CustomElement {
     private _x = 0;
@@ -10,6 +12,9 @@ export default class ControlBar extends CustomElement {
         super();
         this.x = 0;
         this.y = 0;
+
+        state.subscribe('mouse_x', val => this.x = screenToGrid(val, Axis.x));
+        state.subscribe('mouse_y', val => this.y = screenToGrid(val, Axis.y));
     }
 
     set x(val: number) {

@@ -1,8 +1,19 @@
 import {CustomElement, html} from './CustomElement';
+import settings from '../api/store/settings'
 
 export default class SettingBar extends CustomElement {
     constructor() {
         super();
+    }
+
+    makeInput(section: string, key: string, name: string, type: string='text') {
+        const id = `${section}_${key}`;
+        this.addEventListener('connected', () => {
+            // debugger;
+            // @ts-ignore
+            settings[section].bindTo(key, this.refs[id] as HTMLInputElement);
+        });
+        return `<label for="${id}">${name}</label><div class="input"><input id="${id}" type="${type}" ref="${id}"/><div class="reset"></div></div>`
     }
 
     render() {
@@ -11,7 +22,17 @@ export default class SettingBar extends CustomElement {
             <div class="bar">
             <h2>Settings</h2>
             <foldable-panel>
+              <h3 slot="title">Window</h3>
+              <div class="input_container">  
+              ${this.makeInput('window', 'min_x', 'min x', 'number')}
+              ${this.makeInput('window', 'max_x', 'max x', 'number')}
+              ${this.makeInput('window', 'min_y', 'min y', 'number')}
+              ${this.makeInput('window', 'max_y', 'max y', 'number')}
+              </div>
+            </foldable-panel>
+            <foldable-panel>
               <h3 slot="title">test subject</h3>
+              
               <div class="input_container">  
                 <label>${test}</label>
                 <div class="input"><input /><div class="reset"></div></div>

@@ -1,7 +1,7 @@
 import {CustomElement, html} from './CustomElement';
 
 export default class FoldablePanel extends CustomElement {
-    private closed = true;
+    private closed = false;
     constructor() {
         super();
         this.refs.title.addEventListener('click', e => {
@@ -58,12 +58,12 @@ export default class FoldablePanel extends CustomElement {
                 padding: .5em 1em;
                 height: auto;
                 transform-origin: top center;
-                transition: all ease 200ms;
+                transition: padding cubic-bezier(0.175, 0.885, 0.32, 1.275) 200ms;
                 display: block;
               }
               .closed ::slotted(div) {
                 height: 0 !important;
-                padding: 0 !important;
+                padding: 0 1em !important;
                 overflow: hidden;
               }
             </style>

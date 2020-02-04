@@ -1,10 +1,7 @@
-// import svelte from "rollup-plugin-svelte";
-// import resolve from "rollup-plugin-node-resolve";
-// import commonjs from "rollup-plugin-commonjs";
-// import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 import html from 'rollup-plugin-bundle-html';
 import sass from 'rollup-plugin-sass';
+import { string } from "rollup-plugin-string";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -17,6 +14,9 @@ export default {
         file: "public/bundle.js"
     },
     plugins: [
+        string({
+            include: ['src/shaders/*.frag', 'src/shaders/*.vert']
+        }),
         typescript(),
         html({
             template: 'src/index.html',

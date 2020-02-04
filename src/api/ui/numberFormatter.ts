@@ -11,15 +11,21 @@ export default class NumberFormatter {
         this.maxSize = maxSize;
         this.minNumber = Math.max(-(10**maxSize), Number.MIN_SAFE_INTEGER);
         this.maxNumber = Math.min(10**(maxSize+1), Number.MAX_SAFE_INTEGER);
-        this.normalFmt = new NumberFormat('us', {
-            minimumSignificantDigits: minSize
+        this.normalFmt = new NumberFormat('en-IN', {
+            minimumSignificantDigits: minSize,
+            maximumSignificantDigits: maxSize,
+            minimumIntegerDigits: 1,
+            maximumFractionDigits: maxSize - 2,
         });
         this.exponentFmt = new NumberFormat(
-            'us',
+            'en-IN',
             {
-                // style: '',
+                // @ts-ignore ts has not implemented this yet
+                notation: 'scientific',
                 minimumSignificantDigits: minSize,
-                maximumSignificantDigits: maxSize
+                maximumSignificantDigits: maxSize,
+                minimumIntegerDigits: 1,
+                maximumFractionDigits: maxSize - 1,
             }
         );
 
