@@ -2,6 +2,7 @@ import typescript from "rollup-plugin-typescript2";
 import html from 'rollup-plugin-bundle-html';
 import sass from 'rollup-plugin-sass';
 import { string } from "rollup-plugin-string";
+import resolve from 'rollup-plugin-node-resolve';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -17,6 +18,7 @@ export default {
         string({
             include: ['src/shaders/*.frag', 'src/shaders/*.vert']
         }),
+        resolve(),
         typescript(),
         html({
             template: 'src/index.html',

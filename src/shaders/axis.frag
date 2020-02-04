@@ -1,10 +1,9 @@
 #version 300 es
 
-in vec2 a_position;
-in vec2 a_position;
+precision mediump float;
 
-uniform mat3 u_matrix;
+out vec4 o_color;
 
 void main() {
-    gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);
+    o_color = vec4(1, 0, 0, 1);  // red
 }

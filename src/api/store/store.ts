@@ -1,7 +1,7 @@
 
 
 type callback = (val: any)=>void
-export default class Store<State extends object> {
+export default class Store<State extends object, Key extends keyof State> {
     private vals: State;
     private initial: State;
     private subscribers: {[key in keyof State]: callback[]};
@@ -18,7 +18,7 @@ export default class Store<State extends object> {
         }
     }
 
-    bindTo(key: keyof State, elm: HTMLInputElement) {
+    bindTo(key: Key, elm: HTMLInputElement) {
         this.binds[key] = elm;
         elm.addEventListener('change', () => {
             let val: any = elm.value;
@@ -35,7 +35,7 @@ export default class Store<State extends object> {
     //     this.binds[key] = undefined;
     // }
 
-    set(key: keyof State, val: any) {
+    set(key: Key, val: any) {
         if(this.binds[key]) {
             this.binds[key].value = val;
         } else {
@@ -50,7 +50,7 @@ export default class Store<State extends object> {
         }
     }
 
-    get(key: keyof State) {
+    get(key: Key): State[Key]{
         return this.vals[key];
     }
 
