@@ -112,7 +112,7 @@
         // Triangle 2
         vertices[index_offset + 6] = startX + width / 2;
         vertices[index_offset + 7] = settings.window.get('max_y');
-        vertices[index_offset + 8] = startX + width / 2;
+        vertices[index_offset + 8] = startX - width / 2;
         vertices[index_offset + 9] = settings.window.get('max_y');
         vertices[index_offset + 10] = startX - width / 2;
         vertices[index_offset + 11] = settings.window.get('min_y');
@@ -3659,20 +3659,43 @@
         }
         updateVertices() {
             const vertices = new Float32Array(vert_line_length);
-            vert_line(vertices, 0, 0, 3, 0);
+            vert_line(vertices, 0, 0, 1, 0);
             console.log(vertices);
             const arrays = {
                 position: { numComponents: 2, data: vertices }
             };
             this.bufferInfo = createBufferInfoFromArrays(this.gl, arrays);
+            console.log(this.bufferInfo);
         }
         updateUniform() {
+            console.log(this.gl.canvas.width, this.gl.canvas.height);
+            debugger;
+            this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
             this.uniforms.u_screen = m4.ortho(-this.gl.canvas.width / 2, this.gl.canvas.width / 2, -this.gl.canvas.height / 2, this.gl.canvas.height / 2, -1, 1);
+            // this.uniforms.u_screen = m4.ortho(
+            //     0,
+            //     this.gl.canvas.width,
+            //     0,
+            //     this.gl.canvas.height,
+            //     -1,
+            //     1
+            // );
             this.uniforms.u_camera = m4.ortho(settings.window.get('min_x'), settings.window.get('max_x'), settings.window.get('min_y'), settings.window.get('max_y'), -1, 1);
+            this.draw();
+        }
+        drawRect(x, y, width, height, color) {
+            this.gl.scissor(x, y, width, height);
+            this.gl.clearColor(...color);
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         }
         draw() {
             if (!this.bufferInfo)
                 return;
+            this.gl.clearColor(1, 1, 1, 1);
+            this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+            this.gl.disable(this.gl.DEPTH_TEST);
+            this.gl.enable(this.gl.SCISSOR_TEST);
             this.gl.useProgram(this.programInfo.program);
             setBuffersAndAttributes(this.gl, this.programInfo, this.bufferInfo);
             setUniforms(this.programInfo, this.uniforms);
@@ -3705,6 +3728,11 @@
                 this.canvas.height = height;
                 state$1.set("canvas_width", width);
                 state$1.set("canvas_height", height);
+                if (this.gridDisp) {
+                    this.gridDisp.updateUniform();
+                    //TODO: remove
+                    this.draw();
+                }
             });
             resizeObserver.observe(this);
             this.canvas.addEventListener('pointermove', e => {
@@ -3715,7 +3743,7 @@
         connectedCallback() {
             super.connectedCallback();
             const canvas = this.refs.canvas;
-            let gl = canvas.getContext('webgl2');
+            let gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true });
             if (!gl) {
                 console.log('Trying webgl v1');
                 gl = canvas.getContext('webgl');
@@ -3728,7 +3756,7 @@
             requestAnimationFrame(this.draw.bind(this));
         }
         draw() {
-            requestAnimationFrame(this.draw.bind(this));
+            // requestAnimationFrame(this.draw.bind(this))
             this.gridDisp.draw();
         }
         render() {
@@ -3742,7 +3770,7 @@
               canvas {
                 display:block;
                 position:absolute;
-                background-color: white;
+                /*background-color: white;*/
               }
             </style>
         `;

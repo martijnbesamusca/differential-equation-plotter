@@ -17,7 +17,7 @@ export function vert_line(vertices: Float32Array, startX: number, endX: number, 
     vertices[index_offset + 6] = startX + width / 2;
     vertices[index_offset + 7] = settings.window.get('max_y') as number;
 
-    vertices[index_offset + 8] = startX + width / 2;
+    vertices[index_offset + 8] = startX - width / 2;
     vertices[index_offset + 9] = settings.window.get('max_y') as number;
 
     vertices[index_offset + 10] = startX - width / 2;

@@ -16,6 +16,11 @@ export default class PlotDisplay extends CustomElement {
             this.canvas.height = height;
             state.set("canvas_width", width);
             state.set("canvas_height", height);
+            if(this.gridDisp) {
+                this.gridDisp.updateUniform();
+                //TODO: remove
+                this.draw();
+            }
         });
         resizeObserver.observe(this);
 
@@ -28,7 +33,7 @@ export default class PlotDisplay extends CustomElement {
     connectedCallback() {
         super.connectedCallback();
         const canvas = this.refs.canvas as HTMLCanvasElement;
-        let gl: WebGLRenderingContext | WebGL2RenderingContext | null = canvas.getContext('webgl2');
+        let gl: WebGLRenderingContext | WebGL2RenderingContext | null = canvas.getContext('webgl2', { preserveDrawingBuffer: true });
         if (!gl) {
             console.log('Trying webgl v1');
             gl = canvas.getContext('webgl');
@@ -42,7 +47,7 @@ export default class PlotDisplay extends CustomElement {
     }
 
     draw() {
-        requestAnimationFrame(this.draw.bind(this))
+        // requestAnimationFrame(this.draw.bind(this))
         this.gridDisp!.draw()
     }
 
@@ -57,7 +62,7 @@ export default class PlotDisplay extends CustomElement {
               canvas {
                 display:block;
                 position:absolute;
-                background-color: white;
+                /*background-color: white;*/
               }
             </style>
         `;

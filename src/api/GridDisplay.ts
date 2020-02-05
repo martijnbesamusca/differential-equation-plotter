@@ -35,16 +35,19 @@ export default class GridDisplay {
 
     updateVertices() {
         const vertices = new Float32Array(vert_line_length);
-        vert_line(vertices, 0, 0, 3, 0);
+        vert_line(vertices, 0, 0, 1, 0);
         console.log(vertices);
         const arrays = {
             position: {numComponents:2, data: vertices}
         };
         this.bufferInfo = createBufferInfoFromArrays(this.gl, arrays);
+        console.log(this.bufferInfo)
     }
 
     updateUniform() {
-
+        console.log(this.gl.canvas.width, this.gl.canvas.height);
+        debugger
+        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.uniforms.u_screen = m4.ortho(
             -this.gl.canvas.width / 2,
             this.gl.canvas.width / 2,
@@ -53,6 +56,14 @@ export default class GridDisplay {
             -1,
             1
         );
+        // this.uniforms.u_screen = m4.ortho(
+        //     0,
+        //     this.gl.canvas.width,
+        //     0,
+        //     this.gl.canvas.height,
+        //     -1,
+        //     1
+        // );
         this.uniforms.u_camera = m4.ortho(
             settings.window.get('min_x') as number,
             settings.window.get('max_x') as number,
@@ -61,11 +72,21 @@ export default class GridDisplay {
             -1,
             1
         );
-
+        this.draw()
     }
-
+    drawRect(x:number, y:number, width:number, height:number, color:[number, number, number, number]) {
+        this.gl.scissor(x, y, width, height);
+        this.gl.clearColor(...color);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    }
     draw() {
         if(!this.bufferInfo) return;
+        this.gl.clearColor(1,1,1,1);
+        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+        this.gl.disable(this.gl.DEPTH_TEST);
+
+        this.gl.enable(this.gl.SCISSOR_TEST);
         this.gl.useProgram(this.programInfo.program);
         setBuffersAndAttributes(this.gl, this.programInfo, this.bufferInfo);
         setUniforms(this.programInfo, this.uniforms);
@@ -78,6 +99,14 @@ export default class GridDisplay {
 
     private draw_webgl2(ctx: WebGL2RenderingContext) {
     }
+}
+
+function rand(min:number, max?:number):number {
+    if (max === undefined) {
+        max = min;
+        min = 0;
+    }
+    return Math.random() * (max - min) + min;
 }
 
 enum Version {
