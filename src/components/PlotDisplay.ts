@@ -1,26 +1,21 @@
 import {html, CustomElement} from './CustomElement'
 import state from "../api/store/state";
-import GridDisplay from '../api/GridDisplay';
-
+import * as renderer from '../api/renderer/controller';
+import * as gridRenderer from '../api/renderer/grid';
+import * as textRenderer from '../api/renderer/text';
 export default class PlotDisplay extends CustomElement {
     canvas: HTMLCanvasElement;
-    private gridDisp: GridDisplay|null;
 
     constructor() {
         super();
         this.canvas = <HTMLCanvasElement> this.refs.canvas;
-        this.gridDisp = null;
+
         const resizeObserver = new ResizeObserver(entries => {
             const {width, height} = entries[0].contentRect;
             this.canvas.width = width;
             this.canvas.height = height;
             state.set("canvas_width", width);
             state.set("canvas_height", height);
-            if(this.gridDisp) {
-                this.gridDisp.updateUniform();
-                //TODO: remove
-                this.draw();
-            }
         });
         resizeObserver.observe(this);
 
@@ -33,22 +28,10 @@ export default class PlotDisplay extends CustomElement {
     connectedCallback() {
         super.connectedCallback();
         const canvas = this.refs.canvas as HTMLCanvasElement;
-        let gl: WebGLRenderingContext | WebGL2RenderingContext | null = canvas.getContext('webgl2', { preserveDrawingBuffer: true });
-        if (!gl) {
-            console.log('Trying webgl v1');
-            gl = canvas.getContext('webgl');
-        }
-        if (!gl) {
-            console.error('Webgl is not supported');
-            return;
-        }
-        this.gridDisp = new GridDisplay(gl);
-        requestAnimationFrame(this.draw.bind(this))
-    }
-
-    draw() {
-        // requestAnimationFrame(this.draw.bind(this))
-        this.gridDisp!.draw()
+        renderer.init(canvas);
+        renderer.addRenderer(gridRenderer);
+        renderer.addRenderer(textRenderer);
+        const textBox = textRenderer.addTextBox(5, '01234');
     }
 
     render() {

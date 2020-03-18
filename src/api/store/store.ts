@@ -1,11 +1,13 @@
 
 
-type callback = (val: any)=>void
+type callback = (val: any) => void;
+type cond_fn = (val: any) => boolean;
 export default class Store<State extends object, Key extends keyof State> {
     private vals: State;
     private initial: State;
     private subscribers: {[key in keyof State]: callback[]};
     private binds: {[key in keyof State]: HTMLInputElement};
+    private conditions: {[key in keyof State]: cond_fn[]};
 
 
     constructor (target: State) {
@@ -13,8 +15,10 @@ export default class Store<State extends object, Key extends keyof State> {
         this.vals = Object.assign({}, target);
         this.binds = {} as {[key in keyof State]: HTMLInputElement};
         this.subscribers = {} as {[key in keyof State]: callback[]};
+        this.conditions = {} as {[key in keyof State]: cond_fn[]};
         for(const key of Object.keys(target)) {
             this.subscribers[key as keyof State] = [] as callback[];
+            this.conditions[key as keyof State] = [] as cond_fn[];
         }
     }
 
@@ -31,9 +35,10 @@ export default class Store<State extends object, Key extends keyof State> {
         });
         this.set(key, this.get(key))
     }
-    // unbind(key: keyof State) {
-    //     this.binds[key] = undefined;
-    // }
+
+    addCondition(key: Key, condition: (val: any) => boolean) {
+        // this.conditions[key].push(condition());
+    }
 
     set(key: Key, val: any) {
         if(this.binds[key]) {
