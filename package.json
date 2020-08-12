@@ -20,7 +20,7 @@
     "lodash": "^4.17.15",
     "mathlive": "^0.28.0",
     "register-service-worker": "^1.6.2",
-    "serialize-javascript": "^1.9.1",
+    "serialize-javascript": "^3.1.0",
     "twgl.js": "^4.11.2",
     "vue": "^2.6.6",
     "vue-class-component": "^6.0.0",
