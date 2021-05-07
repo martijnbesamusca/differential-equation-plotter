@@ -17,7 +17,7 @@
     "chroma-js": "^2.0.6",
     "core-js": "^2.6.9",
     "favicons": "^5.4.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "mathlive": "^0.28.0",
     "register-service-worker": "^1.6.2",
     "serialize-javascript": "^1.9.1",
